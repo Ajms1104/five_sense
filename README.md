@@ -1,1 +1,2 @@
-# five_sense
+# Five_sense
+-시각 장애인 투자자를 위한 주식 매매 시스템 개발
