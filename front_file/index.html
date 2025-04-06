@@ -1,12 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
     <title>FIVE-SENSE</title>
-    <link rel="stylesheet" href="main.css" />
-</head>
-
-<body>
+    <link rel="stylesheet" href="./src/index.css" />
+  </head>
+  <body>
+    <script type="module" src="/src/main.jsx"></script>
     <section class="sidebar">
       <span class="name">FIVE-SENSE</span>
         <button>개인설정</button>
@@ -14,7 +14,7 @@
         <button>포토폴리오</button>
 
         <nav>
-            <p style="color: black;">라이브러리</p>
+            <p style="color: black;"> 라이브러리</p>
             <div class="history"></div>
         </nav>
     </section>
@@ -23,7 +23,7 @@
       <div class="chart">
          <!--임시로 이미지 끼워뒀어요! api연결후에 바꿀 예정..-->
          <p style="color: black;"> 실시간 주식 차트</p>
-         <img width="100%" height="50%" src="./sample_chart_.png">
+         <img width="100%" height="50%" src="./public/sample_chart_.png">
       </div>
          <p id="output"></p>
       <div class="bottom-section">
@@ -37,5 +37,5 @@
             FIVE-SENSE는 책임지지 않습니다.
         </p>
     </section>
-</body>
+  </body>
 </html>
