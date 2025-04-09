@@ -1,60 +1,81 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>홈</title>
     <meta charset="UTF-8">
-    <style>
-        .container {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            text-align: center;
-        }
-        .welcome { margin-bottom: 30px; }
-        .btn {
-            padding: 10px 20px;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            margin: 0 10px;
-        }
-        .login-btn { background-color: #007bff; }
-        .register-btn { background-color: #28a745; }
-        .logout-btn { background-color: #dc3545; }
-        .main-content { margin: 30px 0; }
-        .nav-buttons { margin: 20px 0; }
-    </style>
+    <title>FIVE-SENSE</title>
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/profile.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="/js/stockChart.js"></script>
 </head>
+
 <body>
-    <div class="container">
-        <div class="welcome">
-            <h1>Five Sense</h1>
-
-            <!-- 로그인 여부에 따라 다르게 표시 -->
-            <p th:if="${user != null}" th:text="${user.accountid + '님 환영합니다.'}"></p>
-            <p th:if="${user == null}">환영합니다! 로그인하시면 더 많은 기능을 이용하실 수 있습니다.</p>
+    <div class="profile-container">
+        <div class="user-info" th:if="${user != null}" th:text="${user.accountid + '님 환영합니다'}"></div>
+        <div class="user-info" th:unless="${user != null}">게스트님 환영합니다</div>
+        <div class="profile-btn" id="profileBtn">
+            <span>👤</span>
         </div>
-
-        <div class="main-content">
-            <h2>오늘의 추천</h2>
-            <p>다양한 콘텐츠를 즐겨보세요!</p>
-        </div>
-
-        <div class="nav-buttons">
-            <!-- 로그인하지 않은 경우 -->
-            <div th:if="${user == null}">
-                <a th:href="@{/login}" class="btn login-btn">로그인</a>
-                <a th:href="@{/register}" class="btn register-btn">회원가입</a>
-            </div>
-
-            <!-- 로그인한 경우 -->
-            <div th:if="${user != null}">
-                <a th:href="@{/logout}" class="btn logout-btn">로그아웃</a>
-            </div>
+        <div class="dropdown-menu" id="profileMenu">
+            <a th:if="${user != null}" href="/logout">로그아웃</a>
+            <a th:unless="${user != null}" href="/login">로그인</a>
+            <a th:unless="${user != null}" href="/register">회원가입</a>
+            <a th:if="${user != null}" href="/mypage">내 정보</a>
         </div>
     </div>
+    
+    <section class="sidebar">
+      <span class="name">FIVE-SENSE</span>
+        <button>개인설정</button>
+        <button>즐겨찾기</button>
+        <button>포토폴리오</button>
+
+        <nav>
+            <p style="color: black;">라이브러리</p>
+            <div class="history"></div>
+        </nav>
+    </section>
+
+    <section class="main">
+      <div class="chart">
+         <p style="color: black;"> 실시간 주식 차트</p>
+         <div class="stock-control">
+             <div class="input-group">
+                 <label for="stockSelect">종목 선택:</label>
+                 <select id="stockSelect">
+                     <option value="005930">삼성전자</option>
+                     <option value="000660">SK하이닉스</option>
+                     <option value="035720">카카오</option>
+                 </select>
+             </div>
+             <div class="input-group">
+                 <label for="realtimeTrId">실시간 TR ID:</label>
+                 <input type="text" id="realtimeTrId" value="H0STCNT0" />
+             </div>
+             <div class="input-group">
+                 <label for="priceTrId">현재가 TR ID:</label>
+                 <input type="text" id="priceTrId" value="FHKST01010100" />
+             </div>
+         </div>
+         <div style="height: 400px; overflow: auto;">
+             <canvas id="stockChart"></canvas>
+         </div>
+      </div>
+         <p id="output"></p>
+      <div class="bottom-section">
+         <div class="input-container">
+               <input placeholder="AI 입력칸" />
+               <div id="submit"> ➢ </div>
+         </div>
+      </div>
+        <p class="info">
+            주식 투자시 원금 손실에 대한 책임은 투자자 본인에게 있으며 
+            FIVE-SENSE는 책임지지 않습니다.
+        </p>
+    </section>
+
+    <script src="/js/profile.js"></script>
 </body>
 </html>
