@@ -58,8 +58,8 @@ public class KiwoomApiService {
         this.webClient = WebClient.builder()
                 .baseUrl("https://api.kiwoom.com")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .defaultHeader("appkey", apiKey)//apikey 값 가져오기(현재  application.properties에 있는 값을 못가져와서 뒷부분에 값을 하드코딩해야함함)
-                .defaultHeader("appsecret", apiSecret)//apiSecret 값 가져오기
+                .defaultHeader("appkey", "appkey")//apikey 값 가져오기(현재  application.properties에 있는 값을 못가져와서 뒷부분에 값을 하드코딩해야함함)
+                .defaultHeader("appsecret", "secretkey")//apiSecret 값 가져오기
                 .build();
         
         // 토큰 발급
@@ -74,8 +74,8 @@ public class KiwoomApiService {
             // 1. 요청 데이터 JSON 문자열 생성
             Map<String, String> tokenRequest = new HashMap<>();
             tokenRequest.put("grant_type", "client_credentials");
-            tokenRequest.put("appkey", apiKey);//apikey 값 가져오기(현재  application.properties에 있는 값을 못가져와서 뒷부분에 값을 하드코딩해야함함)
-            tokenRequest.put("secretkey", apiSecret);
+            tokenRequest.put("appkey", "appkey");//apikey 값 가져오기(현재  application.properties에 있는 값을 못가져와서 뒷부분에 값을 하드코딩해야함함)
+            tokenRequest.put("secretkey", "secretkey");
 
             // 2. API 호출
             Map<String, Object> response = webClient.post()
@@ -103,27 +103,6 @@ public class KiwoomApiService {
             e.printStackTrace();
         }
     }
-    
-    // 주식 시세 조회
-    public Map<String, Object> getStockPrice(String stockCode, String trId) {
-        System.out.println("Fetching stock price for code: " + stockCode + " with TR ID: " + trId);
-        try {
-            Map<String, Object> result = webClient.get()
-                    .uri("/uapi/domestic-stock/v1/quotations/inquire-price?fid_cond_mrkt_div_code=J&fid_input_iscd={stockCode}",
-                            stockCode)
-                    .header("tr_id", trId)
-                    .retrieve()
-                    .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
-                    .block();
-            System.out.println("Stock price response: " + result);
-            return result;
-        } catch (Exception e) {
-            System.err.println("Error fetching stock price: " + e.getMessage());
-            e.printStackTrace();
-            return new HashMap<>();
-        }
-    }
-    
     // 웹소켓 연결 초기화
     private void initWebSocketConnection() {
         try {
@@ -171,42 +150,6 @@ public class KiwoomApiService {
                                 }
                             } else {
                                 System.out.println("로그인 성공");
-                                
-                                // 실시간 시세 등록
-                                Map<String, Object> registerMessage = new HashMap<>();
-                                registerMessage.put("trnm", "REG");
-                                registerMessage.put("grp_no", "1");
-                                registerMessage.put("refresh", "1");
-                                
-                                Map<String, Object> data = new HashMap<>();
-                                data.put("item", Arrays.asList("005930")); // 삼성전자
-                                data.put("type", Arrays.asList("0B")); // 실시간 항목
-                                
-                                registerMessage.put("data", Arrays.asList(data));
-                                
-                                session.sendMessage(new TextMessage(objectMapper.writeValueAsString(registerMessage)));
-                            }
-                        }
-                        // 실시간 시세 데이터 처리
-                        else if ("REAL".equals(response.get("trnm"))) {
-                            List<Map<String, Object>> dataList = (List<Map<String, Object>>) response.get("data");
-                            if (dataList != null && !dataList.isEmpty()) {
-                                Map<String, Object> values = (Map<String, Object>) dataList.get(0).get("values");
-                                
-                                Map<String, Object> output = new HashMap<>();
-                                output.put("현재가", values.get("20"));  // 현재가
-                                output.put("거래량", values.get("13"));  // 거래량
-                                output.put("시가", values.get("16"));    // 시가
-                                output.put("고가", values.get("17"));    // 고가
-                                output.put("저가", values.get("18"));    // 저가
-                                output.put("전일대비", values.get("10")); // 전일대비
-                                output.put("등락률", values.get("12"));   // 등락률
-                                
-                                Map<String, Object> chartData = new HashMap<>();
-                                chartData.put("output", output);
-                                
-                                String stockCode = (String) dataList.get(0).get("item");
-                                messagingTemplate.convertAndSend("/topic/stock/" + stockCode, chartData);
                             }
                         }
                     } catch (Exception e) {
@@ -229,23 +172,39 @@ public class KiwoomApiService {
         }
     }
     
-    // 특정 종목 실시간 시세 구독
-    public void subscribeToStock(String stockCode, String trId) {
-        if (socketSession != null && socketSession.isOpen()) {
-            try {
-                Map<String, Object> subscribeMessage = new HashMap<>();
-                subscribeMessage.put("header", Map.of(
-                    "tr_id", trId,
-                    "tr_type", "1"
-                ));
-                subscribeMessage.put("body", Map.of(
-                    "mksc_shrn_iscd", stockCode
-                ));
-                
-                socketSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(subscribeMessage)));
-            } catch (Exception e) {
-                e.printStackTrace();
+
+    // 주식 일봉 차트 조회
+    public Map<String, Object> getDailyStockChart(String stockCode, String baseDate) {
+        try {
+            // 요청 데이터 JSON 문자열 생성
+            Map<String, String> requestData = new HashMap<>();
+            requestData.put("stk_cd", stockCode);
+            requestData.put("base_dt", baseDate);
+            requestData.put("upd_stkpc_tp", "1");
+
+            // API 호출
+            Map<String, Object> response = webClient.post()
+                    .uri("/api/dostk/chart")
+                    .header("authorization", "Bearer " + accessToken)
+                    .header("cont-yn", "N")
+                    .header("next-key", "")
+                    .header("api-id", "ka10081")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(requestData)
+                    .retrieve()
+                    .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
+                    .block();
+
+            if (response != null) {
+                System.out.println("Daily chart response: " + response);
+                return response;
             }
+        } catch (Exception e) {
+            System.err.println("Error fetching daily chart: " + e.getMessage());
+            e.printStackTrace();
         }
+        return new HashMap<>();
     }
+
+
 } 

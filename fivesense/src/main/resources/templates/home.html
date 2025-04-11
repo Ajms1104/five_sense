@@ -6,9 +6,65 @@
     <link rel="stylesheet" href="/css/main.css" />
     <link rel="stylesheet" href="/css/profile.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-    <script src="/js/stockChart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+    <style>
+        .chart-wrapper {
+            width: 100%;
+            height: 300px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 10px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .chart-container {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        .stock-control {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1;
+        }
+        .stock-control select {
+            padding: 6px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-size: 12px;
+            background: white;
+        }
+        #stockChart {
+            width: 800px;
+            height: 280px;
+        }
+        .chart-title {
+            color: black;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .stock-select {
+            padding: 6px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-size: 12px;
+            background: white;
+            width: 150px;
+            color: black;
+        }
+        .stock-select option {
+            color: black;
+        }
+    </style>
 </head>
 
 <body>
@@ -40,30 +96,25 @@
 
     <section class="main">
       <div class="chart">
-         <p style="color: black;"> 실시간 주식 차트</p>
-         <div class="stock-control">
-             <div class="input-group">
-                 <label for="stockSelect">종목 선택:</label>
-                 <select id="stockSelect">
-                     <option value="005930">삼성전자</option>
-                     <option value="000660">SK하이닉스</option>
-                     <option value="035720">카카오</option>
-                 </select>
-             </div>
-             <div class="input-group">
-                 <label for="realtimeTrId">실시간 TR ID:</label>
-                 <input type="text" id="realtimeTrId" value="H0STCNT0" />
-             </div>
-             <div class="input-group">
-                 <label for="priceTrId">현재가 TR ID:</label>
-                 <input type="text" id="priceTrId" value="FHKST01010100" />
-             </div>
+         <div class="chart-header">
+            <p class="chart-title">주식 일봉 차트</p>
+            <select id="stockSelector" class="stock-select">
+                <option value="005930">삼성전자</option>
+                <option value="000660">SK하이닉스</option>
+                <option value="035720">카카오</option>
+                <option value="323410">카카오뱅크</option>
+                <option value="207940">삼성바이오로직스</option>
+                <option value="035420">NAVER</option>
+                <option value="051910">LG화학</option>
+                <option value="005380">현대자동차</option>
+            </select>
          </div>
-         <div style="height: 400px; overflow: auto;">
-             <canvas id="stockChart"></canvas>
+         <div class="chart-wrapper">
+            <div class="chart-container">
+               <canvas id="stockChart"></canvas>
+            </div>
          </div>
       </div>
-         <p id="output"></p>
       <div class="bottom-section">
          <div class="input-container">
                <input placeholder="AI 입력칸" />
@@ -77,5 +128,6 @@
     </section>
 
     <script src="/js/profile.js"></script>
+    <script src="/js/StockChart.js"></script>
 </body>
-</html>
+</html> 
