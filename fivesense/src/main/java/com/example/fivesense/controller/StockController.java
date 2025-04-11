@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequestMapping("/api/stock")
@@ -16,20 +18,18 @@ public class StockController {
         this.kiwoomApiService = kiwoomApiService;
     }
 
-    @GetMapping("/price/{stockCode}")
-    public ResponseEntity<Map<String, Object>> getStockPrice(
-            @PathVariable String stockCode,
-            @RequestParam String trId) {
-        Map<String, Object> priceData = kiwoomApiService.getStockPrice(stockCode, trId);
-        return ResponseEntity.ok(priceData);
-    }
     
-    @PostMapping("/subscribe/{stockCode}")
-    public ResponseEntity<String> subscribeStock(
+
+
+    @GetMapping("/daily-chart/{stockCode}")
+    public Map<String, Object> getDailyChart(
             @PathVariable String stockCode,
-            @RequestBody Map<String, String> request) {
-        String trId = request.get("trId");
-        kiwoomApiService.subscribeToStock(stockCode, trId);
-        return ResponseEntity.ok("Subscribed to " + stockCode);
+            @RequestParam(required = false) String baseDate) {
+        if (baseDate == null) {
+            // 기본값으로 오늘 날짜 사용
+            baseDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        }
+        return kiwoomApiService.getDailyStockChart(stockCode, baseDate);
     }
+
 } 
