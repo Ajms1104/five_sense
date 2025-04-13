@@ -230,13 +230,13 @@ if __name__ == '__main__':
         'indc_tp': '0',      # 표시 구분 (0: 수량)
     }
 
-    # 3. 모든 데이터 가져오기 (2023년 1월 1일 ~ 현재 날짜)
+    # 3. 모든 데이터 가져오기 (2020년 1월 1일 ~ 현재 날짜)
     df = fetch_all_data(
         token=MY_ACCESS_TOKEN,
         data=params,
-        start_date='20230101',  # 2023년 1월 1일
+        start_date='20200101',  # 2020년 1월 1일
         end_date=None,          # 현재 날짜로 동적 설정
-        max_iterations=50       # 충분한 횟수로 설정 (2년치 데이터라면 넉넉히)
+        max_iterations=150       # 충분한 횟수로 설정 (2년치 데이터라면 넉넉히 + 3년치 더 넣음(총 5년치))
     )
 
     # 4. 데이터베이스에 삽입
