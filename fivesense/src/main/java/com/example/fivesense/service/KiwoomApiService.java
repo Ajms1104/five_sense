@@ -58,8 +58,6 @@ public class KiwoomApiService {
         this.webClient = WebClient.builder()
                 .baseUrl("https://api.kiwoom.com")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .defaultHeader("appkey", "appkey")//apikey 값 가져오기(현재  application.properties에 있는 값을 못가져와서 뒷부분에 값을 하드코딩해야함함)
-                .defaultHeader("appsecret", "secretkey")//apiSecret 값 가져오기
                 .build();
         
         // 토큰 발급
@@ -74,8 +72,6 @@ public class KiwoomApiService {
             // 1. 요청 데이터 JSON 문자열 생성
             Map<String, String> tokenRequest = new HashMap<>();
             tokenRequest.put("grant_type", "client_credentials");
-            tokenRequest.put("appkey", "appkey");//apikey 값 가져오기(현재  application.properties에 있는 값을 못가져와서 뒷부분에 값을 하드코딩해야함함)
-            tokenRequest.put("secretkey", "secretkey");
 
             // 2. API 호출
             Map<String, Object> response = webClient.post()
@@ -174,7 +170,7 @@ public class KiwoomApiService {
     
 
     // 주식 일봉 차트 조회
-    public Map<String, Object> getDailyStockChart(String stockCode, String baseDate) {
+    public Map<String, Object> getDailyStockChart(String stockCode, String baseDate, String apiId) {
         try {
             // 요청 데이터 JSON 문자열 생성
             Map<String, String> requestData = new HashMap<>();
@@ -188,7 +184,7 @@ public class KiwoomApiService {
                     .header("authorization", "Bearer " + accessToken)
                     .header("cont-yn", "N")
                     .header("next-key", "")
-                    .header("api-id", "ka10081")
+                    .header("api-id", apiId.toLowerCase())
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(requestData)
                     .retrieve()
