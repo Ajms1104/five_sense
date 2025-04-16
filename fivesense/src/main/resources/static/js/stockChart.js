@@ -1,234 +1,535 @@
 class StockChart {
     constructor() {
         this.stockCode = '005930';
-        this.chart = null;
-        this.fullData = []; // 전체 데이터 저장
-        this.visibleDataCount = 60; // 처음에 표시할 데이터 수
-        this.currentStartIndex = 0; // 현재 보여지는 데이터의 시작 인덱스
+        this.chartWrapper = document.querySelector('.chart-wrapper');
+        this.chartContainer = document.querySelector('.chart-container');
+        this.priceChart = null;        // 가격 차트
+        this.volumeChart = null;       // 거래량 차트
+        this.candlestickSeries = null; // 캔들스틱 시리즈
+        this.volumeSeries = null;      // 거래량 시리즈
+        this.chartType = 'daily';
+        this.minuteType = '1';         // 기본 1분봉
+        this.resizeHandle = null;
+        this.startHeight = 0;
+        this.startY = 0;
+        this.stockInfo = null;         // 종목명
+        this.latestData = null;        // 최신 데이터 저장용
+        this.movingAverageSeries = {}; // 이동평균선 시리즈 저장용
+        this.dataMap = new Map();      // 시간 기반 데이터 조회를 위한 Map
+        this.isSyncing = false;        // 동기화 중복 방지 플래그
         this.init();
     }
 
     init() {
+        console.log('Initializing StockChart...');
         this.createChart();
         this.setupEventListeners();
-        this.fetchDailyChart(this.stockCode);
+        this.fetchChartData();
+    }
+
+    // 숫자 포맷 (콤마, M/K 단위)
+    formatNumber(num, precision = 0) {
+        if (num === null || num === undefined || isNaN(num)) return 'N/A';
+        if (Math.abs(num) >= 1_000_000_000) {
+            return (num / 1_000_000_000).toFixed(2) + 'B';
+        } else if (Math.abs(num) >= 1_000_000) {
+            return (num / 1_000_000).toFixed(2) + 'M';
+        } else if (Math.abs(num) >= 1_000) {
+             // 거래량 외에는 K 단위 사용 안 함
+             return num.toLocaleString(undefined, { minimumFractionDigits: precision, maximumFractionDigits: precision });
+        }
+        return num.toLocaleString(undefined, { minimumFractionDigits: precision, maximumFractionDigits: precision });
+    }
+
+    // 거래량 포맷 (M/K 단위 특화)
+    formatVolume(num) {
+        if (num === null || num === undefined || isNaN(num)) return 'N/A';
+        if (Math.abs(num) >= 1_000_000) {
+            return (num / 1_000_000).toFixed(2) + 'M';
+        } else if (Math.abs(num) >= 1_000) {
+             return (num / 1_000).toFixed(2) + 'K';
+        }
+        return num.toString();
     }
 
     createChart() {
-        const ctx = document.getElementById('stockChart').getContext('2d');
-        this.chart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: [],
-                datasets: [{
-                    label: '주가',
-                    data: [],
-                    backgroundColor: 'rgba(53, 162, 235, 0.5)',
-                    borderColor: 'rgb(53, 162, 235)',
-                    borderWidth: 1
-                }]
+        console.log('Creating chart...');
+
+        // 토스증권 스타일로 두 개의 차트 영역 생성
+        this.chartContainer.innerHTML = `
+            <div class="chart-separator">
+                <div id="priceChartContainer" style="width: 100%; height: 65%; position: relative;">
+                    <div id="stockInfoPanel" style="position: absolute; top: 5px; left: 5px; background: rgba(255,255,255,0.85); padding: 5px 8px; border-radius: 4px; font-size: 11px; color: black; z-index: 10; pointer-events: none; line-height: 1.4;"></div>
+                </div>
+                <div class="divider" style="width: 100%; height: 2px; background-color: #dddddd;"></div>
+                <div id="volumeChartContainer" style="width: 100%; height: 35%; position: relative;">
+                    <div id="volumeInfoPanel" style="position: absolute; top: 5px; left: 5px; background: rgba(255,255,255,0.85); padding: 3px 6px; border-radius: 4px; font-size: 11px; color: black; z-index: 10; pointer-events: none;"></div>
+                </div>
+            </div>
+        `;
+
+        // 차트 컨테이너 크기
+        const containerWidth = this.chartContainer.clientWidth;
+        const priceChartHeight = Math.floor(this.chartContainer.clientHeight * 0.65);
+        const volumeChartHeight = Math.floor(this.chartContainer.clientHeight * 0.35) - 2; // 구분선 높이 2px 고려
+
+        // 공통 차트 옵션
+        const commonOptions = {
+            width: containerWidth,
+            layout: { 
+                background: { color: '#ffffff' }, 
+                textColor: '#333333',
+                fontFamily: "'Open Sans', sans-serif"
             },
-            options: {
-                responsive: false,
-                maintainAspectRatio: false,
-                animation: false,
-                layout: {
-                    padding: {
-                        left: 10,
-                        right: 10,
-                        top: 20,
-                        bottom: 10
-                    }
+            grid: { 
+                vertLines: { color: '#f0f0f0' },
+                horzLines: { color: '#f0f0f0' }
+            },
+            crosshair: {
+                mode: LightweightCharts.CrosshairMode.Normal,
+                vertLine: { 
+                    color: '#999999', 
+                    width: 1, 
+                    style: 1, 
+                    labelBackgroundColor: '#ffffff',
+                    labelVisible: false // x축 라벨 숨김
                 },
-                scales: {
-                    y: {
-                        beginAtZero: false,
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.05)'
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value.toLocaleString() + '원';
-                            },
-                            font: {
-                                size: 10
-                            }
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false
-                        },
-                        ticks: {
-                            maxRotation: 45,
-                            minRotation: 45,
-                            autoSkip: true,
-                            maxTicksLimit: 20,
-                            font: {
-                                size: 9
-                            }
-                        },
-                        barPercentage: 0.8,
-                        categoryPercentage: 0.9
-                    }
-                },
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return context.parsed.y.toLocaleString() + '원';
-                            }
-                        }
-                    },
-                    legend: {
-                        display: false
-                    },
-                    zoom: {
-                        pan: {
-                            enabled: true,
-                            mode: 'x',
-                            onPanComplete: (ctx) => {
-                                this.handlePanComplete(ctx);
-                            }
-                        },
-                        zoom: {
-                            wheel: {
-                                enabled: true
-                            },
-                            pinch: {
-                                enabled: true
-                            },
-                            mode: 'x'
-                        }
-                    }
+                horzLine: { 
+                    color: '#999999', 
+                    width: 1, 
+                    style: 1, 
+                    labelBackgroundColor: '#ffffff'
                 }
+            },
+            timeScale: {
+                borderColor: '#dddddd',
+                borderVisible: true,
+                timeVisible: true,
+                secondsVisible: false,
+                tickMarkFormatter: (time) => {
+                    const date = new Date(time * 1000);
+                    if (this.chartType === 'yearly') return date.getFullYear();
+                    if (this.chartType === 'monthly') return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+                    return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+                }
+            },
+            handleScroll: true,
+            handleScale: true
+        };
+
+        // 1. 가격 차트 생성 (상단 65%)
+        this.priceChart = LightweightCharts.createChart(document.getElementById('priceChartContainer'), {
+            ...commonOptions,
+            height: priceChartHeight,
+            rightPriceScale: {
+                borderColor: '#dddddd',
+                borderVisible: true,
+                scaleMargins: {
+                    top: 0.1,
+                    bottom: 0.1
+                },
+                visible: true,
+                autoScale: true
             }
         });
 
-        // 차트 리셋 버튼 추가
-        const resetButton = document.createElement('button');
-        resetButton.textContent = '차트 초기화';
-        resetButton.style.position = 'absolute';
-        resetButton.style.top = '10px';
-        resetButton.style.left = '10px';
-        resetButton.style.padding = '5px 10px';
-        resetButton.style.fontSize = '12px';
-        resetButton.style.backgroundColor = '#f0f0f0';
-        resetButton.style.border = '1px solid #ddd';
-        resetButton.style.borderRadius = '4px';
-        resetButton.style.cursor = 'pointer';
-        resetButton.style.zIndex = '10';
-        resetButton.addEventListener('click', () => {
-            this.chart.resetZoom();
-            this.currentStartIndex = Math.max(0, this.fullData.length - this.visibleDataCount);
-            this.updateChartWithVisibleData();
+        // 2. 거래량 차트 생성 (하단 35%)
+        this.volumeChart = LightweightCharts.createChart(document.getElementById('volumeChartContainer'), {
+            ...commonOptions,
+            height: volumeChartHeight,
+            rightPriceScale: {
+                borderColor: '#dddddd',
+                borderVisible: true,
+                scaleMargins: {
+                    top: 0.1,
+                    bottom: 0.1
+                },
+                visible: true,
+                autoScale: true
+            }
         });
-        
-        const chartWrapper = document.querySelector('.chart-wrapper');
-        chartWrapper.appendChild(resetButton);
+
+        // 캔들스틱 시리즈 추가 (가격 차트)
+        this.candlestickSeries = this.priceChart.addCandlestickSeries({
+            upColor: '#ff3333', 
+            downColor: '#5050ff',
+            borderVisible: false, 
+            wickUpColor: '#ff3333', 
+            wickDownColor: '#5050ff',
+            priceFormat: { type: 'price', precision: 0, minMove: 1 }
+        });
+
+        // 거래량 시리즈 추가 (거래량 차트)
+        this.volumeSeries = this.volumeChart.addHistogramSeries({
+            color: '#26a69a',
+            priceFormat: { type: 'volume' },
+            priceScaleId: 'volume',
+            scaleMargins: {
+                top: 0.1,
+                bottom: 0.1
+            }
+        });
+
+        // 차트 싱크 설정 (스크롤 및 줌 동기화)
+        this.syncCharts();
+
+        // 크로스헤어 동기화 설정
+        this.setupCrosshairSync();
+
+        // 윈도우 리사이즈 이벤트
+        window.addEventListener('resize', this.handleResize.bind(this));
+    }
+
+    // 차트 동기화 설정
+    syncCharts() {
+        // 시간 스케일(가로축) 동기화
+        this.priceChart.timeScale().subscribeVisibleLogicalRangeChange(timeRange => {
+            if (timeRange && !this.isSyncing) {
+                this.isSyncing = true;
+                this.volumeChart.timeScale().setVisibleLogicalRange(timeRange);
+                this.isSyncing = false;
+            }
+        });
+
+        this.volumeChart.timeScale().subscribeVisibleLogicalRangeChange(timeRange => {
+            if (timeRange && !this.isSyncing) {
+                this.isSyncing = true;
+                this.priceChart.timeScale().setVisibleLogicalRange(timeRange);
+                this.isSyncing = false;
+            }
+        });
+    }
+
+    // 날짜 포맷 함수 분리
+    formatDateForDisplay(date) {
+        switch(this.chartType) {
+            case 'yearly': return date.getFullYear().toString();
+            case 'monthly': return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+            case 'daily':
+            case 'weekly': return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+            case 'minute': return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+            default: return date.toLocaleDateString('ko-KR');
+        }
     }
 
     setupEventListeners() {
-        // HTML의 주식 선택 드롭다운을 연결
         const stockSelect = document.getElementById('stockSelector');
         stockSelect.value = this.stockCode;
         stockSelect.addEventListener('change', (e) => {
             this.stockCode = e.target.value;
-            this.fetchDailyChart(this.stockCode);
+            const stockOption = stockSelect.options[stockSelect.selectedIndex];
+            this.stockInfo = stockOption.textContent;
+            this.fetchChartData();
+        });
+
+        const minuteSelect = document.getElementById('minuteSelector');
+        minuteSelect.addEventListener('change', (e) => {
+            this.minuteType = e.target.value;
+            this.fetchChartData();
+        });
+
+        const chartTypeBtns = document.querySelectorAll('.chart-type-btn');
+        chartTypeBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const newType = e.target.dataset.type;
+                chartTypeBtns.forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                this.chartType = newType;
+                const minuteSelector = document.getElementById('minuteSelector');
+                minuteSelector.style.display = (newType === 'minute') ? 'block' : 'none';
+                this.fetchChartData();
+            });
+        });
+
+        // 윈도우 리사이즈 시 차트 크기 조정
+        window.addEventListener('resize', this.handleResize.bind(this));
+        
+        // 초기 리사이즈 실행
+        this.handleResize();
+
+        const stockOption = stockSelect.options[stockSelect.selectedIndex];
+        this.stockInfo = stockOption.textContent;
+    }
+
+    // 차트 크기 조정 처리
+    handleResize() {
+        if (!this.priceChart || !this.volumeChart) return;
+        
+        const chartWidth = this.chartContainer.clientWidth;
+        const totalHeight = this.chartContainer.clientHeight;
+        const priceChartHeight = Math.floor(totalHeight * 0.65);
+        const volumeChartHeight = Math.floor(totalHeight * 0.35) - 2; // 구분선 높이 2px 고려
+        
+        // 차트 크기 조정
+        this.priceChart.resize(chartWidth, priceChartHeight);
+        this.volumeChart.resize(chartWidth, volumeChartHeight);
+        
+        console.log(`차트 크기 조정: ${chartWidth}x${totalHeight} (가격: ${priceChartHeight}, 거래량: ${volumeChartHeight})`);
+    }
+
+    async fetchChartData() {
+        try {
+            console.log(`Fetching ${this.chartType} chart data for stock ${this.stockCode}...`);
+
+            let apiId;
+            let requestData = { stk_cd: this.stockCode, upd_stkpc_tp: "1" };
+
+            switch(this.chartType) {
+                case 'minute': apiId = 'KA10080'; requestData.tic_scope = this.minuteType; break;
+                case 'daily': apiId = 'KA10081'; break;
+                case 'weekly': apiId = 'KA10082'; break;
+                case 'monthly': apiId = 'KA10083'; break;
+                case 'yearly': apiId = 'KA10094'; break;
+                default: apiId = 'KA10081';
+            }
+
+            const response = await fetch(`/api/stock/daily-chart/${this.stockCode}?apiId=${apiId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(requestData)
+            });
+
+            const data = await response.json();
+            console.log('Received data:', data);
+
+            let chartData;
+            switch(this.chartType) {
+                case 'monthly': chartData = data.stk_mth_pole_chart_qry; break;
+                case 'daily': chartData = data.stk_dt_pole_chart_qry; break;
+                case 'weekly': chartData = data.stk_stk_pole_chart_qry; break;
+                case 'yearly': chartData = data.stk_yr_pole_chart_qry; break;
+                case 'minute': chartData = data.stk_min_pole_chart_qry || data.stk_stk_pole_chart_qry; break;
+                default: chartData = data.stk_dt_pole_chart_qry;
+            }
+
+            if (chartData && chartData.length > 0) {
+                const processedData = [];
+                
+                // 데이터 처리
+                for (const item of chartData) {
+                    // 날짜/시간 처리
+                    let dateStr = (this.chartType === 'minute') ? item.cntr_tm : (item.dt || item.trd_dt);
+                    if (!dateStr) continue;
+
+                    // 날짜 생성
+                    let timestamp;
+                    try {
+                        if (this.chartType === 'yearly' && dateStr.length === 4) {
+                            // 년도 데이터 처리 (YYYY)
+                            timestamp = new Date(parseInt(dateStr), 0, 1).getTime() / 1000;
+                        } else if (this.chartType === 'minute' && dateStr.length === 14) {
+                            // 분 데이터 처리 (YYYYMMDDhhmmss)
+                            timestamp = new Date(
+                                parseInt(dateStr.slice(0,4)),
+                                parseInt(dateStr.slice(4,6))-1,
+                                parseInt(dateStr.slice(6,8)),
+                                parseInt(dateStr.slice(8,10)),
+                                parseInt(dateStr.slice(10,12))
+                            ).getTime() / 1000;
+                        } else if (dateStr.length === 8) {
+                            // 일/주/월 데이터 처리 (YYYYMMDD)
+                            timestamp = new Date(
+                                parseInt(dateStr.slice(0,4)),
+                                parseInt(dateStr.slice(4,6))-1,
+                                parseInt(dateStr.slice(6,8))
+                            ).getTime() / 1000;
+                        } else {
+                            console.log('Invalid date format:', dateStr);
+                            continue;
+                        }
+                    } catch (e) {
+                        console.log('Date parsing error:', e, dateStr);
+                        continue;
+                    }
+
+                    if (isNaN(timestamp)) {
+                        console.log('Invalid timestamp for date:', dateStr);
+                        continue;
+                    }
+
+                    // 가격 데이터 처리
+                    let close = parseFloat(item.cur_prc || item.clos_prc);
+                    if (isNaN(close)) continue;
+                    
+                    let open = parseFloat(item.open_pric || item.open_prc);
+                    let high = parseFloat(item.high_pric || item.high_prc);
+                    let low = parseFloat(item.low_pric || item.low_prc);
+                    let volume = parseFloat(item.trde_qty || item.trd_qty) || 0;
+                    
+                    // NaN 값 처리
+                    if (isNaN(open)) open = close;
+                    if (isNaN(high)) high = Math.max(close, open);
+                    if (isNaN(low)) low = Math.min(close, open);
+                    
+                    processedData.push({
+                        time: timestamp,
+                        open, high, low, close, volume
+                    });
+                }
+
+                if (processedData.length > 0) {
+                    // 시간순 정렬
+                    processedData.sort((a, b) => a.time - b.time);
+                    
+                    // 캔들스틱 데이터
+                    const candlestickData = processedData.map(({ time, open, high, low, close }) => ({
+                        time, open, high, low, close
+                    }));
+                    
+                    // 거래량 데이터 - 색상 설정 (상승 빨강, 하락 파랑)
+                    const volumeData = processedData.map(({ time, volume, open, close }) => ({
+                        time,
+                        value: volume,
+                        color: close >= open ? '#ff3333' : '#5050ff'  // 상승(빨강), 하락(파랑)
+                    }));
+                    
+                    // 데이터 설정
+                    this.candlestickSeries.setData(candlestickData);
+                    this.volumeSeries.setData(volumeData);
+                    
+                    // 차트 타입에 맞게 옵션 업데이트
+                    this.updateChartOptionsForType();
+                    
+                    // 차트 스케일 조정 (두 차트 모두)
+                    this.priceChart.timeScale().fitContent();
+                    this.volumeChart.timeScale().fitContent();
+                    
+                    // 데이터 맵 저장 (정보 패널용)
+                    this.dataMap = new Map(processedData.map(d => [d.time, d]));
+                    this.latestData = processedData[processedData.length - 1];
+                    
+                    // 정보 패널 업데이트
+                    this.updateInfoPanel(null);
+                    
+                    return;
+                }
+            }
+            
+            // 유효한 데이터가 없는 경우
+            console.error('No valid chart data found');
+            this.candlestickSeries.setData([]);
+            this.volumeSeries.setData([]);
+            this.dataMap.clear();
+            this.latestData = null;
+            
+        } catch (error) {
+            console.error('Error fetching chart data:', error);
+            this.candlestickSeries.setData([]);
+            this.volumeSeries.setData([]);
+            this.dataMap.clear();
+            this.latestData = null;
+        }
+    }
+
+    // 차트 타입에 따른 옵션 업데이트 함수 
+    updateChartOptionsForType() {
+        const timeScaleOptions = {
+            timeVisible: this.chartType === 'minute',
+            secondsVisible: false
+        };
+
+        // 두 차트 모두 옵션 업데이트
+        this.priceChart.applyOptions({ 
+            timeScale: timeScaleOptions
+        });
+        this.volumeChart.applyOptions({ 
+            timeScale: timeScaleOptions
         });
     }
 
-    handlePanComplete(ctx) {
-        // 차트의 X축 시작과 끝 인덱스 확인
-        const chartArea = this.chart.chartArea;
-        const xAxis = this.chart.scales.x;
-        
-        // 차트 왼쪽 끝의 데이터 인덱스 (가장 과거 데이터)
-        const leftEdgeIndex = Math.floor(xAxis.getValueForPixel(chartArea.left) || 0);
-        
-        // 차트 오른쪽 끝의 데이터 인덱스 (가장 최근 데이터)
-        const rightEdgeIndex = Math.ceil(xAxis.getValueForPixel(chartArea.right) || this.visibleDataCount - 1);
-        
-        // 왼쪽으로 드래그하여 과거 데이터를 요청하는 경우
-        if (leftEdgeIndex <= 2) {  // 왼쪽 여백 거의 없을 때
-            this.loadMorePastData();
-        }
-        
-        // 오른쪽으로 드래그하여 최신 데이터를 요청하는 경우
-        if (rightEdgeIndex >= this.chart.data.labels.length - 3) {  // 오른쪽 여백 거의 없을 때
-            this.loadMoreRecentData();
-        }
-    }
+    // 정보 패널 업데이트 로직
+    updateInfoPanel = (time) => {
+        let displayTime = time;
+        let dataPoint = null;
 
-    loadMorePastData() {
-        if (this.currentStartIndex > 0) {
-            // 더 많은 과거 데이터를 보여줌 (최대 30개 추가)
-            const addCount = Math.min(30, this.currentStartIndex);
-            this.currentStartIndex = Math.max(0, this.currentStartIndex - addCount);
-            this.updateChartWithVisibleData();
+        if (displayTime === null && this.latestData) { // 마우스 벗어남 -> 최신 데이터 사용
+            displayTime = this.latestData.time;
         }
-    }
 
-    loadMoreRecentData() {
-        const maxEndIndex = this.fullData.length;
-        const currentEndIndex = this.currentStartIndex + this.visibleDataCount;
-        
-        if (currentEndIndex < maxEndIndex) {
-            // 더 많은 최신 데이터를 보여줌 (최대 30개 추가)
-            this.currentStartIndex = Math.min(this.currentStartIndex + 30, maxEndIndex - this.visibleDataCount);
-            this.updateChartWithVisibleData();
+        if (displayTime !== null) {
+            dataPoint = this.dataMap.get(displayTime); // Map에서 데이터 조회
         }
-    }
 
-    updateChartWithVisibleData() {
-        if (this.fullData.length === 0) return;
-        
-        // 현재 보여질 데이터의 범위 계산
-        const endIndex = Math.min(this.currentStartIndex + this.visibleDataCount, this.fullData.length);
-        const visibleData = this.fullData.slice(this.currentStartIndex, endIndex);
-        
-        this.chart.data.labels = visibleData.map(item => item.label);
-        this.chart.data.datasets[0].data = visibleData.map(item => item.price);
-        
-        // 모든 데이터의 최소/최대값을 기준으로 y축 설정 (전체 데이터셋 기준)
-        const allPrices = this.fullData.map(item => item.price);
-        const minPrice = Math.min(...allPrices);
-        const maxPrice = Math.max(...allPrices);
-        const priceRange = maxPrice - minPrice;
-        const padding = priceRange * 0.1;
-        
-        this.chart.options.scales.y.min = minPrice - padding;
-        this.chart.options.scales.y.max = maxPrice + padding;
-        
-        this.chart.update('none');
-    }
+        // 데이터 없으면 패널 숨김
+        if (!dataPoint) {
+            document.getElementById('stockInfoPanel').style.display = 'none';
+            document.getElementById('volumeInfoPanel').style.display = 'none';
+            return;
+        }
 
-    async fetchDailyChart(code) {
-        try {
-            const response = await fetch(`/api/stock/daily-chart/${code}`);
-            const data = await response.json();
-            
-            if (data.stk_dt_pole_chart_qry) {
-                const chartData = data.stk_dt_pole_chart_qry;
-                // 데이터를 날짜순으로 정렬
-                chartData.sort((a, b) => a.dt.localeCompare(b.dt));
+        const date = new Date(dataPoint.time * 1000);
+        let dateStr = this.formatDateForDisplay(date);
+        const volumeValue = dataPoint.volume ?? 0;
+
+        // 유효성 검사
+        if (isNaN(dataPoint.open) || isNaN(dataPoint.high) || isNaN(dataPoint.low) || isNaN(dataPoint.close) || isNaN(volumeValue)) {
+            document.getElementById('stockInfoPanel').style.display = 'none';
+            document.getElementById('volumeInfoPanel').style.display = 'none';
+            return;
+        }
+
+        const priceChange = dataPoint.close - dataPoint.open;
+        const priceChangePercent = dataPoint.open === 0 ? 0 : (priceChange / dataPoint.open * 100);
+        const priceDirection = priceChange >= 0 ? 'up' : 'down';
+        const sign = priceChange >= 0 ? '+' : '';
+        const color = priceDirection === 'up' ? '#ff3333' : '#5050ff'; // 빨강/파랑
+
+        // 패널 업데이트
+        let stockCodeName = this.stockInfo || this.stockCode;
+        document.getElementById('stockInfoPanel').innerHTML = `
+            <span style="font-weight: bold;">${stockCodeName}</span> <span style="font-size: 10px;">${dateStr}</span><br>
+            <span>시가 <span style="color: ${color};">${this.formatNumber(dataPoint.open)}</span></span>
+            <span style="margin-left: 5px;">고가 <span style="color: ${color};">${this.formatNumber(dataPoint.high)}</span></span>
+            <span style="margin-left: 5px;">저가 <span style="color: ${color};">${this.formatNumber(dataPoint.low)}</span></span>
+            <span style="margin-left: 5px;">종가 <span style="color: ${color};">${this.formatNumber(dataPoint.close)}</span></span>
+            <span style="color: ${color}; margin-left: 5px;">(${sign}${this.formatNumber(priceChange)} ${sign}${priceChangePercent.toFixed(2)}%)</span>
+        `;
+        document.getElementById('volumeInfoPanel').innerHTML = `
+            거래량 <span style="color: ${color};">${this.formatVolume(volumeValue)}</span>
+        `;
+
+        document.getElementById('stockInfoPanel').style.display = 'block';
+        document.getElementById('volumeInfoPanel').style.display = 'block';
+    };
+
+    // 크로스헤어 동기화 및 정보 패널 업데이트 로직
+    setupCrosshairSync() {
+        // 크로스헤어 동기화 (두 차트 간)
+        this.priceChart.subscribeCrosshairMove(param => {
+            if (!param.point || !param.time) {
+                this.volumeChart.clearCrosshairPosition();
                 
-                // 전체 데이터 저장
-                this.fullData = chartData.map(item => {
-                    // YYYYMMDD 형식을 MM/DD로 변환
-                    const dateStr = item.dt;
-                    const label = dateStr.substring(4, 6) + '/' + dateStr.substring(6, 8);
-                    const price = parseFloat(item.cur_prc);
-                    return { label, price, originalDate: item.dt };
-                });
-                
-                // 처음에는 최신 데이터 60개만 표시 (시작 인덱스 계산)
-                this.currentStartIndex = Math.max(0, this.fullData.length - this.visibleDataCount);
-                this.updateChartWithVisibleData();
+                if (!param.point) {
+                    // 마우스가 차트 영역을 벗어나면 최신 데이터 표시
+                    this.updateInfoPanel(null);
+                }
+                return;
             }
-        } catch (error) {
-            console.error('일봉 차트 데이터 로드 실패:', error);
-        }
+            
+            // 거래량 차트 크로스헤어 동기화
+            this.volumeChart.setCrosshairPosition(param.point, param.time);
+            
+            // 정보 패널 업데이트
+            this.updateInfoPanel(param.time);
+        });
+        
+        this.volumeChart.subscribeCrosshairMove(param => {
+            if (!param.point || !param.time) {
+                this.priceChart.clearCrosshairPosition();
+                return;
+            }
+            
+            // 가격 차트 크로스헤어 동기화
+            this.priceChart.setCrosshairPosition(param.point, param.time);
+            
+            // 정보 패널 업데이트
+            this.updateInfoPanel(param.time);
+        });
+        
+        // 마우스가 차트 컨테이너를 벗어날 때 처리
+        this.chartContainer.addEventListener('mouseleave', () => {
+            this.updateInfoPanel(null);
+        });
     }
 }
 
