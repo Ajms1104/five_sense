@@ -21,15 +21,21 @@ public class StockController {
     
 
 
-    @GetMapping("/daily-chart/{stockCode}")
+    @PostMapping("/daily-chart/{stockCode}")
     public Map<String, Object> getDailyChart(
             @PathVariable String stockCode,
-            @RequestParam(required = false) String baseDate,
+            @RequestBody Map<String, Object> requestData,
             @RequestParam(required = false, defaultValue = "KA10081") String apiId) {
+        String baseDate = requestData.containsKey("base_dt") ? (String) requestData.get("base_dt") : null;
         if (baseDate == null) {
-            // 기본값으로 오늘 날짜 사용
             baseDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         }
+        
+        // 분봉 차트인 경우 tic_scope 파라미터 추가
+        if ("KA10080".equals(apiId) && requestData.containsKey("tic_scope")) {
+            return kiwoomApiService.getDailyStockChart(stockCode, baseDate, apiId, (String) requestData.get("tic_scope"));
+        }
+        
         return kiwoomApiService.getDailyStockChart(stockCode, baseDate, apiId);
     }
 

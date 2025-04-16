@@ -171,12 +171,25 @@ public class KiwoomApiService {
 
     // 주식 일봉 차트 조회
     public Map<String, Object> getDailyStockChart(String stockCode, String baseDate, String apiId) {
+        return getDailyStockChart(stockCode, baseDate, apiId, null);
+    }
+
+    public Map<String, Object> getDailyStockChart(String stockCode, String baseDate, String apiId, String ticScope) {
         try {
             // 요청 데이터 JSON 문자열 생성
             Map<String, String> requestData = new HashMap<>();
             requestData.put("stk_cd", stockCode);
-            requestData.put("base_dt", baseDate);
             requestData.put("upd_stkpc_tp", "1");
+
+            // 분봉 차트인 경우
+            if ("KA10080".equals(apiId)) {
+                requestData.put("tic_scope", ticScope != null ? ticScope : "1");
+            } else {
+                // 다른 차트 타입의 경우 base_dt 추가
+                requestData.put("base_dt", baseDate);
+            }
+
+            System.out.println("Request data: " + requestData);
 
             // API 호출
             Map<String, Object> response = webClient.post()
@@ -192,11 +205,11 @@ public class KiwoomApiService {
                     .block();
 
             if (response != null) {
-                System.out.println("Daily chart response: " + response);
+                System.out.println("Chart response: " + response);
                 return response;
             }
         } catch (Exception e) {
-            System.err.println("Error fetching daily chart: " + e.getMessage());
+            System.err.println("Error fetching chart: " + e.getMessage());
             e.printStackTrace();
         }
         return new HashMap<>();
