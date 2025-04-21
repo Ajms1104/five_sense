@@ -8,26 +8,53 @@ intents:
   - mood_great
   - mood_unhappy
   - bot_challenge
+  - stock_info
+  - stock_price
+  - stock_chart
+  - stock_news
+  - stock_analysis
+  - stock_recommendation
+  - stock_question
 
 responses:
   utter_greet:
-  - text: "Hey! How are you?"
-
-  utter_cheer_up:
-  - text: "Here is something to cheer you up:"
-    image: "https://i.imgur.com/nGF1K8f.jpg"
-
-  utter_did_that_help:
-  - text: "Did that help you?"
-
-  utter_happy:
-  - text: "Great, carry on!"
-
+  - text: "안녕하세요! 주식 투자 도우미입니다. 무엇을 도와드릴까요?"
+  
   utter_goodbye:
-  - text: "Bye"
-
+  - text: "안녕히 가세요! 좋은 투자 되세요."
+  
   utter_iamabot:
-  - text: "I am a bot, powered by Rasa."
+  - text: "저는 주식 투자를 도와드리는 AI 챗봇입니다."
+  
+  utter_happy:
+  - text: "좋아요! 더 도와드릴까요?"
+  
+  utter_cheer_up:
+  - text: "힘내세요! 주식 시장은 항상 기회가 있습니다."
+  
+  utter_did_that_help:
+  - text: "도움이 되셨나요?"
+  
+  utter_stock_info:
+  - text: "{stock_name}에 대한 정보를 알려드리겠습니다."
+  
+  utter_stock_price:
+  - text: "{stock_name}의 현재 가격은 {price}원입니다."
+  
+  utter_stock_chart:
+  - text: "{stock_name}의 차트를 보여드리겠습니다."
+  
+  utter_stock_news:
+  - text: "{stock_name}의 최신 뉴스를 알려드리겠습니다."
+  
+  utter_stock_analysis:
+  - text: "{stock_name}의 분석 결과를 알려드리겠습니다."
+  
+  utter_stock_recommendation:
+  - text: "현재 시장 상황을 고려한 추천 종목을 알려드리겠습니다."
+
+actions:
+  - action_stock_qna
 
 session_config:
   session_expiration_time: 60

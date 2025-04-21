@@ -28,3 +28,43 @@ stories:
   - action: utter_did_that_help
   - intent: deny
   - action: utter_goodbye
+
+- story: say goodbye
+  steps:
+  - intent: goodbye
+  - action: utter_goodbye
+
+- story: bot challenge
+  steps:
+  - intent: bot_challenge
+  - action: utter_iamabot
+
+- story: stock info
+  steps:
+  - intent: stock_info
+  - action: utter_stock_info
+
+- story: stock price
+  steps:
+  - intent: stock_price
+  - action: utter_stock_price
+
+- story: stock chart
+  steps:
+  - intent: stock_chart
+  - action: utter_stock_chart
+
+- story: stock news
+  steps:
+  - intent: stock_news
+  - action: utter_stock_news
+
+- story: stock analysis
+  steps:
+  - intent: stock_analysis
+  - action: utter_stock_analysis
+
+- story: stock recommendation
+  steps:
+  - intent: stock_recommendation
+  - action: utter_stock_recommendation

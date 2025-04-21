@@ -3,81 +3,130 @@ version: "3.1"
 nlu:
 - intent: greet
   examples: |
-    - 안녕
+    - 안녕하세요
+    - 반갑습니다
     - 하이
-    - 안녕하세요요
-    - 반가워
-    - 반갑습니다다
+    - 안녕
+    - 안녕하세요!
+    - 반가워요
+    - 안녕하세요~
 
 - intent: goodbye
   examples: |
-
-    - 고마워
-    - 수고했어
+    - 안녕히 가세요
+    - 잘 가요
+    - 다음에 봐요
+    - 그럼 이만
+    - 바이
+    - 수고하세요
+    - 다음에 또 봐요
 
 - intent: affirm
   examples: |
-    - 맞아
-    - 예
     - 네
-    - 알았어
-    - 오케이
-    - 알겠어요
-    - 알았어요요
-    - 응
-    - 확인
-    - 확인했어
-    - 알겠어
-    - 넵넵
-    - 확인했어요요
+    - 예
+    - 맞아요
+    - 그렇습니다
+    - 좋아요
+    - 좋습니다
+    - 네 알겠습니다
+
 - intent: deny
   examples: |
+    - 아니요
     - 아니
-    - 아니야
     - 아닙니다
-    - 아니예요
-    - 그렇지 않아요요
-
-
+    - 아니에요
+    - 싫어요
+    - 필요없어요
+    - 괜찮아요
 
 - intent: mood_great
   examples: |
-    - perfect
-    - great
-    - amazing
-    - feeling like a king
-    - wonderful
-    - I am feeling very good
-    - I am great
-    - I am amazing
-    - I am going to save the world
-    - super stoked
-    - extremely good
-    - so so perfect
-    - so good
-    - so perfect
+    - 좋아요
+    - 기분이 좋아요
+    - 행복해요
+    - 기분이 최고에요
+    - 오늘은 기분이 좋네요
+    - 기분이 좋습니다
+    - 기분이 좋아요~
 
 - intent: mood_unhappy
   examples: |
-    - my day was horrible
-    - I am sad
-    - I don't feel very well
-    - I am disappointed
-    - super sad
-    - I'm so sad
-    - sad
-    - very sad
-    - unhappy
-    - not good
-    - not very good
-    - extremly sad
-    - so saad
-    - so sad
+    - 기분이 안좋아요
+    - 슬퍼요
+    - 우울해요
+    - 기분이 최악이에요
+    - 오늘은 기분이 안좋네요
+    - 기분이 안좋습니다
+    - 기분이 안좋아요~
 
 - intent: bot_challenge
   examples: |
-    - 너 봇이야?
-    - 너 사람이야?
-    - 내가 너랑 대화하고 있어?
-    - 내가 봇이랑 대화하고 있어?
-    - 내가 사람이랑 대화하고 있어?
+    - 너는 봇이야?
+    - 너는 누구야?
+    - 너는 인공지능이야?
+    - 너는 로봇이야?
+    - 너는 챗봇이야?
+    - 너는 AI야?
+    - 너는 뭐야?
+
+- intent: stock_info
+  examples: |
+    - [삼성전자](stock_name) 정보 알려줘
+    - [SK하이닉스](stock_name)에 대해 알려줘
+    - [카카오](stock_name) 회사 정보
+    - [NAVER](stock_name) 회사 소개
+    - [현대자동차](stock_name) 회사 정보
+    - [LG화학](stock_name)에 대해 알려줘
+    - [삼성바이오로직스](stock_name) 정보
+
+- intent: stock_price
+  examples: |
+    - [삼성전자](stock_name) 현재 주가
+    - [SK하이닉스](stock_name) 현재 가격
+    - [카카오](stock_name) 주가 얼마야?
+    - [NAVER](stock_name) 현재 주가
+    - [현대자동차](stock_name) 주가
+    - [LG화학](stock_name) 현재 가격
+    - [삼성바이오로직스](stock_name) 주가
+
+- intent: stock_chart
+  examples: |
+    - [삼성전자](stock_name) 차트 보여줘
+    - [SK하이닉스](stock_name) 차트
+    - [카카오](stock_name) 주가 차트
+    - [NAVER](stock_name) 차트 보여줘
+    - [현대자동차](stock_name) 주가 차트
+    - [LG화학](stock_name) 차트
+    - [삼성바이오로직스](stock_name) 주가 차트
+
+- intent: stock_news
+  examples: |
+    - [삼성전자](stock_name) 뉴스
+    - [SK하이닉스](stock_name) 최신 뉴스
+    - [카카오](stock_name) 관련 뉴스
+    - [NAVER](stock_name) 뉴스 보여줘
+    - [현대자동차](stock_name) 최신 뉴스
+    - [LG화학](stock_name) 뉴스
+    - [삼성바이오로직스](stock_name) 관련 뉴스
+
+- intent: stock_analysis
+  examples: |
+    - [삼성전자](stock_name) 분석
+    - [SK하이닉스](stock_name) 기술적 분석
+    - [카카오](stock_name) 분석 결과
+    - [NAVER](stock_name) 분석 보여줘
+    - [현대자동차](stock_name) 기술적 분석
+    - [LG화학](stock_name) 분석
+    - [삼성바이오로직스](stock_name) 분석 결과
+
+- intent: stock_recommendation
+  examples: |
+    - 추천 종목
+    - 오늘 추천 주식
+    - 추천해줘
+    - 어떤 주식이 좋을까?
+    - 투자 추천
+    - 추천해주세요
+    - 어떤 종목이 좋을까요?
