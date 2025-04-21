@@ -533,6 +533,8 @@ class StockChart {
     }
 }
 
+
+
 // 차트 초기화
 document.addEventListener('DOMContentLoaded', () => {
     new StockChart();

@@ -60,6 +60,8 @@ nav p {
   flex-direction: column;
   height: 100%;
   justify-content: space-between;
+  overflow-y: auto;
+  max-height: 300px;
 }
 
 .history p {
@@ -285,4 +287,103 @@ input:focus {
     margin-top: 4px;
     border-top: 1px solid #eee;
     padding-top: 4px;
+}
+
+/* 채팅 메시지 스타일 */
+.chat-message {
+    padding: 8px 12px;
+    margin: 8px;
+    border-radius: 8px;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+.user-message {
+    background-color: #007bff;
+    color: white;
+    margin-left: auto;
+}
+
+.bot-message {
+    background-color: #f1f1f1;
+    color: black;
+    margin-right: auto;
+}
+
+/* 채팅 섹션 스타일 */
+.chat-section {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    padding: 0 20px;
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+.chat-history {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    padding: 15px;
+    height: 200px;
+    overflow-y: auto;
+}
+
+.chat-message {
+    padding: 8px 12px;
+    margin: 8px 0;
+    border-radius: 8px;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+.user-message {
+    background-color: #007bff;
+    color: white;
+    margin-left: auto;
+}
+
+.bot-message {
+    background-color: #f1f1f1;
+    color: black;
+    margin-right: auto;
+}
+
+.bottom-section {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.input-container {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.input-container input {
+    width: 100%;
+    padding: 12px 40px 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: #ffffff;
+}
+
+.input-container #submit {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #007bff;
+}
+
+.info {
+    text-align: center;
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 12px;
+    margin-top: 10px;
 }
