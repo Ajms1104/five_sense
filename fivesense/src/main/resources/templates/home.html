@@ -42,55 +42,75 @@
     </section>
 
     <section class="main">
-      <div class="chart">
-         <div class="chart-header">
-            <p class="chart-title">주식 차트</p>
-            <div class="chart-controls">
-                <div class="chart-type-btn" data-type="minute">분</div>
-                <select id="minuteSelector" class="stock-select" style="display: none;">
-                    <option value="1">1분</option>
-                    <option value="3">3분</option>
-                    <option value="5">5분</option>
-                    <option value="10">10분</option>
-                    <option value="15">15분</option>
-                    <option value="30">30분</option>
-                    <option value="45">45분</option>
-                    <option value="60">60분</option>
-                </select>
-                <div class="chart-type-btn active" data-type="daily">일</div>
-                <div class="chart-type-btn" data-type="weekly">주</div>
-                <div class="chart-type-btn" data-type="monthly">월</div>
-                <div class="chart-type-btn" data-type="yearly">년</div>
-                <select id="stockSelector" class="stock-select">
-                    <option value="005930">삼성전자</option>
-                    <option value="000660">SK하이닉스</option>
-                    <option value="035720">카카오</option>
-                    <option value="323410">카카오뱅크</option>
-                    <option value="207940">삼성바이오로직스</option>
-                    <option value="035420">NAVER</option>
-                    <option value="051910">LG화학</option>
-                    <option value="005380">현대자동차</option>
-                </select>
-            </div>
-         </div>
-         <div class="chart-wrapper">
-            <div class="chart-container">
-               <!-- 차트 컨테이너는 이제 stockChart.js에서 동적으로 생성됩니다 -->
-            </div>
-         </div>
-      </div>
-      <div class="chat-section">
-        <div class="chat-history"></div>
-        <div class="bottom-section">
-            <div class="input-container">
-                <input placeholder="AI 입력칸" />
-                <div id="submit"> ➢ </div>
-            </div>
+      <div class="main-left">
+        <div class="top-volume-section">
+          <h3>당일 거래량 상위 종목</h3>
+          <table id="topVolumeTable" class="top-volume-table">
+            <thead>
+              <tr>
+                <th>순위</th>
+                <th>종목명</th>
+                <th>현재가</th>
+                <th>등락률</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- JS로 동적 생성 -->
+            </tbody>
+          </table>
         </div>
-        <p class="info">
-            주식 투자시 원금 손실에 대한 책임은 투자자 본인에게 있으며 
-            FIVE-SENSE는 책임지지 않습니다.
-        </p>
+        <div class="chart" style="display: none;">
+           <div class="chart-header">
+              <p class="chart-title">주식 차트</p>
+              <div class="chart-controls">
+                  <div class="chart-type-btn" data-type="minute">분</div>
+                  <select id="minuteSelector" class="stock-select" style="display: none;">
+                      <option value="1">1분</option>
+                      <option value="3">3분</option>
+                      <option value="5">5분</option>
+                      <option value="10">10분</option>
+                      <option value="15">15분</option>
+                      <option value="30">30분</option>
+                      <option value="45">45분</option>
+                      <option value="60">60분</option>
+                  </select>
+                  <div class="chart-type-btn active" data-type="daily">일</div>
+                  <div class="chart-type-btn" data-type="weekly">주</div>
+                  <div class="chart-type-btn" data-type="monthly">월</div>
+                  <div class="chart-type-btn" data-type="yearly">년</div>
+                  <select id="stockSelector" class="stock-select">
+                      <option value="005930">삼성전자</option>
+                      <option value="000660">SK하이닉스</option>
+                      <option value="035720">카카오</option>
+                      <option value="323410">카카오뱅크</option>
+                      <option value="207940">삼성바이오로직스</option>
+                      <option value="035420">NAVER</option>
+                      <option value="051910">LG화학</option>
+                      <option value="005380">현대자동차</option>
+                  </select>
+              </div>
+           </div>
+           <div class="chart-wrapper">
+              <div class="chart-container">
+                 <!-- 차트 컨테이너는 이제 stockChart.js에서 동적으로 생성됩니다 -->
+              </div>
+           </div>
+        </div>
+      </div>
+      <div class="main-right">
+        <div class="chat-section">
+          <div class="chat-history"></div>
+          <div class="bottom-section">
+              <div class="input-container">
+                  <input placeholder="AI 입력칸" />
+                  <div id="submit"> ➢ </div>
+              </div>
+          </div>
+          <p class="info">
+              주식 투자시 원금 손실에 대한 책임은 투자자 본인에게 있으며 
+              FIVE-SENSE는 책임지지 않습니다.
+          </p>
+        </div>
       </div>
     </section>
 

@@ -71,12 +71,31 @@ nav p {
 /*ai 입력칸*/
 .main {
   display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: 600px;
+  gap: 30px;
+}
+
+.main-left {
+  flex: 1 1 0;
+  min-width: 400px;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.main-right {
+  flex: 1 1 0;
+  min-width: 350px;
+  max-width: 500px;
+  display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: center;
-  justify-content: space-between;
-  width: 100%;
-  overflow-y: auto; 
 }
 
 .bottom-section {
@@ -386,4 +405,116 @@ input:focus {
     color: rgba(0, 0, 0, 0.5);
     font-size: 12px;
     margin-top: 10px;
+}
+
+/* 당일 거래량 상위 종목 섹션 */
+.top-volume-section {
+    background-color: white;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.top-volume-section h3 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.top-volume-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.top-volume-item {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #e9ecef;
+}
+
+.top-volume-item .stock-name {
+    font-weight: bold;
+    color: #333;
+}
+
+.top-volume-item .stock-code {
+    color: #666;
+    font-size: 12px;
+}
+
+.top-volume-item .volume {
+    color: #007bff;
+    font-weight: bold;
+}
+
+.top-volume-item .price-change {
+    font-size: 12px;
+}
+
+.top-volume-item .price-change.up {
+    color: #dc3545;
+}
+
+.top-volume-item .price-change.down {
+    color: #28a745;
+}
+
+.top-volume-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 15px;
+}
+.top-volume-table th, .top-volume-table td {
+    border: 1px solid #e9ecef;
+    padding: 8px 6px;
+    text-align: center;
+}
+.top-volume-table th {
+    background: #f5f5f5;
+    color: #333;
+    font-weight: bold;
+}
+.top-volume-table tr:hover {
+    background: #f0f8ff;
+    cursor: pointer;
+}
+.top-volume-table .up {
+    color: #dc3545;
+    font-weight: bold;
+}
+.top-volume-table .down {
+    color: #007bff;
+    font-weight: bold;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0 0 0;
+  gap: 8px;
+}
+.pagination button {
+  background: #fff;
+  border: 1px solid #ddd;
+  color: #333;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.pagination button.active {
+  background: #007bff;
+  color: #fff;
+  border-color: #007bff;
+}
+.pagination button:disabled {
+  color: #aaa;
+  border-color: #eee;
+  background: #f5f5f5;
+  cursor: default;
 }

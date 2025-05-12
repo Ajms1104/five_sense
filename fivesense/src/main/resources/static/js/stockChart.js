@@ -533,9 +533,98 @@ class StockChart {
     }
 }
 
+let topVolumeData = [];
+let currentPage = 1;
+const pageSize = 10;
 
+async function loadTopVolumeStocks() {
+    try {
+        const response = await fetch('/api/stock/top-volume');
+        const data = await response.json();
+        topVolumeData = data.tdy_trde_qty_upper || [];
+        currentPage = 1;
+        renderTopVolumeTable();
+        renderPagination();
+    } catch (error) {
+        console.error('거래량 상위 종목 조회 실패:', error);
+    }
+}
 
-// 차트 초기화
+function renderTopVolumeTable() {
+    const tableBody = document.querySelector('#topVolumeTable tbody');
+    tableBody.innerHTML = '';
+    const startIdx = (currentPage - 1) * pageSize;
+    const pageData = topVolumeData.slice(startIdx, startIdx + pageSize);
+
+    pageData.forEach((stock, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${startIdx + idx + 1}</td>
+            <td>${stock.stk_nm}</td>
+            <td>${Number(stock.cur_prc).toLocaleString()}</td>
+            <td class="${parseFloat(stock.flu_rt) >= 0 ? 'up' : 'down'}">
+                ${parseFloat(stock.flu_rt) >= 0 ? '+' : ''}${stock.flu_rt}%
+            </td>
+        `;
+        tr.addEventListener('click', () => {
+            document.querySelector('.chart').style.display = 'block';
+            document.getElementById('stockSelector').value = stock.stk_cd;
+            if (window.stockChart) {
+                window.stockChart.stockCode = stock.stk_cd;
+                window.stockChart.fetchChartData();
+            }
+        });
+        tableBody.appendChild(tr);
+    });
+}
+
+function renderPagination() {
+    const pagination = document.getElementById('topVolumePagination');
+    pagination.innerHTML = '';
+    const totalPages = Math.ceil(topVolumeData.length / pageSize);
+
+    const prevBtn = document.createElement('button');
+    prevBtn.textContent = '이전';
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.onclick = () => {
+        if (currentPage > 1) {
+            currentPage--;
+            renderTopVolumeTable();
+            renderPagination();
+        }
+    };
+    pagination.appendChild(prevBtn);
+
+    for (let i = 1; i <= totalPages; i++) {
+        const pageBtn = document.createElement('button');
+        pageBtn.textContent = i;
+        if (i === currentPage) pageBtn.classList.add('active');
+        pageBtn.onclick = () => {
+            currentPage = i;
+            renderTopVolumeTable();
+            renderPagination();
+        };
+        pagination.appendChild(pageBtn);
+    }
+
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = '다음';
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.onclick = () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            renderTopVolumeTable();
+            renderPagination();
+        }
+    };
+    pagination.appendChild(nextBtn);
+}
+
+// 페이지 로드 시 거래량 상위 종목 로드
 document.addEventListener('DOMContentLoaded', () => {
-    new StockChart();
+    loadTopVolumeStocks();
+    // 1분마다 거래량 상위 종목 갱신
+    setInterval(loadTopVolumeStocks, 60000);
+    // 차트 인스턴스 생성
+    window.stockChart = new StockChart();
 }); 

@@ -219,5 +219,43 @@ public class KiwoomApiService {
         return new HashMap<>();
     }
 
+    // 당일 거래량 상위 종목 조회
+    public Map<String, Object> getDailyTopVolumeStocks() {
+        try {
+            // 요청 데이터 JSON 문자열 생성
+            Map<String, String> requestData = new HashMap<>();
+            requestData.put("mrkt_tp", "000");      // 시장구분 (000: 전체)
+            requestData.put("sort_tp", "1");        // 정렬구분 (1: 거래량)
+            requestData.put("mang_stk_incls", "0"); // 관리종목 포함여부
+            requestData.put("crd_tp", "0");         // 신용구분
+            requestData.put("trde_qty_tp", "0");    // 거래량구분
+            requestData.put("pric_tp", "0");        // 가격구분
+            requestData.put("trde_prica_tp", "0");  // 거래대금구분
+            requestData.put("mrkt_open_tp", "0");   // 시장구분
+            requestData.put("stex_tp", "3");        // 증권구분
+
+            // API 호출
+            Map<String, Object> response = webClient.post()
+                    .uri("/api/dostk/rkinfo")
+                    .header("authorization", "Bearer " + accessToken)
+                    .header("cont-yn", "N")
+                    .header("next-key", "")
+                    .header("api-id", "ka10030")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(requestData)
+                    .retrieve()
+                    .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
+                    .block();
+    
+            if (response != null) {
+                System.out.println("Top volume stocks response: " + response);
+                return response;
+            }
+        } catch (Exception e) {
+            System.err.println("Error fetching top volume stocks: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return new HashMap<>();
+    }
 
 } 

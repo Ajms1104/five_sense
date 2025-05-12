@@ -39,4 +39,9 @@ public class StockController {
         return kiwoomApiService.getDailyStockChart(stockCode, baseDate, apiId);
     }
 
+    @GetMapping("/top-volume")
+    public Map<String, Object> getTopVolumeStocks() {
+        return kiwoomApiService.getDailyTopVolumeStocks();
+    }
+
 } 
