@@ -55,7 +55,7 @@ class StockChart {
     createChart() {
         console.log('Creating chart...');
 
-        // 토스증권 스타일로 두 개의 차트 영역 생성
+   
         this.chartContainer.innerHTML = `
             <div class="chart-separator">
                 <div id="priceChartContainer" style="width: 100%; height: 65%; position: relative;">

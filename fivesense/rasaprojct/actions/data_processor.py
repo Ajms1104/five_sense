@@ -42,19 +42,56 @@ class StockOptionsDataProcessor:
             translated = self.translator.translate(text, dest='ko').text
             return translated
         except Exception as e:
-            self.logger.error(f"번역 실패: {e}")
-            return text
+            self.logger.warning(f"번역 실패, 원문 사용: {e}")
+            return text  # 실패하면 원문 사용
 
     def generate_embedding(self, text):
         """텍스트에 대한 임베딩 생성"""
         try:
-            inputs = self.tokenizer(text, return_tensors='pt', truncation=True, max_length=512)
+            if not text or len(text.strip()) == 0:
+                self.logger.warning("빈 텍스트로 임베딩을 생성할 수 없습니다.")
+                return None
+                
+            # 텍스트가 너무 짧은 경우 처리
+            if len(text.strip()) < 3:
+                self.logger.warning("텍스트가 너무 짧습니다.")
+                return None
+                
+            # 디버깅을 위한 로그 추가
+            self.logger.info(f"처리 중인 텍스트 길이: {len(text)}")
+            
+            # 토크나이저 설정 변경
+            inputs = self.tokenizer(
+                text,
+                return_tensors='pt',
+                truncation=True,
+                max_length=128,
+                padding='max_length',  # 고정 길이 패딩 사용
+                add_special_tokens=True
+            )
+            
+            # 입력 텐서 크기 확인
+            self.logger.info(f"입력 텐서 크기: {inputs['input_ids'].size()}")
+            
+            # attention_mask 생성
+            attention_mask = inputs['attention_mask']
+            
             with torch.no_grad():
-                outputs = self.model(**inputs)
-            embedding = outputs.last_hidden_state.mean(dim=1)
-            return embedding.detach().numpy()
+                outputs = self.model(
+                    input_ids=inputs['input_ids'],
+                    attention_mask=attention_mask
+                )
+                
+            # [CLS] 토큰의 임베딩을 사용
+            cls_embedding = outputs.last_hidden_state[:, 0, :]
+            
+            # 임베딩 크기 확인
+            self.logger.info(f"생성된 임베딩 크기: {cls_embedding.size()}")
+            
+            return cls_embedding.detach().numpy()
+            
         except Exception as e:
-            self.logger.error(f"임베딩 생성 실패: {e}")
+            self.logger.error(f"임베딩 생성 실패: {e}, 텍스트: {text[:50]}...")
             return None
 
     def setup_database(self):
@@ -66,13 +103,16 @@ class StockOptionsDataProcessor:
             # pgvector 확장 활성화
             cur.execute("CREATE EXTENSION IF NOT EXISTS vector")
             
+            # 기존 테이블이 있다면 삭제
+            cur.execute("DROP TABLE IF EXISTS stock_qa")
+            
             # 테이블 생성
             cur.execute("""
-                CREATE TABLE IF NOT EXISTS stock_qa (
+                CREATE TABLE stock_qa (
                     id SERIAL PRIMARY KEY,
-                    question TEXT,
-                    answer TEXT,
-                    embedding vector(768)
+                    question TEXT NOT NULL,
+                    answer TEXT NOT NULL,
+                    embedding vector(768) NOT NULL
                 )
             """)
             
@@ -99,30 +139,41 @@ class StockOptionsDataProcessor:
         try:
             conn = psycopg2.connect(**self.db_params)
             cur = conn.cursor()
+            
+            # 첫 번째 레코드 확인
+            if len(self.dataset['train']) > 0:
+                self.logger.info(f"첫 번째 레코드: {self.dataset['train'][0]}")
+            
             for record in self.dataset['train']:
-                conversations=json.loads(record['conversation'])
-                question=""
-                answer=""
-                for item in conversations:
-                    # 질문과 답변 번역
-                    if item['from'] == 'human':
-                        translated_question = self.translate_to_korean(item['value'])
-                    elif item['from'] == 'gpt':
-                        translated_answer=self.translate_tokorean(item['value'])
-                    
-                if question == "" or answer =="":
+                try:
+                    conversations = json.loads(record['conversations'])
+                except json.JSONDecodeError as e:
+                    self.logger.error(f"JSON 파싱 실패: {e}")
                     continue
-                    # 임베딩 생성
                     
-                embedding = self.generate_embedding(translated_question)
+                question = ""
+                answer = ""
+                
+                for item in conversations:
+                    if item['from'] == 'human':
+                        question = self.translate_to_korean(item['value'])
+                    elif item['from'] == 'gpt':
+                        answer = self.translate_to_korean(item['value'])
+                
+                if not question.strip() or not answer.strip():
+                    self.logger.warning("빈 질문/답변이 감지되어 건너뜀")
+                    continue
+                
+                # 임베딩 생성
+                embedding = self.generate_embedding(question)
                 if embedding is None:
                     continue
-                    
-                    # 데이터베이스에 저장
+                
+                # 데이터베이스에 저장
                 cur.execute(
-                        "INSERT INTO stock_qa (question, answer, embedding) VALUES (%s, %s, %s)",
-                        (translated_question, translated_answer, embedding.tolist())
-                    )
+                    "INSERT INTO stock_qa (question, answer, embedding) VALUES (%s, %s, %s)",
+                    (question, answer, embedding.flatten().tolist())
+                )
             
             conn.commit()
             self.logger.info("데이터 처리 및 저장 완료")
