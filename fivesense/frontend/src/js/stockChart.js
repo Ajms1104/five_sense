@@ -3,9 +3,9 @@ import { createChart, CrosshairMode } from 'lightweight-charts';
 class StockChart {
     constructor() {
         this.chartContainer = document.getElementById('chartContainer');
-        this.stockCode = '005930'; // 기본값, 필요시 동적으로 설정
-        this.chartType = 'daily';   // 기본값, 필요시 동적으로 설정
-        this.minuteType = '1';      // 분봉 타입, 필요시 동적으로 설정
+        this.stockCode = '005930'; // 기본값
+        this.chartType = 'daily';   // 기본값
+        this.minuteType = '1';      // 분봉 타입
         this.stockInfo = '';
         this.dataMap = new Map();
         this.latestData = null;
@@ -17,7 +17,6 @@ class StockChart {
     }
 
     createChart() {
-        // 차트 영역 HTML 세팅
         this.chartContainer.innerHTML = `
             <div class="chart-separator">
                 <div id="priceChartContainer" style="width: 100%; height: 65%; position: relative;">
@@ -30,12 +29,10 @@ class StockChart {
             </div>
         `;
 
-        // 크기 계산
         const containerWidth = this.chartContainer.clientWidth;
         const priceChartHeight = Math.floor(this.chartContainer.clientHeight * 0.65);
         const volumeChartHeight = Math.floor(this.chartContainer.clientHeight * 0.35) - 2;
 
-        // 공통 옵션
         const commonOptions = {
             width: containerWidth,
             layout: {
@@ -77,7 +74,6 @@ class StockChart {
             handleScale: true
         };
 
-        // 가격 차트
         this.priceChart = createChart(document.getElementById('priceChartContainer'), {
             ...commonOptions,
             height: priceChartHeight,
@@ -90,7 +86,6 @@ class StockChart {
             }
         });
 
-        // 거래량 차트
         this.volumeChart = createChart(document.getElementById('volumeChartContainer'), {
             ...commonOptions,
             height: volumeChartHeight,
@@ -103,7 +98,6 @@ class StockChart {
             }
         });
 
-        // 시리즈 추가
         this.candlestickSeries = this.priceChart.addCandlestickSeries({
             upColor: '#ff3333',
             downColor: '#5050ff',
@@ -120,11 +114,8 @@ class StockChart {
             scaleMargins: { top: 0.1, bottom: 0.1 }
         });
 
-        // 차트 동기화 & 크로스헤어 동기화
         this.syncCharts();
         this.setupCrosshairSync();
-
-        // 리사이즈 이벤트
         window.addEventListener('resize', this.handleResize.bind(this));
     }
 
@@ -158,7 +149,7 @@ class StockChart {
     }
 
     setupEventListeners() {
-        // 예시: 종목/차트 타입/분봉 선택 등
+        // 종목 선택
         const stockSelect = document.getElementById('stockSelector');
         if (stockSelect) {
             stockSelect.value = this.stockCode;
@@ -170,6 +161,7 @@ class StockChart {
             });
         }
 
+        // 분봉 선택
         const minuteSelect = document.getElementById('minuteSelector');
         if (minuteSelect) {
             minuteSelect.addEventListener('change', (e) => {
@@ -178,6 +170,7 @@ class StockChart {
             });
         }
 
+        // 차트 타입 버튼
         const chartTypeBtns = document.querySelectorAll('.chart-type-btn');
         chartTypeBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -287,6 +280,7 @@ class StockChart {
                         color: close >= open ? '#ff3333' : '#5050ff'
                     }));
 
+                    // 여기서 setData로 차트 갱신!
                     this.candlestickSeries.setData(candlestickData);
                     this.volumeSeries.setData(volumeData);
                     this.updateChartOptionsForType();
@@ -398,7 +392,6 @@ class StockChart {
     }
 }
 
-// 차트 초기화
 document.addEventListener('DOMContentLoaded', () => {
     new StockChart();
 });

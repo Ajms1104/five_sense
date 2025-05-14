@@ -19,36 +19,6 @@ const Home = ({ user = userMock }) => {
 
   return (
     <div style={{ width: '100%', height: '100vh', display: 'flex' }}>
-      {/* 프로필/상단 바 */}
-      <div className="profile-container">
-        <div className="user-info">
-          {user
-            ? `${user.accountid}님 환영합니다`
-            : '게스트님 환영합니다'}
-        </div>
-        <div
-          className="profile-btn"
-          id="profileBtn"
-          onClick={handleProfileBtnClick}
-        >
-          <span role="img" aria-label="profile">👤</span>
-        </div>
-        {profileMenuOpen && (
-          <div className="dropdown-menu" id="profileMenu">
-            {user ? (
-              <>
-                <a href="/logout">로그아웃</a>
-                <a href="/mypage">내 정보</a>
-              </>
-            ) : (
-              <>
-                <a href="/login">로그인</a>
-                <a href="/register">회원가입</a>
-              </>
-            )}
-          </div>
-        )}
-      </div>
 
       {/* 왼쪽 사이드바 */}
       <section className="sidebar">
