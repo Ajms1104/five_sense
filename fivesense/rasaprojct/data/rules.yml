@@ -1,0 +1,6 @@
+version: "3.1"
+
+rules:
+- rule: 모든 대화를 BitNet 모델로 처리
+  steps:
+  - action: action_stock_qna

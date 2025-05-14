@@ -1,0 +1,7 @@
+datasets==2.14.5
+googletrans==3.1.0a0
+transformers==4.31.0
+torch==2.0.1
+psycopg2-binary==2.9.7
+numpy==1.24.3
+pgvector==0.1.8 
