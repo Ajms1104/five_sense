@@ -1,30 +1,44 @@
 version: "3.1"
 
 stories:
+- story: 주식 정보 질문
+  steps:
+  - intent: stock_info
+  - action: action_stock_qna
 
-- story: happy path
+- story: 주식 가격 질문
+  steps:
+  - intent: stock_price
+  - action: action_stock_qna
+
+- story: 주식 차트 질문
+  steps:
+  - intent: stock_chart
+  - action: action_stock_qna
+
+- story: 주식 뉴스 질문
+  steps:
+  - intent: stock_news
+  - action: action_stock_qna
+
+- story: 주식 분석 질문
+  steps:
+  - intent: stock_analysis
+  - action: action_stock_qna
+
+- story: 주식 추천 질문
+  steps:
+  - intent: stock_recommendation
+  - action: action_stock_qna
+
+- story: 인사
   steps:
   - intent: greet
-  - action: utter_greet
-  - intent: mood_great
-  - action: utter_happy
+  - action: action_stock_qna
 
-- story: sad path 1
+- story: 작별
   steps:
-  - intent: greet
-  - action: utter_greet
-  - intent: mood_unhappy
-  - action: utter_cheer_up
-  - action: utter_did_that_help
-  - intent: affirm
-  - action: utter_happy
+  - intent: goodbye
+  - action: action_stock_qna
 
-- story: sad path 2
-  steps:
-  - intent: greet
-  - action: utter_greet
-  - intent: mood_unhappy
-  - action: utter_cheer_up
-  - action: utter_did_that_help
-  - intent: deny
-  - action: utter_goodbye
+

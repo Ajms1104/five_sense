@@ -58,6 +58,8 @@ public class KiwoomApiService {
         this.webClient = WebClient.builder()
                 .baseUrl("https://api.kiwoom.com")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .defaultHeader("appkey", "IFZoKZtS4RIhUP7qd4DSzgiFJ5_zbzJvgVoRCbb7KtM")//apikey 값 가져오기(현재  application.properties에 있는 값을 못가져와서 뒷부분에 값을 하드코딩해야함함)
+                .defaultHeader("appsecret", "4lD4p6k5ehfmfx3hB6OIaYoQFiqA8DrM3nVG8ybNryg")//apiSecret 값 가져오기
                 .build();
         
         // 토큰 발급
@@ -72,6 +74,8 @@ public class KiwoomApiService {
             // 1. 요청 데이터 JSON 문자열 생성
             Map<String, String> tokenRequest = new HashMap<>();
             tokenRequest.put("grant_type", "client_credentials");
+            tokenRequest.put("appkey", "IFZoKZtS4RIhUP7qd4DSzgiFJ5_zbzJvgVoRCbb7KtM");//apikey 값 가져오기(현재  application.properties에 있는 값을 못가져와서 뒷부분에 값을 하드코딩해야함함)
+            tokenRequest.put("secretkey", "4lD4p6k5ehfmfx3hB6OIaYoQFiqA8DrM3nVG8ybNryg");
 
             // 2. API 호출
             Map<String, Object> response = webClient.post()
@@ -169,7 +173,7 @@ public class KiwoomApiService {
     }
     
 
-    // 주식 일봉 차트 조회
+    // 주식 차트 조회
     public Map<String, Object> getDailyStockChart(String stockCode, String baseDate, String apiId) {
         return getDailyStockChart(stockCode, baseDate, apiId, null);
     }
@@ -181,7 +185,7 @@ public class KiwoomApiService {
             requestData.put("stk_cd", stockCode);
             requestData.put("upd_stkpc_tp", "1");
 
-            // 분봉 차트인 경우
+
             if ("KA10080".equals(apiId)) {
                 requestData.put("tic_scope", ticScope != null ? ticScope : "1");
             } else {
@@ -215,5 +219,43 @@ public class KiwoomApiService {
         return new HashMap<>();
     }
 
+    // 당일 거래량 상위 종목 조회
+    public Map<String, Object> getDailyTopVolumeStocks() {
+        try {
+            // 요청 데이터 JSON 문자열 생성
+            Map<String, String> requestData = new HashMap<>();
+            requestData.put("mrkt_tp", "000");      // 시장구분 (000: 전체)
+            requestData.put("sort_tp", "1");        // 정렬구분 (1: 거래량)
+            requestData.put("mang_stk_incls", "0"); // 관리종목 포함여부
+            requestData.put("crd_tp", "0");         // 신용구분
+            requestData.put("trde_qty_tp", "0");    // 거래량구분
+            requestData.put("pric_tp", "0");        // 가격구분
+            requestData.put("trde_prica_tp", "0");  // 거래대금구분
+            requestData.put("mrkt_open_tp", "0");   // 시장구분
+            requestData.put("stex_tp", "3");        // 증권구분
+
+            // API 호출
+            Map<String, Object> response = webClient.post()
+                    .uri("/api/dostk/rkinfo")
+                    .header("authorization", "Bearer " + accessToken)
+                    .header("cont-yn", "N")
+                    .header("next-key", "")
+                    .header("api-id", "ka10030")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(requestData)
+                    .retrieve()
+                    .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
+                    .block();
+    
+            if (response != null) {
+                System.out.println("Top volume stocks response: " + response);
+                return response;
+            }
+        } catch (Exception e) {
+            System.err.println("Error fetching top volume stocks: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return new HashMap<>();
+    }
 
 } 

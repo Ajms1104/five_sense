@@ -1,6 +1,6 @@
 class StockChart {
-    constructor() {
-        this.stockCode = '005930';
+    constructor(stockCode = '005930') {
+        this.stockCode = stockCode;
         this.chartWrapper = document.querySelector('.chart-wrapper');
         this.chartContainer = document.querySelector('.chart-container');
         this.priceChart = null;        // 가격 차트
@@ -55,7 +55,7 @@ class StockChart {
     createChart() {
         console.log('Creating chart...');
 
-        // 토스증권 스타일로 두 개의 차트 영역 생성
+   
         this.chartContainer.innerHTML = `
             <div class="chart-separator">
                 <div id="priceChartContainer" style="width: 100%; height: 65%; position: relative;">
@@ -268,6 +268,7 @@ class StockChart {
     }
 
     async fetchChartData() {
+        console.log('차트 데이터 요청 시도:', this.stockCode);
         try {
             console.log(`Fetching ${this.chartType} chart data for stock ${this.stockCode}...`);
 
@@ -288,6 +289,15 @@ class StockChart {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(requestData)
             });
+
+            if (!response.ok) {
+                console.error('차트 데이터 fetch 실패:', response.status, response.statusText);
+                this.candlestickSeries.setData([]);
+                this.volumeSeries.setData([]);
+                this.dataMap.clear();
+                this.latestData = null;
+                return;
+            }
 
             const data = await response.json();
             console.log('Received data:', data);
@@ -315,10 +325,8 @@ class StockChart {
                     let timestamp;
                     try {
                         if (this.chartType === 'yearly' && dateStr.length === 4) {
-                            // 년도 데이터 처리 (YYYY)
                             timestamp = new Date(parseInt(dateStr), 0, 1).getTime() / 1000;
                         } else if (this.chartType === 'minute' && dateStr.length === 14) {
-                            // 분 데이터 처리 (YYYYMMDDhhmmss)
                             timestamp = new Date(
                                 parseInt(dateStr.slice(0,4)),
                                 parseInt(dateStr.slice(4,6))-1,
@@ -327,7 +335,6 @@ class StockChart {
                                 parseInt(dateStr.slice(10,12))
                             ).getTime() / 1000;
                         } else if (dateStr.length === 8) {
-                            // 일/주/월 데이터 처리 (YYYYMMDD)
                             timestamp = new Date(
                                 parseInt(dateStr.slice(0,4)),
                                 parseInt(dateStr.slice(4,6))-1,
@@ -347,20 +354,27 @@ class StockChart {
                         continue;
                     }
 
-                    // 가격 데이터 처리
+                    // 가격 데이터 처리 (분봉일 때만 절대값 적용)
                     let close = parseFloat(item.cur_prc || item.clos_prc);
-                    if (isNaN(close)) continue;
-                    
                     let open = parseFloat(item.open_pric || item.open_prc);
                     let high = parseFloat(item.high_pric || item.high_prc);
                     let low = parseFloat(item.low_pric || item.low_prc);
                     let volume = parseFloat(item.trde_qty || item.trd_qty) || 0;
-                    
+
+                    if (this.chartType === 'minute') {
+                        close = Math.abs(close);
+                        open = Math.abs(open);
+                        high = Math.abs(high);
+                        low = Math.abs(low);
+                        volume = Math.abs(volume);
+                    }
+
                     // NaN 값 처리
+                    if (isNaN(close)) continue;
                     if (isNaN(open)) open = close;
                     if (isNaN(high)) high = Math.max(close, open);
                     if (isNaN(low)) low = Math.min(close, open);
-                    
+
                     processedData.push({
                         time: timestamp,
                         open, high, low, close, volume
@@ -413,7 +427,7 @@ class StockChart {
             this.latestData = null;
             
         } catch (error) {
-            console.error('Error fetching chart data:', error);
+            console.error('차트 데이터 fetch 에러:', error);
             this.candlestickSeries.setData([]);
             this.volumeSeries.setData([]);
             this.dataMap.clear();
@@ -533,9 +547,136 @@ class StockChart {
     }
 }
 
+let topVolumeData = [];
+let currentPage = 1;
+const pageSize = 10;
 
+async function loadTopVolumeStocks() {
+    try {
+        const response = await fetch('/api/stock/top-volume');
+        const data = await response.json();
+        topVolumeData = data.tdy_trde_qty_upper || [];
+        currentPage = 1;
+        renderTopVolumeTable();
+        renderPagination();
+    } catch (error) {
+        console.error('거래량 상위 종목 조회 실패:', error);
+    }
+}
 
-// 차트 초기화
+function renderTopVolumeTable() {
+    const tableBody = document.querySelector('#topVolumeTable tbody');
+    tableBody.innerHTML = '';
+    const startIdx = (currentPage - 1) * pageSize;
+    const pageData = topVolumeData.slice(startIdx, startIdx + pageSize);
+
+    pageData.forEach((stock, idx) => {
+        const tr = document.createElement('tr');
+        const currentPrice = Math.abs(Number(stock.cur_prc)).toLocaleString();
+        tr.innerHTML = `
+            <td>${startIdx + idx + 1}</td>
+            <td>${stock.stk_nm}</td>
+            <td>${currentPrice}</td>
+            <td class="${parseFloat(stock.flu_rt) >= 0 ? 'up' : 'down'}">
+                ${stock.flu_rt}%
+            </td>
+        `;
+        tr.addEventListener('click', () => {
+            console.log('종목 클릭:', stock.stk_cd);
+            document.querySelector('.top-volume-section').style.display = 'none';
+            document.querySelector('.chart').style.display = 'block';
+            document.getElementById('stockSelector').value = stock.stk_cd;
+            if (!window.stockChart) {
+                window.stockChart = new StockChart(stock.stk_cd);
+            } else {
+                window.stockChart.stockCode = stock.stk_cd;
+                window.stockChart.fetchChartData();
+            }
+            addBackButton();
+        });
+        tableBody.appendChild(tr);
+    });
+}
+
+function renderPagination() {
+    const pagination = document.getElementById('topVolumePagination');
+    pagination.innerHTML = '';
+    const totalPages = Math.max(1, Math.ceil(topVolumeData.length / pageSize)); // 최소 1페이지
+
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, startPage + 4);
+    if (endPage - startPage < 4) {
+        startPage = Math.max(1, endPage - 4);
+    }
+
+    // 이전 페이지 버튼
+    const prevBtn = document.createElement('button');
+    prevBtn.textContent = '◀';
+    prevBtn.className = 'page-btn';
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.onclick = () => {
+        if (currentPage > 1) {
+            currentPage--;
+            renderTopVolumeTable();
+            renderPagination();
+        }
+    };
+    pagination.appendChild(prevBtn);
+
+    // 페이지 번호 버튼
+    for (let i = startPage; i <= endPage; i++) {
+        const pageBtn = document.createElement('button');
+        pageBtn.textContent = i;
+        pageBtn.className = 'page-btn';
+        if (i === currentPage) pageBtn.classList.add('active');
+        pageBtn.onclick = () => {
+            currentPage = i;
+            renderTopVolumeTable();
+            renderPagination();
+        };
+        pagination.appendChild(pageBtn);
+    }
+
+    // 다음 페이지 버튼
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = '▶';
+    nextBtn.className = 'page-btn';
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.onclick = () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            renderTopVolumeTable();
+            renderPagination();
+        }
+    };
+    pagination.appendChild(nextBtn);
+}
+
+// 페이지 로드 시 거래량 상위 종목만 로드 (차트 인스턴스 생성 X)
 document.addEventListener('DOMContentLoaded', () => {
-    new StockChart();
-}); 
+    loadTopVolumeStocks();
+    // 1분마다 거래량 상위 종목 갱신
+    setInterval(loadTopVolumeStocks, 60000);
+    // window.stockChart = new StockChart(); // 이 부분 삭제 또는 주석처리
+});
+
+// 차트 상단에 뒤로가기 버튼 추가 함수
+function addBackButton() {
+    const chartHeader = document.querySelector('.chart-header');
+    if (!chartHeader) return;
+    if (document.getElementById('backToTableBtn')) return; // 중복 방지
+    const backBtn = document.createElement('button');
+    backBtn.id = 'backToTableBtn';
+    backBtn.textContent = '← 뒤로가기';
+    backBtn.style.marginRight = '10px';
+    backBtn.style.padding = '4px 10px';
+    backBtn.style.border = '1px solid #ddd';
+    backBtn.style.background = '#fff';
+    backBtn.style.borderRadius = '4px';
+    backBtn.style.cursor = 'pointer';
+    backBtn.onclick = () => {
+        document.querySelector('.top-volume-section').style.display = 'block';
+        document.querySelector('.chart').style.display = 'none';
+    };
+    chartHeader.insertBefore(backBtn, chartHeader.firstChild);
+} 

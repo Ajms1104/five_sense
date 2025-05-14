@@ -26,6 +26,7 @@ public class StockController {
             @PathVariable String stockCode,
             @RequestBody Map<String, Object> requestData,
             @RequestParam(required = false, defaultValue = "KA10081") String apiId) {
+        System.out.println("차트 데이터 요청: " + stockCode + ", apiId: " + apiId + ", requestData: " + requestData);
         String baseDate = requestData.containsKey("base_dt") ? (String) requestData.get("base_dt") : null;
         if (baseDate == null) {
             baseDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
@@ -37,6 +38,11 @@ public class StockController {
         }
         
         return kiwoomApiService.getDailyStockChart(stockCode, baseDate, apiId);
+    }
+
+    @GetMapping("/top-volume")
+    public Map<String, Object> getTopVolumeStocks() {
+        return kiwoomApiService.getDailyTopVolumeStocks();
     }
 
 } 
