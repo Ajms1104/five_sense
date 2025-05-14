@@ -1,6 +1,12 @@
 # Five_sense
 -AI를 이용한 주식 매도 매매 시스템
 
+~~~
+TimeLine
+2025.03.26 쯤 DB+로그인+회원가입 연결 소스 업로드
+2025.04.04 오전 7시 12분 - html, css 견본 느낌 업로드
+
+~~~
 
 
 frontend 에서 npm start 가 안 될 경우
