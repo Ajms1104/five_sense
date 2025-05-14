@@ -11,6 +11,23 @@
         document.addEventListener('DOMContentLoaded', () => {
             console.log('LightweightCharts version:', LightweightCharts.version);
         });
+
+        // 아래처럼 종목 클릭 시에만 생성
+        function renderTopVolumeTable() {
+            // ...
+            tr.addEventListener('click', () => {
+                document.querySelector('.top-volume-section').style.display = 'none';
+                document.querySelector('.chart').style.display = 'block';
+                document.getElementById('stockSelector').value = stock.stk_cd;
+                if (!window.stockChart) {
+                    window.stockChart = new StockChart();
+                }
+                window.stockChart.stockCode = stock.stk_cd;
+                window.stockChart.fetchChartData();
+                addBackButton();
+            });
+            // ...
+        }
     </script>
 </head>
 
@@ -58,6 +75,7 @@
               <!-- JS로 동적 생성 -->
             </tbody>
           </table>
+          <div id="topVolumePagination"></div>
         </div>
         <div class="chart" style="display: none;">
            <div class="chart-header">
