@@ -4,7 +4,7 @@ df = pd.read_csv("/content/drive/MyDrive/finance_train.csv")
 
 # 'kor_sentence' 열만 선택하고 필요한 다른 열 유지
 df_korean = df[['labels', 'kor_sentence']]
-df_korean['labels'] = df_korean['labels'].map(label_map)
+# df_korean['labels'] = df_korean['labels'].map(label_map)
 # 데이터셋 확인
 print(df_korean.head())
 
@@ -49,6 +49,12 @@ class SentimentDataset(Dataset):
             'attention_mask': encoding['attention_mask'].flatten(),
             'labels': torch.tensor(label, dtype=torch.long)
         }
+
+# 데이터셋 준비
+dataset = SentimentDataset(df_korean['kor_sentence'].tolist(), df_korean['labels'].tolist(), tokenizer)
+
+# DataLoader 준비
+dataloader = DataLoader(dataset, batch_size=16, shuffle=True)
 
 from torch.optim import AdamW
 from tqdm import tqdm
