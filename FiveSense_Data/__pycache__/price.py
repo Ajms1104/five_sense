@@ -1,3 +1,4 @@
+
 import requests
 import json
 import pandas as pd
@@ -6,6 +7,9 @@ import main
 import time
 from requests.exceptions import RequestException
 from datetime import datetime
+import numpy as np
+
+file = pd.read_excel("/Users/shxung2/Desktop/FiveSense_Data/data_0755_20250524.xlsx")
 
 # DB 연결
 def DBconnect():
@@ -22,7 +26,25 @@ def DBconnect():
                 ALTER TABLE public.price_data
                 ADD CONSTRAINT price_data_pkey PRIMARY KEY (stk_cd, date);
             """)
-            conn.commit()
+
+            # 기존 테이블 삭제
+            cur.execute("DROP TABLE IF EXISTS public.price_data;")
+            print("기존 price_data 테이블 삭제 완료")
+
+            # 새 테이블 생성
+            create_table = """
+            CREATE TABLE public.price_data (
+                stk_cd VARCHAR(20) PRIMARY KEY,
+                date NUMERIC,
+                open_pric NUMERIC,
+                high_pric NUMERIC,
+                low_pric NUMERIC,
+                close_pric NUMERIC,
+                ind_netprps NUMERIC
+            );
+            """
+
+            conn.commit(create_table)
             print("기본 키 설정 완료: (stk_cd, date)")
         except Exception as e:
             print(f"기본 키 설정 중 오류: {str(e)}")
@@ -223,25 +245,30 @@ if __name__ == '__main__':
     # 1. 토큰 설정
     MY_ACCESS_TOKEN = main.fn_au10001()  # 접근 토큰
 
-    # 2. 요청 데이터
-    params = {
-        'stk_cd': '005930',  # 종목 코드 (삼성전자)
-        'qry_dt': None,      # fetch_all_data에서 동적으로 설정
-        'indc_tp': '0',      # 표시 구분 (0: 수량)
-    }
+    stk_list = file['단축코드'].dropna().astype(str).tolist()
 
-    # 3. 모든 데이터 가져오기 (2020년 1월 1일 ~ 현재 날짜)
-    df = fetch_all_data(
-        token=MY_ACCESS_TOKEN,
-        data=params,
-        start_date='20200101',  # 2020년 1월 1일
-        end_date=None,          # 현재 날짜로 동적 설정
-        max_iterations=150       # 충분한 횟수로 설정 (2년치 데이터라면 넉넉히 + 3년치 더 넣음(총 5년치))
-    )
+    for stk_cd in stk_list : 
+        print(f"\n{stk_cd} 데이터 조회 중")
 
-    # 4. 데이터베이스에 삽입
-    if df is not None:
-        print(f"총 {len(df)} rows 데이터를 삽입합니다.")
-        insert_to_db(df, expected_stk_cd=params['stk_cd'], batch_size=1000)
-        
+        # 2. 요청 데이터
+        params = {
+            'stk_cd' : stk_cd,
+            'qry_dt' : None,
+            'indc_tp' : '0',
+        }
 
+        # 3. 모든 데이터 가져오기
+        df = fetch_all_data(
+            token = MY_ACCESS_TOKEN,
+            data = params,
+            start_date='20200101',
+            end_date=None,
+            max_iterations=100
+        )
+
+        # 4. 데이터베이스에 삽입
+        if df is not None:
+            print(f"총 {len(df)} row 데이터를 삽입합니다.")
+            insert_to_db(df, expected_stk_cd=params['stk_cd'], batch_size=1000)
+
+  
