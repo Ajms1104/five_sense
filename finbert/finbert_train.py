@@ -2,6 +2,7 @@ import pandas as pd
 
 df = pd.read_csv("/content/drive/MyDrive/finance_train.csv")
 
+label_map = {'negative': 0, 'neutral': 1, 'positive': 2}
 # 'kor_sentence' 열만 선택하고 필요한 다른 열 유지
 df_korean = df[['labels', 'kor_sentence']]
 # df_korean['labels'] = df_korean['labels'].map(label_map)
