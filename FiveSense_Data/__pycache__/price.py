@@ -1,4 +1,3 @@
-
 import requests
 import json
 import pandas as pd
@@ -8,8 +7,6 @@ import time
 from requests.exceptions import RequestException
 from datetime import datetime
 import numpy as np
-
-file = pd.read_excel("/Users/shxung2/Desktop/FiveSense_Data/data_0755_20250524.xlsx")
 
 # DB 연결
 def DBconnect():
@@ -240,12 +237,38 @@ def insert_to_db(df, expected_stk_cd, batch_size=1000):
     finally:
         DBdisconnect()
 
+# buyTop50_data에서 상위 20개 종목 코드 가져오기
+def get_top20_stk_codes():
+    try:
+        cur, conn = DBconnect()
+        if cur is None or conn is None:
+            raise Exception("DB 연결 실패")
+
+        # 최신 created_at을 기준으로 상위 20개 종목 코드 조회
+        query = """
+        SELECT stk_cd
+        FROM public.buyTop50_data
+        WHERE created_at = (SELECT MAX(created_at) FROM public.buyTop50_data)
+        ORDER BY rank ASC
+        LIMIT 20;
+        """
+        cur.execute(query)
+        stk_codes = [row[0] for row in cur.fetchall()]
+        print(f"상위 20개 종목 코드: {stk_codes}")
+        return stk_codes
+    except Exception as err:
+        print(f"종목 코드 조회 중 오류: {str(err)}")
+        return []
+    finally:
+        DBdisconnect()
+
+
 # 실행 구간
 if __name__ == '__main__':
     # 1. 토큰 설정
     MY_ACCESS_TOKEN = main.fn_au10001()  # 접근 토큰
 
-    stk_list = file['단축코드'].dropna().astype(str).tolist()
+    stk_list = get_top20_stk_codes()
 
     for stk_cd in stk_list : 
         print(f"\n{stk_cd} 데이터 조회 중")
@@ -271,4 +294,4 @@ if __name__ == '__main__':
             print(f"총 {len(df)} row 데이터를 삽입합니다.")
             insert_to_db(df, expected_stk_cd=params['stk_cd'], batch_size=1000)
 
-  
+   
