@@ -7,9 +7,17 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/stock")
+@CrossOrigin(origins = "http://localhost:5173")
 public class StockController {
 
     private final KiwoomApiService kiwoomApiService;
@@ -43,6 +51,32 @@ public class StockController {
     @GetMapping("/top-volume")
     public Map<String, Object> getTopVolumeStocks() {
         return kiwoomApiService.getDailyTopVolumeStocks();
+    }
+
+    @GetMapping("/news")
+    public List<Map<String, Object>> getLatestNews(@RequestParam(defaultValue = "1") int page) {
+        int pageSize = 4;
+        int offset = (page - 1) * pageSize;
+        List<Map<String, Object>> newsList = new ArrayList<>();
+        try (Connection conn = DriverManager.getConnection(
+                "jdbc:postgresql://192.168.56.1:5432/fivesense", "postgres", "1234");
+             PreparedStatement stmt = conn.prepareStatement(
+                "SELECT title, link FROM company_news ORDER BY pub_date DESC LIMIT 40 OFFSET 0")) {
+            ResultSet rs = stmt.executeQuery();
+            int idx = 0;
+            while (rs.next() && newsList.size() < 40) {
+                if (idx >= offset && newsList.size() < offset + pageSize) {
+                    Map<String, Object> news = new HashMap<>();
+                    news.put("title", rs.getString("title"));
+                    news.put("link", rs.getString("link"));
+                    newsList.add(news);
+                }
+                idx++;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return newsList;
     }
 
 } 

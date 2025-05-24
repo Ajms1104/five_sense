@@ -55,6 +55,8 @@
         <nav>
             <p style="color: black;">라이브러리</p>
             <div class="history"></div>
+            <div id="news-list" style="margin-top:20px;"></div>
+            <div id="news-pagination" style="margin-top:8px; display:flex; gap:4px;"></div>
         </nav>
     </section>
 
@@ -135,5 +137,57 @@
     <script src="/js/profile.js"></script>
     <script src="/js/stockChart.js"></script>
     <script src="/js/chat.js"></script>
+    <div id="news-modal" style="display:none; position:fixed; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.3); z-index:9999; align-items:center; justify-content:center;">
+      <div style="background:#fff; padding:30px 20px; border-radius:8px; min-width:300px; max-width:90vw; max-height:80vh; overflow:auto; position:relative;">
+        <span id="news-modal-close" style="position:absolute; right:10px; top:10px; cursor:pointer; font-size:20px;">✖</span>
+        <div id="news-modal-content"></div>
+      </div>
+    </div>
+    <script>
+    // 뉴스 4개씩 10페이지로 불러오기 및 바로 새 창으로 링크 열기
+    let newsCurrentPage = 1;
+    const newsPageSize = 4;
+    const newsTotalPages = 10;
+
+    async function loadNewsList(page = 1) {
+      newsCurrentPage = page;
+      const newsListDiv = document.getElementById('news-list');
+      newsListDiv.innerHTML = '<b>최신 뉴스</b><ul id="news-ul" style="padding-left:18px; margin:8px 0 0 0;"></ul>';
+      try {
+        const res = await fetch(`/api/stock/news?page=${page}`);
+        const newsArr = await res.json();
+        const ul = document.getElementById('news-ul');
+        ul.innerHTML = '';
+        newsArr.forEach(news => {
+          const li = document.createElement('li');
+          li.textContent = news.title;
+          li.style.cursor = 'pointer';
+          li.style.marginBottom = '6px';
+          li.onclick = () => window.open(news.link, '_blank');
+          ul.appendChild(li);
+        });
+        renderNewsPagination();
+      } catch(e) {
+        newsListDiv.innerHTML += '<div style="color:red; font-size:13px;">뉴스를 불러올 수 없습니다.</div>';
+      }
+    }
+    function renderNewsPagination() {
+      const pagDiv = document.getElementById('news-pagination');
+      pagDiv.innerHTML = '';
+      for (let i = 1; i <= newsTotalPages; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        btn.style.padding = '2px 8px';
+        btn.style.margin = '0 2px';
+        btn.style.borderRadius = '4px';
+        btn.style.border = '1px solid #bbb';
+        btn.style.background = (i === newsCurrentPage) ? '#007bff' : '#fff';
+        btn.style.color = (i === newsCurrentPage) ? '#fff' : '#222';
+        btn.onclick = () => loadNewsList(i);
+        pagDiv.appendChild(btn);
+      }
+    }
+    document.addEventListener('DOMContentLoaded', () => loadNewsList(1));
+    </script>
 </body>
 </html> 
