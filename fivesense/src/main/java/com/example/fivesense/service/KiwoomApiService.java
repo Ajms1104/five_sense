@@ -33,7 +33,7 @@ import java.util.List;
 @Service
 public class KiwoomApiService {
 
-    private WebClient webClient;
+    private final WebClient webClient;
     private final SimpMessagingTemplate messagingTemplate;
     private final ObjectMapper objectMapper;
     private WebSocketSession socketSession;
@@ -55,6 +55,7 @@ public class KiwoomApiService {
     public KiwoomApiService(SimpMessagingTemplate messagingTemplate) {
         this.messagingTemplate = messagingTemplate;
         this.objectMapper = new ObjectMapper();
+        
     }
 
     // 값을 읽은 뒤 초기화
@@ -63,8 +64,10 @@ public class KiwoomApiService {
         
         // REST API 클라이언트 설정
         this.webClient = WebClient.builder()
+                .baseUrl("https://api.kiwoom.com")
                 .baseUrl(apiHost)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .defaultHeader("appsecret", "secretkey")//apiSecret 값 가져오기
                 .defaultHeader("appkey", apiKey)
                 .defaultHeader("appsecret", apiSecret)
                 .build();
@@ -73,7 +76,7 @@ public class KiwoomApiService {
         getAccessToken();
         
         // 웹소켓 연결 초기화
-        initWebSocketConnection();
+        // initWebSocketConnection();
     }
     
     private void getAccessToken() {
@@ -81,8 +84,8 @@ public class KiwoomApiService {
             // 1. 요청 데이터 JSON 문자열 생성
             Map<String, String> tokenRequest = new HashMap<>();
             tokenRequest.put("grant_type", "client_credentials");
-            tokenRequest.put("appkey", apiKey);
-            tokenRequest.put("secretkey", apiSecret);
+            tokenRequest.put("appkey", appKey);
+            tokenRequest.put("secretkey", seecretkey);
 
             // 2. API 호출
             Map<String, Object> response = webClient.post()
@@ -172,7 +175,7 @@ public class KiwoomApiService {
                 }
             };
             
-            client.execute(handler, headers, URI.create("wss://mockapi.kiwoom.com:10000/api/dostk/websocket")).get();
+            client.execute(handler, headers, URI.create("wss://api.kiwoom.com:10000/api/dostk/websocket")).get();
             
         } catch (Exception e) {
             e.printStackTrace();
