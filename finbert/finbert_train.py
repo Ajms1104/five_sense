@@ -16,11 +16,11 @@ model_name = "snunlp/KR-FinBert-SC"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForSequenceClassification.from_pretrained(model_name)
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model.to(device)
 # 예시로 하나의 문장을 토큰화
-inputs = tokenizer(df_korean['kor_sentence'].tolist(), padding=True, truncation=True, return_tensors='pt')
-
-# 토큰화된 입력 확인
-print(inputs)
+# inputs = tokenizer(df_korean['kor_sentence'].tolist(), padding=True, truncation=True, return_tensors='pt')
+# print(inputs)
 
 from torch.utils.data import Dataset, DataLoader
 
