@@ -8,7 +8,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 import psycopg2
 from psycopg2 import Error
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup  # HTML 태그 제거
 import pandas as pd
 from urllib.error import HTTPError, URLError
 
@@ -78,8 +78,10 @@ def clean_text(text):
     cleaned = re.sub(r'\s+', ' ', cleaned).strip()
     return cleaned
 
+
+# 네이버 뉴스 API로 데이터 가져오기
 def fetch_naver_news(query, display=100, start=1, max_retries=3):
-    """네이버 뉴스 API로 데이터 가져오기"""
+    
     enc_text = urllib.parse.quote(query)  # 검색어 인코딩
     url = f"https://openapi.naver.com/v1/search/news.json?query={enc_text}&display={display}&start={start}&sort=date"
 
@@ -136,8 +138,10 @@ def process_news_data(news_data, query):
 
     return df
 
+
+# 여러 페이지를 조회하여 뉴스 데이터 수집
 def fetch_all_news(query, display=100, max_pages=10):
-    """여러 페이지를 조회하여 뉴스 데이터 수집"""
+    
     all_data = []
 
     for page in range(1, max_pages + 1):
@@ -169,8 +173,10 @@ def fetch_all_news(query, display=100, max_pages=10):
         return pd.concat(all_data, ignore_index=True)
     return None
 
+
+# 뉴스 데이터를 PostgreSQL에 배치 삽입.
 def insert_to_db(df, batch_size=1000):
-    """뉴스 데이터를 PostgreSQL에 배치 삽입"""
+    
     try:
         cur, conn = DBconnect()
         if cur is None or conn is None:
@@ -187,12 +193,12 @@ def insert_to_db(df, batch_size=1000):
                 ON CONFLICT (title, pub_date) DO NOTHING;
                 """
                 cur.execute(insert_query, (
-                    row['query'],
-                    row['title'],
-                    row['description'],
-                    row['pubDate'],
-                    row['link'],
-                    row['cleaned_text']
+                    row['query'],   # 검색한 글(태그)
+                    row['title'],   # 연관된 뉴스 제목
+                    row['description'],   # 뉴스 원문
+                    row['pubDate'],   # 실제로 뉴스가 발행된 시각(날짜)
+                    row['link'],   # 실제 뉴스 링크
+                    row['cleaned_text']   # 제목 + 원문 합쳐진 뉴스
                 ))
 
             conn.commit()
