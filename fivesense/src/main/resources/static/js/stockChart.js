@@ -17,6 +17,14 @@ class StockChart {
         this.movingAverageSeries = {}; // 이동평균선 시리즈 저장용
         this.dataMap = new Map();      // 시간 기반 데이터 조회를 위한 Map
         this.isSyncing = false;        // 동기화 중복 방지 플래그
+        
+        // 차트 컨테이너가 없으면 생성
+        if (!this.chartContainer) {
+            this.chartContainer = document.createElement('div');
+            this.chartContainer.className = 'chart-container';
+            this.chartWrapper.appendChild(this.chartContainer);
+        }
+        
         this.init();
     }
 
@@ -55,7 +63,7 @@ class StockChart {
     createChart() {
         console.log('Creating chart...');
 
-   
+        // 차트 컨테이너 초기화
         this.chartContainer.innerHTML = `
             <div class="chart-separator">
                 <div id="priceChartContainer" style="width: 100%; height: 65%; position: relative;">
@@ -92,7 +100,7 @@ class StockChart {
                     width: 1, 
                     style: 1, 
                     labelBackgroundColor: '#ffffff',
-                    labelVisible: false // x축 라벨 숨김
+                    labelVisible: false
                 },
                 horzLine: { 
                     color: '#999999', 
@@ -105,13 +113,7 @@ class StockChart {
                 borderColor: '#dddddd',
                 borderVisible: true,
                 timeVisible: true,
-                secondsVisible: false,
-                tickMarkFormatter: (time) => {
-                    const date = new Date(time * 1000);
-                    if (this.chartType === 'yearly') return date.getFullYear();
-                    if (this.chartType === 'monthly') return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
-                    return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-                }
+                secondsVisible: false
             },
             handleScroll: true,
             handleScale: true
@@ -170,14 +172,9 @@ class StockChart {
             }
         });
 
-        // 차트 싱크 설정 (스크롤 및 줌 동기화)
+        // 차트 싱크 설정
         this.syncCharts();
-
-        // 크로스헤어 동기화 설정
         this.setupCrosshairSync();
-
-        // 윈도우 리사이즈 이벤트
-        window.addEventListener('resize', this.handleResize.bind(this));
     }
 
     // 차트 동기화 설정

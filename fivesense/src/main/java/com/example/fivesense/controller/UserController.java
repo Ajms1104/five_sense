@@ -12,6 +12,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173")
 public class UserController{
     private final UserService userService;
     @GetMapping("/")
@@ -19,7 +20,11 @@ public class UserController{
         model.addAttribute("user",null);
         return "home";
     }
-
+    @GetMapping("/hello")
+    @ResponseBody
+    public String hello(){
+        return "Spring Boot 연결 성공";
+    }
     @GetMapping("/register")
         public String register(Model model){
             model.addAttribute("user",new User());
