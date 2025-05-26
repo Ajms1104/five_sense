@@ -8,10 +8,6 @@ from requests.exceptions import RequestException
 from datetime import datetime
 import numpy as np
 
-
-########### 일별 주가 요청 ##############
-
-
 # DB 연결
 def DBconnect():
     global cur, conn
@@ -22,11 +18,6 @@ def DBconnect():
 
         # 기존 기본 키 삭제 및 새로운 기본 키 추가
         try:
-            cur.execute("ALTER TABLE public.price_data DROP CONSTRAINT IF EXISTS price_data_pkey;")
-            cur.execute("""
-                ALTER TABLE public.price_data
-                ADD CONSTRAINT price_data_pkey PRIMARY KEY (stk_cd, date);
-            """)
 
             # 기존 테이블 삭제
             cur.execute("DROP TABLE IF EXISTS public.price_data;")
@@ -35,17 +26,18 @@ def DBconnect():
             # 새 테이블 생성
             create_table = """
             CREATE TABLE public.price_data (
-                stk_cd VARCHAR(20) PRIMARY KEY,
+                stk_cd VARCHAR(20),
                 date NUMERIC,
                 open_pric NUMERIC,
                 high_pric NUMERIC,
                 low_pric NUMERIC,
                 close_pric NUMERIC,
-                ind_netprps NUMERIC
+                ind_netprps NUMERIC,
+                PRIMARY KEY (stk_cd, date)
             );
             """
-
-            conn.commit(create_table)
+            cur.execute(create_table)
+            conn.commit()
             print("기본 키 설정 완료: (stk_cd, date)")
         except Exception as e:
             print(f"기본 키 설정 중 오류: {str(e)}")
@@ -212,19 +204,20 @@ def insert_to_db(df, expected_stk_cd, batch_size=1000):
                     print(f"stk_cd 불일치: 예상값 {expected_stk_cd}, 실제값 {row['stk_cd']}")
                     continue
 
+                # 중복 데이터 삽입 안되게 설정
                 insert_query = """
                 INSERT INTO public.price_data (stk_cd, date, open_pric, high_pric, low_pric, close_pric, ind_netprps)
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
                 ON CONFLICT (stk_cd, date) DO NOTHING;
                 """
                 cur.execute(insert_query, (
-                    row['stk_cd'],  # 종목코드
-                    row['date'],   # 날짜
-                    row['open_pric'],   # 시가
-                    row['high_pric'],   # 고가
-                    row['low_pric'],   # 저가
-                    row['close_pric'],   # 종가
-                    row['ind_netprps']   # 개인순매수
+                    row['stk_cd'],
+                    row['date'],
+                    row['open_pric'],
+                    row['high_pric'],
+                    row['low_pric'],
+                    row['close_pric'],
+                    row['ind_netprps']
                 ))
             
             # 배치 커밋
@@ -240,6 +233,7 @@ def insert_to_db(df, expected_stk_cd, batch_size=1000):
 
     finally:
         DBdisconnect()
+
 
 # buyTop50_data에서 상위 20개 종목 코드 가져오기
 def get_top20_stk_codes():
@@ -289,7 +283,7 @@ if __name__ == '__main__':
             token = MY_ACCESS_TOKEN,
             data = params,
             start_date='20200101',
-            end_date=None,   # 현재 날짜까지
+            end_date=None,
             max_iterations=100
         )
 
@@ -297,5 +291,3 @@ if __name__ == '__main__':
         if df is not None:
             print(f"총 {len(df)} row 데이터를 삽입합니다.")
             insert_to_db(df, expected_stk_cd=params['stk_cd'], batch_size=1000)
-
-   
