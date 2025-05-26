@@ -17,6 +17,14 @@ class StockChart {
         this.movingAverageSeries = {}; // 이동평균선 시리즈 저장용
         this.dataMap = new Map();      // 시간 기반 데이터 조회를 위한 Map
         this.isSyncing = false;        // 동기화 중복 방지 플래그
+        
+        // 차트 컨테이너가 없으면 생성
+        if (!this.chartContainer) {
+            this.chartContainer = document.createElement('div');
+            this.chartContainer.className = 'chart-container';
+            this.chartWrapper.appendChild(this.chartContainer);
+        }
+        
         this.init();
     }
 
@@ -55,7 +63,7 @@ class StockChart {
     createChart() {
         console.log('Creating chart...');
 
-   
+        // 차트 컨테이너 초기화
         this.chartContainer.innerHTML = `
             <div class="chart-separator">
                 <div id="priceChartContainer" style="width: 100%; height: 65%; position: relative;">
@@ -92,7 +100,7 @@ class StockChart {
                     width: 1, 
                     style: 1, 
                     labelBackgroundColor: '#ffffff',
-                    labelVisible: false // x축 라벨 숨김
+                    labelVisible: false
                 },
                 horzLine: { 
                     color: '#999999', 
@@ -105,13 +113,7 @@ class StockChart {
                 borderColor: '#dddddd',
                 borderVisible: true,
                 timeVisible: true,
-                secondsVisible: false,
-                tickMarkFormatter: (time) => {
-                    const date = new Date(time * 1000);
-                    if (this.chartType === 'yearly') return date.getFullYear();
-                    if (this.chartType === 'monthly') return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
-                    return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-                }
+                secondsVisible: false
             },
             handleScroll: true,
             handleScale: true
@@ -170,14 +172,9 @@ class StockChart {
             }
         });
 
-        // 차트 싱크 설정 (스크롤 및 줌 동기화)
+        // 차트 싱크 설정
         this.syncCharts();
-
-        // 크로스헤어 동기화 설정
         this.setupCrosshairSync();
-
-        // 윈도우 리사이즈 이벤트
-        window.addEventListener('resize', this.handleResize.bind(this));
     }
 
     // 차트 동기화 설정
@@ -564,15 +561,37 @@ async function loadTopVolumeStocks() {
     }
 }
 
+function getFavorites() {
+    const favorites = localStorage.getItem('favorites');
+    return favorites ? JSON.parse(favorites) : [];
+}
+
+function toggleFavorite(stockCode, stockName) {
+    const favorites = getFavorites();
+    const index = favorites.findIndex(fav => fav.code === stockCode);
+    
+    if (index === -1) {
+        favorites.push({ code: stockCode, name: stockName });
+    } else {
+        favorites.splice(index, 1);
+    }
+    
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+    return index === -1; // true if added, false if removed
+}
+
 function renderTopVolumeTable() {
     const tableBody = document.querySelector('#topVolumeTable tbody');
     tableBody.innerHTML = '';
     const startIdx = (currentPage - 1) * pageSize;
     const pageData = topVolumeData.slice(startIdx, startIdx + pageSize);
+    const favorites = getFavorites();
 
     pageData.forEach((stock, idx) => {
         const tr = document.createElement('tr');
         const currentPrice = Math.abs(Number(stock.cur_prc)).toLocaleString();
+        const isFavorite = favorites.some(fav => fav.code === stock.stk_cd);
+        
         tr.innerHTML = `
             <td>${startIdx + idx + 1}</td>
             <td>${stock.stk_nm}</td>
@@ -580,7 +599,14 @@ function renderTopVolumeTable() {
             <td class="${parseFloat(stock.flu_rt) >= 0 ? 'up' : 'down'}">
                 ${stock.flu_rt}%
             </td>
+            <td>
+                <button class="favorite-btn ${isFavorite ? 'active' : ''}" 
+                        onclick="event.stopPropagation(); toggleFavoriteAndUpdate('${stock.stk_cd}', '${stock.stk_nm}', this)">
+                    ${isFavorite ? '★' : '☆'}
+                </button>
+            </td>
         `;
+        
         tr.addEventListener('click', () => {
             console.log('종목 클릭:', stock.stk_cd);
             document.querySelector('.top-volume-section').style.display = 'none';
@@ -650,6 +676,12 @@ function renderPagination() {
         }
     };
     pagination.appendChild(nextBtn);
+}
+
+function toggleFavoriteAndUpdate(stockCode, stockName, button) {
+    const isAdded = toggleFavorite(stockCode, stockName);
+    button.textContent = isAdded ? '★' : '☆';
+    button.classList.toggle('active');
 }
 
 // 페이지 로드 시 거래량 상위 종목만 로드 (차트 인스턴스 생성 X)
