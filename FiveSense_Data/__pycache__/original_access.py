@@ -6,6 +6,7 @@ import main
 import time
 from requests.exceptions import RequestException
 
+
 ##### 주식기본정보요청 #######
 
 def fn_ka10001(token, data, cont_yn='N', next_key='', max_retries=3):
@@ -169,14 +170,14 @@ def insert_to_db(df, expected_stk_cd, batch_size=100):
                 ON CONFLICT (stk_cd) DO NOTHING;
                 """
                 cur.execute(insert_query, (
-                    row['stk_cd'],
-                    row['stk_nm'],
-                    row['oyr_hgst'],
-                    row['oyr_lwst'],
-                    row['lst_pric'],
-                    row['base_pric'],
-                    row['cur_prc'],
-                    row['trde_qty']
+                    row['stk_cd'],   # 종목코드
+                    row['stk_nm'],   # 종목명
+                    row['oyr_hgst'],   # 연중최고
+                    row['oyr_lwst'],   # 연중최저
+                    row['lst_pric'],   # 하한가
+                    row['base_pric'],   # 기준가
+                    row['cur_prc'],   # 현재가
+                    row['trde_qty']   # 거래량
                 ))
 
                 # 삽입 여부 확인

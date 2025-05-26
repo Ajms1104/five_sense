@@ -216,6 +216,8 @@ def parse_xbrl_file(xbrl_path, rcept_no, batch_size=1000):
         print(f"XBRL 파일 {xbrl_path} 파싱 완료")
         print(f"루트 엘리먼트: {root.tag}")
 
+
+        # 날짜 저장 함수코드
         contexts = {}
         for context in root.findall('.//xbrl:context', ns):
             context_id = context.get('id')
@@ -344,9 +346,9 @@ if __name__ == "__main__":
         print("API_KEY가 .env 파일에 설정되지 않았습니다. 종료합니다.")
         exit()
 
-    CORP_CODE = "00126380"  # 삼성전자 기업 코드
+    CORP_CODE = "00126380"  # 삼성전자 기업 코드(병렬코드로 수정예정.)
     BSNS_YEAR = "2020"  # 사업 연도
-    REPRT_CODE = "11011"  # 사업보고서 코드
+    REPRT_CODE = "11011"  # 사업보고서 코드(1분기보고서:11013, 반기보고서:11012, 3분기보고서:11014, 사업보고서:11011)
 
     rcept_no = fetch_rcept_no(API_KEY, CORP_CODE, BSNS_YEAR, REPRT_CODE)
     if not rcept_no:

@@ -8,6 +8,10 @@ from requests.exceptions import RequestException
 from datetime import datetime
 import numpy as np
 
+
+########### 일별 주가 요청 ##############
+
+
 # DB 연결
 def DBconnect():
     global cur, conn
@@ -214,13 +218,13 @@ def insert_to_db(df, expected_stk_cd, batch_size=1000):
                 ON CONFLICT (stk_cd, date) DO NOTHING;
                 """
                 cur.execute(insert_query, (
-                    row['stk_cd'],
-                    row['date'],
-                    row['open_pric'],
-                    row['high_pric'],
-                    row['low_pric'],
-                    row['close_pric'],
-                    row['ind_netprps']
+                    row['stk_cd'],  # 종목코드
+                    row['date'],   # 날짜
+                    row['open_pric'],   # 시가
+                    row['high_pric'],   # 고가
+                    row['low_pric'],   # 저가
+                    row['close_pric'],   # 종가
+                    row['ind_netprps']   # 개인순매수
                 ))
             
             # 배치 커밋
@@ -285,7 +289,7 @@ if __name__ == '__main__':
             token = MY_ACCESS_TOKEN,
             data = params,
             start_date='20200101',
-            end_date=None,
+            end_date=None,   # 현재 날짜까지
             max_iterations=100
         )
 
