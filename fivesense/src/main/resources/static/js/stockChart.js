@@ -202,7 +202,7 @@ class StockChart {
         switch(this.chartType) {
             case 'yearly': return date.getFullYear().toString();
             case 'monthly': return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
-            case 'daily':
+            case 'daily': return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
             case 'weekly': return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
             case 'minute': return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
             default: return date.toLocaleDateString('ko-KR');
