@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { createChart, CrosshairMode } from 'lightweight-charts';
+import '../styles/StockChart.css';
 
 const StockChart = ({ stockCode = '005930', chartType = 'daily', minuteType = '1' }) => {
   const chartContainerRef = useRef(null);
@@ -269,14 +270,14 @@ const StockChart = ({ stockCode = '005930', chartType = 'daily', minuteType = '1
   }, [stockCode, chartType, minuteType]);
 
   return (
-    <div ref={chartContainerRef} style={{ width: '100%', height: '100%' }}>
+    <div ref={chartContainerRef} className="chart-container" >
       <div className="chart-separator">
-        <div ref={priceChartContainerRef} style={{ width: '100%', height: '65%', position: 'relative' }}>
-          <div id="stockInfoPanel" style={{ position: 'absolute', top: '5px', left: '5px', background: 'rgba(255,255,255,0.85)', padding: '5px 8px', borderRadius: '4px', fontSize: '11px', color: 'black', zIndex: 10, pointerEvents: 'none', lineHeight: 1.4 }}></div>
+        <div ref={priceChartContainerRef} className='price-chart-container'>
+          <div id="stockInfoPanel" className='stock-info-panel'></div>
         </div>
-        <div className="divider" style={{ width: '100%', height: '2px', backgroundColor: '#dddddd' }}></div>
-        <div ref={volumeChartContainerRef} style={{ width: '100%', height: '35%', position: 'relative' }}>
-          <div id="volumeInfoPanel" style={{ position: 'absolute', top: '5px', left: '5px', background: 'rgba(255,255,255,0.85)', padding: '3px 6px', borderRadius: '4px', fontSize: '11px', color: 'black', zIndex: 10, pointerEvents: 'none' }}></div>
+        <div className="divider"></div>
+        <div ref={volumeChartContainerRef} className='volume-chart-container' >
+          <div id="volumeInfoPanel" className='volume-info'></div>
         </div>
       </div>
     </div>

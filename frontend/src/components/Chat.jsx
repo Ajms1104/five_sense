@@ -1,77 +1,48 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from "react";
+import '../styles/chat.css';
 
-const Chat = () => {
-  const chatContainerRef = useRef(null);
+import input_btn from '../assets/Vector.svg'
+
+const ChatUI = () => {
   const [messages, setMessages] = useState([]);
-  const [inputMessage, setInputMessage] = useState('');
+  const [input, setInput] = useState("");
 
-  useEffect(() => {
-    if (!chatContainerRef.current) return;
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (input.trim() === "") return;
 
-    const handleSendMessage = (e) => {
-      e.preventDefault();
-      if (!inputMessage.trim()) return;
-
-      const newMessage = {
-        text: inputMessage,
-        sender: 'user',
-        timestamp: new Date().toISOString()
-      };
-
-      setMessages(prev => [...prev, newMessage]);
-      setInputMessage('');
-
-      // 여기에 API 호출 로직 추가
-      // fetch('/api/chat', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ message: inputMessage })
-      // })
-      // .then(response => response.json())
-      // .then(data => {
-      //   setMessages(prev => [...prev, {
-      //     text: data.response,
-      //     sender: 'bot',
-      //     timestamp: new Date().toISOString()
-      //   }]);
-      // });
-    };
-
-    const form = chatContainerRef.current.querySelector('form');
-    if (form) {
-      form.addEventListener('submit', handleSendMessage);
-    }
-
-    return () => {
-      if (form) {
-        form.removeEventListener('submit', handleSendMessage);
-      }
-    };
-  }, [inputMessage]);
+    setMessages([...messages, input]);
+    setInput("");
+  };
 
   return (
-    <div ref={chatContainerRef} className="chat-container">
-      <div className="chat-messages">
-        {messages.map((message, index) => (
-          <div key={index} className={`message ${message.sender}`}>
-            <div className="message-content">{message.text}</div>
-            <div className="message-timestamp">
-              {new Date(message.timestamp).toLocaleTimeString()}
+    <section className="chat-container">
+      <aside className="message-container">
+        <div className="chat-messages" id="chat-messages">
+          <p className="sub_title">오늘은 어떤 주식이 궁금하신가요?</p>
+          {messages.map((msg, index) => (
+            <div key={index} className="chat-message">
+              {msg}
             </div>
-          </div>
-        ))}
-      </div>
-      <form className="chat-input-form">
+           ))}
+        </div>
+      </aside>
+
+      <form className="chat-input-form" onSubmit={handleSubmit}>
         <input
-          type="text"
-          value={inputMessage}
-          onChange={(e) => setInputMessage(e.target.value)}
-          placeholder="메시지를 입력하세요..."
+            type="text"
+            id="chat-input"
+            placeholder="메시지를 입력하세요..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
         />
-        <button type="submit">전송</button>
+          <button type="submit">
+            <img src={input_btn} className="input_btn"/>
+          </button>
       </form>
-    </div>
+      <h3 className='danger'> 투자에 대한 모든 결과는 전적으로 개인에게 있으며 손해에 대해 FIVESENSE 에선 책임지지 않습니다</h3>
+    </section>
   );
 };
 
-export default Chat; 
+export default ChatUI;
