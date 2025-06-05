@@ -1,0 +1,33 @@
+/* src/styles/join.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Barriecito&family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
+
+.container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+.form-group {
+    margin-bottom: 15px;
+}
+input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    box-sizing: border-box;
+}
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.login-link {
+    text-align: center;
+    margin-top: 15px;
+}

@@ -1,0 +1,551 @@
+/* src/styles/main.css */
+
+@import url('https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@2.0/nanumSquare.css');
+
+
+* {
+  color: #000000;
+  font-family: 'NanumSquare', sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  overflow-x: hidden;
+}
+
+/*상단바*/
+.top_bar{
+  height: 70px;
+  position: absolute;
+  top: 0;
+  left: 312px;
+  right: 0;          /* right를 0으로 지정해 우측 여백 제거 */
+  border-bottom: 1.5px solid rgba(214, 214, 214, 0.85);
+  background: #FFF;
+}
+
+.user{
+  width: 50px;
+  height: 50px;
+  flex-shrink: 0;
+  aspect-ratio: 1/1;
+  position: absolute;
+  right: 50px;
+  top : 15%
+}
+
+/*왼쪽 사이드바*/
+.sidebar {
+  border-right: 1.5px solid var(--_, rgba(214, 214, 214, 0.85));
+  background: var(--, #FFF);
+  width: 300px;
+  height: 100vh;
+  flex-shrink: 0;
+  position: relative;
+  left: 10px;
+}
+
+.sidebar_top{
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: 29px;
+}
+
+.logo_top{
+  width: 316px;
+  height: 54px;
+  flex-shrink: 0;
+}
+
+.logo_txt{ /*five_sense*/
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: #24AFCF;
+  font-family: NanumSquare;
+  font-size: 29px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+  position: relative;
+  left : 60px;
+}
+
+/*로고 및 슬라이드 버튼 추가 영역 */
+.logo_png{
+  width: 50px;
+  height: 35px;
+  flex-shrink: 0;
+  aspect-ratio: 1/1;
+  position: relative;
+  top : -50px;
+  left: 5px;
+}
+
+.slide{
+  width: 35px;
+  height: 25px;
+  flex-shrink: 0;
+  position: relative;
+  top : -50px;
+  left: 190px;
+}
+.menu{
+  width: 300px;
+  height: 170px;
+  position: relative;
+  left: -5px;
+}
+
+.menu_font{
+  width: 44px;
+  height: 17px;
+  flex-shrink: 0;
+  color: var(--, #3B413C);
+  font-family: NanumSquare;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+button{
+  width: 200px;
+  height: 40px;
+  background-color: transparent;
+  border: none;
+}
+
+.ai_chat_bg{
+  display: flex;
+  width: 133px;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+  left : -7px;
+  top : 5px;
+}
+
+.ai_chat{
+  width: auto;
+  height: auto;
+  flex-shrink: 0;
+  color: var(--, #3B413C);
+  font-family: NanumSquare;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: 2px;
+}
+
+.bookmark_bg{
+  width: 135px;
+  height: 30px;
+  flex-shrink: 0;
+  position: relative;
+  left : -7px;
+  top : 30px;
+}
+.bookmark{
+  width: auto;
+  height: auto;
+  flex-shrink: 0;
+  color: var(--, #3B413C);
+  font-family: NanumSquare;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 2px;
+}
+
+
+/*라이브러리*/
+.sidebar_mid{
+  display: inline-flex;
+  padding: 25px 5px 10px 0px;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 6px;
+  border-top: 1.5px solid var(--_, rgba(214, 214, 214, 0.85));
+
+}
+
+.history{
+  width: 279px;
+  height: 230px;
+  border-bottom: 1.5px solid var(--_, rgba(214, 214, 214, 0.85));
+  position: relative;
+  left : 0px;
+  top : -15px;
+}
+
+.history_font{
+  width: 71px;
+  height: 17px;
+  flex-shrink: 0;
+  color: var(--, #3B413C);
+  font-family: NanumSquare;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  position: relative;
+  left: 10px;
+}
+
+.today_bg{
+  width: 268px;
+  height: 29px;
+  flex-shrink: 0;
+  position: relative;
+  top : 10px;
+}
+
+.today_btn{
+  width: 268px; /* 필요하다면 min-width로 변경 */
+  height: 29px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border-radius: 100px;
+  background: var(--_, #f2f2f2);
+  color: var(--, #3B413C);
+  font-family: NanumSquare;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0.75px;
+  box-sizing: border-box;
+  white-space: nowrap; 
+  position: relative;
+  top:-10px;
+}
+
+.line_1{
+  width: 1px;
+  height: 80px;
+  background-color: rgba(166,166,166,0.85);
+  position: relative;
+  left : 40px;
+  top : -15px;
+}
+
+.dplus7_bg{
+  width: 268px;
+  height: 29px;
+  flex-shrink: 0;
+  position: relative;
+  top : 110px;
+  left : 15px;
+}
+
+.dplus7_btn{
+  width: auto;
+  height: auto;
+  flex-shrink: 0;
+  color: var(--, #3B413C);
+  font-family: NanumSquare;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 0.75px;
+}
+
+/**/
+
+.sidebar_bottom{
+  width: 279px;
+  height: 416px;
+  position: relative;
+  top : -15px;
+  left: 10px;
+}
+
+.post{
+  width: 71px;
+  height: 17px;
+  flex-shrink: 0;
+  color: var(--, #3B413C);
+  font-family: NanumSquare;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal; 
+}
+
+/*메인 화면*/
+.chat_main{
+  flex: 1;          /* 남은 영역 가득 채우기 */
+  position: relative;
+  top: 71px;        /* 상단바 높이 만큼 띄우기 */
+}
+
+/*1. 주식 차트*/
+.stockChart {
+  padding: 131px 27px 130px 27px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  justify-content: flex-start;
+  width: 100%;
+  overflow-y: auto;
+}
+
+/*어디서 쓰이는 거지..?*/
+.stock-control {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+}
+.input-group {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.input-group label {
+    min-width: 100px;
+    color: #333;
+}
+
+.input-group input, .input-group select {
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    width: 150px;
+}
+/*위에는 찾는 중*/
+
+/* 차트 스타일 */
+.chart-wrapper {
+    position: relative;
+    width: 100%;
+    height: 700px; /* 고정된 높이 설정 */
+    padding: 10px;
+    background-color: white;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/*차트 네모*/
+.chart-container {
+    width: 600px;
+    height: 800px; /* 부모 요소의 높이에 맞춤 */
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+    position: relative;
+    top : -300px;
+    left: 30px;
+}
+
+#priceChart, #volumeChart {
+    overflow: hidden;
+    position: relative;
+}
+
+#stockChart {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+/**/
+.chart-title {
+    color: black;
+    font-size: 14px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    position: relative;
+    left: 60px;
+    top : -30px;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 10px;
+} 
+
+/**/
+.chart-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    position: relative;
+    top : -30px;
+    left: 100px;
+}
+
+.chart-type-btn {
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    background: rgb(255, 255, 255);
+    cursor: pointer;
+    font-size: 12px;
+    color: black;
+}
+
+.chart-type-btn.active {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+/**/
+.stock-select {
+    padding: 6px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    font-size: 12px;
+    background: white;
+    width: 150px;
+    color: black;
+    position: relative;
+    left: 30px;
+}
+
+.stock-select option {
+    color: black;
+}
+
+.chart-tooltip {
+    position: fixed;
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 1px solid #ddd;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #333;
+    z-index: 1000;
+    pointer-events: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    left: 10px !important;
+    top: 10px !important;
+    min-width: 150px;
+}
+
+.chart-tooltip .price {
+    color: #333;
+    font-weight: bold;
+    margin: 4px 0;
+}
+
+.chart-tooltip .price.up {
+    color: #ff0000;
+}
+
+.chart-tooltip .price.down {
+    color: #0000ff;
+}
+
+.chart-tooltip .date {
+    color: #666;
+    font-size: 11px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 4px;
+}
+
+.chart-tooltip .volume {
+    color: #666;
+    font-size: 11px;
+    margin-top: 4px;
+    border-top: 1px solid #eee;
+    padding-top: 4px;
+}
+
+.line_2{
+  width: 1.5px;
+  height: 100vh;
+  background-color: rgba(166,166,166,0.85);
+  position: relative;
+  left : -350px;
+  top : 200px;
+}
+
+/*오른쪽 끝 채팅구역*/
+/* 1) 채팅 컨테이너를 우측 끝에 고정하면서 내부는 중앙 정렬 */
+.chat_wrapper {
+  position: absolute;    /* 부모(뷰포트 또는 상위 컨테이너) 기준으로 */
+  top: 70px;    
+  right: 60px;         /* 상단바 높이에 맞춰 조정 */           /* 우측 끝에 딱 붙임 */
+  width: 600px;
+  height: 600px;
+
+  display: flex;               
+  flex-direction: column;      
+  justify-content: center;     /* 세로 중앙 정렬 */
+  align-items: center;         /* 가로 중앙 정렬 */
+
+  padding: 20px;         /* 내부 여백 필요하면 조정 */
+  box-sizing: border-box;
+}
+
+/* 2) .main_chat 은 wrapper 안에서 flex item으로 중앙에 배치 */
+.main_chat {
+  width: 100%;           
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 38px;
+}
+
+/* 3) 제목과 입력란도 position, top 속성 제거 */
+.title {
+  margin: 0;            
+  color: #3B413C;
+  text-align: center;
+  font-family: Inter, sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: normal;
+  position: relative;
+  left: -15px;
+  top : -450px;
+}
+
+.chat_input {
+  width: 550px;
+  height: 50px;
+  border-radius: 15px;
+  border: 1px solid rgba(166, 166, 166, 0.85);
+  position: relative;
+  top:-400px;
+  left: -10px;
+}
+
+.chat_btn {
+  height: 20px;
+  width: 30px;
+  border: none;
+  border-radius: 15px;
+  background:url(./src/Vector.svg);
+  cursor: pointer;
+  position: relative;
+  top: -475px;
+  left: 210px;
+}
