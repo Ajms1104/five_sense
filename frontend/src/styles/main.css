@@ -213,17 +213,17 @@ button{
   line-height: normal;
   letter-spacing: 2px;
   position: relative;
-  left: -93px;
-  top: 57px;
+  left: 25px;
+  top: 40px;
 }
 
 .line_1{
   width: 90%;
-  height: 1px;
+  height: 1.5px;
   background-color: rgba(166,166,166,0.85);
   position: relative;
   left: 15px;
-  top : 73px;
+  top : 40px;
 }
 
 /*메뉴 중간 : 검색 기록 */
