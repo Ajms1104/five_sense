@@ -1,4 +1,7 @@
 import React, {useState, useEffect} from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+
+
 import StockChart from './StockChart.jsx';
 import Chat from './Chat.jsx';
 import Rank from './Rank.jsx';
@@ -23,12 +26,16 @@ const Home = () => {
     setSidebarOpen(prev => !prev);
   };
 
+  const toggleUserPopup = () => {  // 추가
+    setShowUserPopup(prev => !prev);
+  };
+  
   const handleAiChat = () => {
-    window.location.href = '/ai-chat';
+    navigate('/');
   };
 
   const handleBookmark = () => {
-    window.location.href = '/bookmark';
+    navigate('/bookmark'); 
   };
 
   const handleStockSelect = (stockCode) => {
@@ -125,9 +132,9 @@ const Home = () => {
       {/* 상단바 : 유저 (추후 로그인+회원가입) */}
       <aside className='top-bar'>
         <div className="user-bar">
-          <button type='button' className="user_btn">
-            <img src={UserIcon} alt="user" className="user" />
-          </button>
+            <button type='button' className="user_btn">
+              <img src={UserIcon} alt="user" className="user" />
+            </button>
           <p className='line_5'></p>
           {showUserPopup && (
             <div className="user-popup">
@@ -148,13 +155,21 @@ const Home = () => {
             </button>
           </div>
         </div>
+
         {/* 사이드바 : 메뉴영역(ai chat, 즐겨찾기)  */}
         <div className='sidebar-menu-top'>
           <h2 className="menu-txt">메뉴</h2>
-          <button className="ai_chat" onClick={handleAiChat}>🔎 AI Chat</button>
-          <button className="bookmark" onClick={handleBookmark}>⭐ 즐겨찾기</button>
+          <nav>
+            <Link to ="/"></Link>
+            <button className="ai_chat" onClick={handleAiChat}>🔎 AI Chat</button>
+          </nav>
+          <nav>
+            <Link to ="/bookmark"></Link>
+            <button className="bookmark" onClick={handleBookmark}>⭐ 즐겨찾기</button>
+          </nav>
           <p className='line_1'></p>
         </div>
+
         {/* 사이드바 : 검색 기록 */}
         <div className='sidebar-menu-mid'>
           <h2 className="history_font">검색 기록</h2>

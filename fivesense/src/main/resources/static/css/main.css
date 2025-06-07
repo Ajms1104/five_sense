@@ -185,7 +185,7 @@ input:focus {
 .chart-wrapper {
     position: relative;
     width: 100%;
-    height: 600px; /* 높이 증가 */
+    height: 500px; /* 고정된 높이 설정 */
     padding: 10px;
     background-color: white;
     overflow: hidden;
@@ -194,87 +194,68 @@ input:focus {
 
 .chart-container {
     width: 100%;
-    height: 100%;
+    height: 100%; /* 부모 요소의 높이에 맞춤 */
     background-color: white;
     display: flex;
     flex-direction: column;
 }
 
-.chart-separator {
+#priceChart, #volumeChart {
+    overflow: hidden;
+    position: relative;
+}
+
+#stockChart {
     width: 100%;
     height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-#priceChartContainer, #volumeChartContainer {
-    position: relative;
-    width: 100%;
-}
-
-#priceChartContainer {
-    height: 65%;
-}
-
-#volumeChartContainer {
-    height: 35%;
-}
-
-.divider {
-    width: 100%;
-    height: 2px;
-    background-color: #dddddd;
+    padding: 0;
     margin: 0;
 }
 
-#stockInfoPanel, #volumeInfoPanel {
-    position: absolute;
-    top: 5px;
-    left: 5px;
-    background: rgba(255,255,255,0.85);
-    padding: 5px 8px;
-    border-radius: 4px;
-    font-size: 11px;
+.chart-title {
     color: black;
-    z-index: 10;
-    pointer-events: none;
+    font-size: 14px;
+    margin-bottom: 10px;
+    font-weight: bold;
 }
 
-#stockInfoPanel {
-    line-height: 1.4;
-}
-
-#volumeInfoPanel {
-    padding: 3px 6px;
-}
-
-/* 차트 컨트롤 스타일 */
-.chart-controls {
+.chart-header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px;
     margin-bottom: 10px;
 }
 
+.chart-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
 .chart-type-btn {
-    padding: 4px 8px;
-    border: 1px solid #ddd;
+    padding: 6px 12px;
     border-radius: 4px;
+    border: 1px solid #ddd;
+    background: white;
     cursor: pointer;
     font-size: 12px;
+    color: black;
 }
 
 .chart-type-btn.active {
-    background-color: #007bff;
+    background: #007bff;
     color: white;
     border-color: #007bff;
 }
 
 .stock-select {
-    padding: 4px 8px;
-    border: 1px solid #ddd;
+    padding: 6px;
     border-radius: 4px;
+    border: 1px solid #ddd;
     font-size: 12px;
+    background: white;
+    width: 150px;
+    color: black;
 }
 
 .stock-select option {

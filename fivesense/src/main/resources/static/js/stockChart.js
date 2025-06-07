@@ -63,7 +63,7 @@ class StockChart {
     createChart() {
         console.log('Creating chart...');
 
-        // 차트 컨테이너 초기화
+   
         this.chartContainer.innerHTML = `
             <div class="chart-separator">
                 <div id="priceChartContainer" style="width: 100%; height: 65%; position: relative;">
@@ -100,7 +100,7 @@ class StockChart {
                     width: 1, 
                     style: 1, 
                     labelBackgroundColor: '#ffffff',
-                    labelVisible: false
+                    labelVisible: false // x축 라벨 숨김
                 },
                 horzLine: { 
                     color: '#999999', 
@@ -113,7 +113,13 @@ class StockChart {
                 borderColor: '#dddddd',
                 borderVisible: true,
                 timeVisible: true,
-                secondsVisible: false
+                secondsVisible: false,
+                tickMarkFormatter: (time) => {
+                    const date = new Date(time * 1000);
+                    if (this.chartType === 'yearly') return date.getFullYear();
+                    if (this.chartType === 'monthly') return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+                    return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+                }
             },
             handleScroll: true,
             handleScale: true
@@ -172,9 +178,14 @@ class StockChart {
             }
         });
 
-        // 차트 싱크 설정
+        // 차트 싱크 설정 (스크롤 및 줌 동기화)
         this.syncCharts();
+
+        // 크로스헤어 동기화 설정
         this.setupCrosshairSync();
+
+        // 윈도우 리사이즈 이벤트
+        window.addEventListener('resize', this.handleResize.bind(this));
     }
 
     // 차트 동기화 설정
