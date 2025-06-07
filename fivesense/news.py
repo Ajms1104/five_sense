@@ -16,8 +16,8 @@ from urllib.error import HTTPError, URLError
 load_dotenv()
 
 # 네이버 API 인증 정보
-client_id = "yVTs36RiAqwNoBsKtvlP"
-client_secret = "5pKiHIh22g"
+client_id = 
+client_secret = 
 
 # DB 연결
 def DBconnect():

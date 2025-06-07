@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import StockChart from './StockChart.jsx';
 import Chat from './Chat.jsx';
+import Rank from './Rank.jsx';
 import '../styles/main.css';
 
 /*이미지 모음 */
@@ -11,6 +12,12 @@ import UserIcon from "../assets/user.svg";
 const Home = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showUserPopup, setShowUserPopup] = useState(false);
+  const [news, setNews] = useState([]);
+  const [newsError, setNewsError] = useState(null);
+  const [topStocks, setTopStocks] = useState([]);
+  const [selectedStock, setSelectedStock] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const toggleSidebar = () => {
     setSidebarOpen(prev => !prev);
@@ -22,6 +29,90 @@ const Home = () => {
 
   const handleBookmark = () => {
     window.location.href = '/bookmark';
+  };
+
+  const handleStockSelect = (stockCode) => {
+    setSelectedStock(stockCode);
+  };
+
+  useEffect(() => {
+    const fetchTopStocks = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/stock/top-volume');
+        if (!response.ok) {
+          throw new Error('거래량 상위 종목을 가져오는데 실패했습니다');
+        }
+        const data = await response.json();
+        console.log('API 응답:', data); // 실제 응답 확인
+
+        // 여기서 키를 바꿔줍니다!
+        const stocks = data.tdy_trde_qty_upper || [];
+        console.log('파싱된 stocks:', stocks);
+
+        setTopStocks(stocks.map(stock => ({
+          code: stock.stk_cd?.replace('_AL', '') ?? '',
+          name: stock.stk_nm ?? '',
+          volume: parseInt(stock.trde_qty) || 0,
+          price: parseInt(stock.cur_prc) || 0,
+          change: parseFloat(stock.flu_rt) || 0
+        })));
+        setLoading(false);
+      } catch (error) {
+        console.error('거래량 상위 종목 로딩 에러:', error);
+        setError(error.message);
+        setLoading(false);
+      }
+    };
+
+    fetchTopStocks();
+  }, []);
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/stock/news');
+        if (!response.ok) {
+          throw new Error('뉴스를 가져오는데 실패했습니다');
+        }
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          setNews(data);
+        } else {
+          setNews([]);
+        }
+      } catch (error) {
+        console.error('뉴스 로딩 에러:', error);
+        setNewsError(error.message);
+        setNews([]);
+      }
+    };
+
+    fetchNews();
+  }, []);
+
+  const renderChartSection = () => {
+    if (selectedStock) {
+      return (
+        <div className="chart-container">
+          <button className="back-button" onClick={() => setSelectedStock(null)}>
+            ← 랭킹으로 돌아가기
+          </button>
+          <StockChart stockCode={selectedStock} chartType="daily" />
+        </div>
+      );
+    }
+
+    if (loading) {
+      return <div className="loading">거래량 상위 종목을 불러오는 중...</div>;
+    }
+
+    if (error) {
+      return <div className="error">거래량 상위 종목을 불러오는데 실패했습니다</div>;
+    }
+
+    return (
+      <Rank stocks={topStocks} onStockSelect={handleStockSelect} />
+    );
   };
 
   return (
@@ -75,7 +166,21 @@ const Home = () => {
         {/* 사이드바 : 최신 뉴스 */}
         <div className="sidebar-menu-bottom">
           <h2 className="post">최신 뉴스</h2>
-          <div className="post_bg">{/* 뉴스 컨텐츠 */}</div>
+          <div className="post_bg">
+            {newsError ? (
+              <div className="news-error">뉴스를 불러오는데 실패했습니다</div>
+            ) : news.length > 0 ? (
+              news.map((item, index) => (
+                <div key={index} className="news-item">
+                  <a href={item.link} target="_blank" rel="noopener noreferrer">
+                    {item.title}
+                  </a>
+                </div>
+              ))
+            ) : (
+              <div className="news-loading">뉴스를 불러오는 중...</div>
+            )}
+          </div>
         </div>
       </aside>
 
@@ -83,7 +188,7 @@ const Home = () => {
       {/* 메인 콘텐츠 */}
       <aside className="main-bar">
         <section className="chart-section">
-          <StockChart stockCode="005930" chartType="daily" /> 
+          {renderChartSection()}
         </section>
          <p className="line_4"></p>
         <section className="chat-section">

@@ -269,6 +269,22 @@ const StockChart = ({ stockCode = '005930', chartType = 'daily', minuteType = '1
     fetchChartData();
   }, [stockCode, chartType, minuteType]);
 
+  const renderChart = (data) => {
+    if (!chartRef.current) return;
+
+    // 여기에 차트 렌더링 로직 구현
+    // 예: TradingView 차트 또는 다른 차트 라이브러리 사용
+    chartRef.current.innerHTML = `
+      <div class="chart-info">
+        <h3>${stockCode}</h3>
+        <p>일별 차트</p>
+      </div>
+      <div class="chart-placeholder">
+        차트 데이터: ${JSON.stringify(data)}
+      </div>
+    `;
+  };
+
   return (
     <div ref={chartContainerRef} className="chart-container" >
       <div className="chart-separator">
