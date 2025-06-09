@@ -58,8 +58,8 @@ public class KiwoomApiService {
         this.webClient = WebClient.builder()
                 .baseUrl("https://api.kiwoom.com")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .defaultHeader("appkey", "IFZoKZtS4RIhUP7qd4DSzgiFJ5_zbzJvgVoRCbb7KtM")//apikey 값 가져오기(현재  application.properties에 있는 값을 못가져와서 뒷부분에 값을 하드코딩해야함함)
-                .defaultHeader("appsecret", "4lD4p6k5ehfmfx3hB6OIaYoQFiqA8DrM3nVG8ybNryg")//apiSecret 값 가져오기
+                .defaultHeader("appkey", "  ")//apikey 값 가져오기(현재  application.properties에 있는 값을 못가져와서 뒷부분에 값을 하드코딩해야함함)
+                .defaultHeader("appsecret", "   ")//apiSecret 값 가져오기
                 .build();
         
         // 토큰 발급
@@ -74,8 +74,8 @@ public class KiwoomApiService {
             // 1. 요청 데이터 JSON 문자열 생성
             Map<String, String> tokenRequest = new HashMap<>();
             tokenRequest.put("grant_type", "client_credentials");
-            tokenRequest.put("appkey", "IFZoKZtS4RIhUP7qd4DSzgiFJ5_zbzJvgVoRCbb7KtM");//apikey 값 가져오기(현재  application.properties에 있는 값을 못가져와서 뒷부분에 값을 하드코딩해야함함)
-            tokenRequest.put("secretkey", "4lD4p6k5ehfmfx3hB6OIaYoQFiqA8DrM3nVG8ybNryg");
+            tokenRequest.put("appkey", "    ");//apikey 값 가져오기(현재  application.properties에 있는 값을 못가져와서 뒷부분에 값을 하드코딩해야함함)
+            tokenRequest.put("secretkey", "     ");
 
             // 2. API 호출
             Map<String, Object> response = webClient.post()
