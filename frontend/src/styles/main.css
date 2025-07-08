@@ -139,7 +139,7 @@ button{
   height: 20px;
   flex-shrink: 0;
   color: #24AFCF;
-  font-family: NanumSquare;
+  font-family: 'NanumSquare';
   font-size: 23px;
   font-style: normal;
   font-weight: 800;
@@ -149,7 +149,7 @@ button{
   left: 56px;
 }
 
-.side_btn { /*사이드바 접었다 폈다 그거거*/
+.side_btn { /*사이드바 접었다 폈다 그거*/
   position: relative;
   top: -93px;
   left: 220px;

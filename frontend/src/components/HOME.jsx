@@ -38,6 +38,10 @@ const Home = () => {
     navigate('/bookmark'); 
   };
 
+  const handleLogin = () => {
+    navigate('/login');
+  }
+
   const handleStockSelect = (stockCode) => {
     setSelectedStock(stockCode);
   };
@@ -129,18 +133,17 @@ const Home = () => {
         <img src={side_btn} className="side_btn_png" alt="toggle sidebar" />
       </button> */ }
       
-      {/* 상단바 : 유저 (추후 로그인+회원가입) */}
+      {/* 상단바 : 로그인+회원가입*/}
       <aside className='top-bar'>
         <div className="user-bar">
-            <button type='button' className="user_btn">
-              <img src={UserIcon} alt="user" className="user" />
-            </button>
+            <nav>
+              <Link to ="/login">
+               <button className="user_btn" onClick={handleLogin}>
+                <img src={UserIcon} alt="user" className="user" />
+               </button>
+              </Link>
+            </nav>
           <p className='line_5'></p>
-          {showUserPopup && (
-            <div className="user-popup">
-              <button onClick={() => alert("로그인")}>로그인</button>
-              <button onClick={() => alert("회원가입")}>회원가입</button>
-            </div>)}
         </div>
       </aside>
 
@@ -160,12 +163,14 @@ const Home = () => {
         <div className='sidebar-menu-top'>
           <h2 className="menu-txt">메뉴</h2>
           <nav>
-            <Link to ="/"></Link>
-            <button className="ai_chat" onClick={handleAiChat}>🔎 AI Chat</button>
+            <Link to ="/">
+             <button className="ai_chat" onClick={handleAiChat}>🔎 AI Chat</button>
+            </Link>
           </nav>
           <nav>
-            <Link to ="/bookmark"></Link>
-            <button className="bookmark" onClick={handleBookmark}>⭐ 즐겨찾기</button>
+            <Link to ="/bookmark">
+             <button className="bookmark" onClick={handleBookmark}>⭐ 즐겨찾기</button>
+            </Link>         
           </nav>
           <p className='line_1'></p>
         </div>

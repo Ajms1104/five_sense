@@ -30,6 +30,10 @@ const Bookmark = () => {
     navigate('/bookmark'); 
   };
 
+  const handleLogin = () => {   //User 버튼 누르면 이어질 곳 (로그인, 회원가입)
+    navigate('/login');   
+  }
+
   return (
     <section className="bookmark-container">
       
@@ -37,20 +41,19 @@ const Bookmark = () => {
         <img src={side_btn} className="side_btn_png" alt="toggle sidebar" />
       </button> */ }
       
-      {/* 상단바 : 유저 (추후 로그인+회원가입) */}
-        <aside className='top-bar'>
-            <div className="user-bar">
-                <button type='button' className="user_btn">
-                <img src={UserIcon} alt="user" className="user" />
+      {/* 상단바 : 로그인+회원가입*/}
+      <aside className='top-bar'>
+        <div className="user-bar">
+            <nav>
+              <Link to ="/login">
+                <button className="user_btn" onClick={handleLogin}>
+                  <img src={UserIcon} alt="user" className="user" />
                 </button>
-            <p className='line_5'></p>
-            {showUserPopup && (
-                <div className="user-popup">
-                <button onClick={() => alert("로그인")}>로그인</button>
-                <button onClick={() => alert("회원가입")}>회원가입</button>
-                </div>)}
-            </div>
-        </aside>
+              </Link>
+            </nav>
+          <p className='line_5'></p>
+        </div>
+      </aside>
 
       {/* 사이드바 : 로고  */}
         <aside className= 'sidebar'> {/*{`sidebar ${sidebarOpen ? '' : 'collapsed'}`} */}
@@ -68,12 +71,14 @@ const Bookmark = () => {
             <div className='sidebar-menu-top'>
                 <h2 className="menu-txt">메뉴</h2>
                 <nav>
-                    <Link to ="/"></Link>
+                  <Link to ="/">
                     <button className="ai_chat" onClick={handlehome}>🔎 AI Chat</button>
+                  </Link>
                 </nav>
                 <nav>
-                    <Link to ="/bookmark"></Link>
+                  <Link to ="/bookmark">
                     <button className="b_bookmark" onClick={handleBookmark}>⭐ 즐겨찾기</button>
+                  </Link>
                 </nav>
                 <p className='b_line_1'></p>
             </div>
