@@ -10,11 +10,45 @@ const Login = () => {
   const navigate = useNavigate();
   const [accountid, setAccountid] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // 로그인 처리 로직
-    console.log('로그인 시도:', accountid, password);
+    setError('');
+    setLoading(true);
+
+    try {
+      const response = await fetch('http://localhost:8080/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          accountid: accountid,
+          password: password
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // 로그인 성공
+        console.log('로그인 성공:', data.user);
+        // 사용자 정보를 localStorage에 저장
+        localStorage.setItem('user', JSON.stringify(data.user));
+        // 메인 페이지로 이동
+        navigate('/');
+      } else {
+        // 로그인 실패
+        setError(data.message || '로그인에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('로그인 오류:', error);
+      setError('서버 연결에 실패했습니다.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleHome = () => {
@@ -34,6 +68,13 @@ const Login = () => {
             <h1 className="login-logo-txt">FIVE_SENSE</h1>
           </button>
         </div>
+        
+        {error && (
+          <div className="error-message" style={{ color: 'red', marginBottom: '10px' }}>
+            {error}
+          </div>
+        )}
+        
         <div className="form-group">
           <label htmlFor="accountid">아이디</label>
           <input
@@ -43,6 +84,7 @@ const Login = () => {
             required
             value={accountid}
             onChange={e => setAccountid(e.target.value)}
+            disabled={loading}
           />
         </div>
 
@@ -55,14 +97,19 @@ const Login = () => {
             required
             value={password}
             onChange={e => setPassword(e.target.value)}
+            disabled={loading}
           />
         </div>
+        
         <div className="join-group">
-          <button className="join_btn" type="button" onClick={handleJoin}>
+          <button className="join_btn" type="button" onClick={handleJoin} disabled={loading}>
             <h3 className='Join-txt'> 회원가입 </h3>
           </button>
         </div>
-        <button className="login_btn" type="submit">로그인</button>
+        
+        <button className="login_btn" type="submit" disabled={loading}>
+          {loading ? '로그인 중...' : '로그인'}
+        </button>
       </form>
     </div>
   );

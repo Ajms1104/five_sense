@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.Builder;
 import lombok.ToString;
 import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Getter
