@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 
 
 import StockChart from './StockChart.jsx';
@@ -13,6 +13,7 @@ import side_btn from '../assets/Vector_3.svg';
 import UserIcon from "../assets/user.svg";
 
 const Home = () => {
+  const [searchParams] = useSearchParams();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showUserPopup, setShowUserPopup] = useState(false);
   const [news, setNews] = useState([]);
@@ -21,6 +22,7 @@ const Home = () => {
   const [selectedStock, setSelectedStock] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
 
   const toggleSidebar = () => {
     setSidebarOpen(prev => !prev);
@@ -46,6 +48,54 @@ const Home = () => {
     setSelectedStock(stockCode);
   };
 
+  // 즐겨찾기 추가 함수
+  const handleAddFavorite = async (stockCode, stockName) => {
+    try {
+      // 로그인된 사용자 정보 가져오기
+      const userStr = localStorage.getItem('user');
+      if (!userStr) {
+        alert('로그인이 필요합니다.');
+        return;
+      }
+      
+      const user = JSON.parse(userStr);
+      const accountid = user.accountid;
+      
+      const response = await fetch('http://localhost:8080/api/favorites', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          accountid: accountid,
+          stockCode: stockCode,
+          stockName: stockName
+        })
+      });
+
+      if (response.ok) {
+        alert('즐겨찾기에 추가되었습니다!');
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message || '즐겨찾기 추가에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('즐겨찾기 추가 오류:', error);
+      alert('즐겨찾기 추가 중 오류가 발생했습니다.');
+    }
+  };
+
+  //여기까지 즐겨찾기 추가 함수
+
+  // URL 파라미터에서 stock 코드 확인
+  useEffect(() => {
+    const stockParam = searchParams.get('stock');
+    if (stockParam) {
+      setSelectedStock(stockParam);
+    }
+  }, [searchParams]);
+
+  
   useEffect(() => {
     const fetchTopStocks = async () => {
       try {
@@ -103,11 +153,27 @@ const Home = () => {
 
   const renderChartSection = () => {
     if (selectedStock) {
+      // 선택된 주식의 이름 찾기
+      const selectedStockInfo = topStocks.find(stock => stock.code === selectedStock);
+      const stockName = selectedStockInfo ? selectedStockInfo.name : selectedStock;
+      
       return (
         <div className="chart-container">
-          <button className="back-button" onClick={() => setSelectedStock(null)}>
-            ← 랭킹으로 돌아가기
-          </button>
+          <div className="chart-header">
+            <button className="back-button" onClick={() => setSelectedStock(null)}>
+              ← 랭킹으로 돌아가기
+            </button>
+            <div className="stock-info">
+              <h3>{stockName} ({selectedStock})</h3>
+              <button 
+                className="favorite-button"
+                onClick={() => handleAddFavorite(selectedStock, stockName)}
+                title="즐겨찾기 추가"
+              >
+                ⭐ 즐겨찾기 추가
+              </button>
+            </div>
+          </div>
           <StockChart stockCode={selectedStock} chartType="daily" />
         </div>
       );

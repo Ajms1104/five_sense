@@ -439,3 +439,106 @@ button{
  top: 25px;
  left: 25px;
 }
+
+/* 즐겨찾기 목록 스타일추가 */
+.loading, .error, .empty-favorites {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  color: #6c757d;
+  font-size: 16px;
+}
+
+.error {
+  color: #dc3545;
+}
+
+.empty-favorites p {
+  margin: 5px 0;
+  color: #6c757d;
+}
+
+.favorites-list {
+  padding: 20px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.favorites-list h4 {
+  margin: 0 0 20px 0;
+  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.favorite-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 10px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  transition: all 0.2s ease;
+}
+
+.favorite-item:hover {
+  background: #e9ecef;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.favorite-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.stock-name {
+  font-weight: 600;
+  color: #333;
+  font-size: 16px;
+}
+
+.stock-code {
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.favorite-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.view-chart-btn, .remove-favorite-btn {
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.view-chart-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.view-chart-btn:hover {
+  background-color: #0056b3;
+}
+
+.remove-favorite-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.remove-favorite-btn:hover {
+  background-color: #c82333;
+}
