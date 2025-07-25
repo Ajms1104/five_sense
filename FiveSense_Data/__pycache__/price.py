@@ -9,53 +9,59 @@ from datetime import datetime
 import numpy as np
 
 # DB 연결
-def DBconnect():
+def DBconnect(create_table=False):
     global cur, conn
     try:
         conn = psycopg2.connect(host='localhost', user='postgres', password='1234', dbname='kiwoom_data')
         cur = conn.cursor()
-        print("Database Connect Success")
+        print("데이터베이스 연결 성공")
 
-        # 기존 기본 키 삭제 및 새로운 기본 키 추가
-        try:
+        if create_table:
+            try:
+                # 기존 테이블 삭제
+                cur.execute("DROP TABLE IF EXISTS public.price_data;")
+                print("기존 price_data 테이블 삭제 완료")
 
-            # 기존 테이블 삭제
-            cur.execute("DROP TABLE IF EXISTS public.price_data;")
-            print("기존 price_data 테이블 삭제 완료")
-
-            # 새 테이블 생성
-            create_table = """
-            CREATE TABLE public.price_data (
-                stk_cd VARCHAR(20),
-                date NUMERIC,
-                open_pric NUMERIC,
-                high_pric NUMERIC,
-                low_pric NUMERIC,
-                close_pric NUMERIC,
-                ind_netprps NUMERIC,
-                PRIMARY KEY (stk_cd, date)
-            );
-            """
-            cur.execute(create_table)
-            conn.commit()
-            print("기본 키 설정 완료: (stk_cd, date)")
-        except Exception as e:
-            print(f"기본 키 설정 중 오류: {str(e)}")
-            conn.rollback()
+                # 새 테이블 생성
+                create_table_query = """
+                CREATE TABLE public.price_data (
+                    stk_cd VARCHAR(20),
+                    date NUMERIC,
+                    open_pric NUMERIC,
+                    high_pric NUMERIC,
+                    low_pric NUMERIC,
+                    close_pric NUMERIC,
+                    ind_netprps NUMERIC,
+                    PRIMARY KEY (stk_cd, date)
+                );
+                """
+                cur.execute(create_table_query)
+                conn.commit()
+                print("기본 키 설정 완료: (stk_cd, date)")
+            except Exception as e:
+                print(f"기본 키 설정 중 오류: {str(e)}")
+                conn.rollback()
 
         return cur, conn
     except Exception as err:
-        print(str(err))
+        print(f"데이터베이스 연결 실패: {str(err)}")
         return None, None
 
 # DB 닫기
 def DBdisconnect():
+    global cur, conn
     try:
-        conn.close()
-        cur.close()
-        print("DB Connect Close")
-    except:
-        print("Error: Database Not Connected.")
+        if cur is not None and not cur.closed:
+            cur.close()
+            print("커서 닫기 완료")
+        if conn is not None and not conn.closed:
+            conn.close()
+            print("데이터베이스 연결 종료")
+    except Exception as err:
+        print(f"연결 종료 중 오류: {str(err)}")
+    finally:
+        cur = None
+        conn = None
 
 # API 요청 (단일 요청)
 def fn_ka10086(token, data, cont_yn='N', next_key='', max_retries=3):
@@ -74,13 +80,13 @@ def fn_ka10086(token, data, cont_yn='N', next_key='', max_retries=3):
     for attempt in range(max_retries):
         try:
             response = requests.post(url, headers=headers, json=data)
-            print('Code:', response.status_code)
-            print('Header:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
-            print('Body:', json.dumps(response.json(), indent=4, ensure_ascii=False))
+            print('응답 코드:', response.status_code)
+            print('헤더:', json.dumps({key: response.headers.get(key) for key in ['next-key', 'cont-yn', 'api-id']}, indent=4, ensure_ascii=False))
+            print('바디:', json.dumps(response.json(), indent=4, ensure_ascii=False))
 
             if response.status_code == 429:
                 print(f"429 Too Many Requests 에러 발생. {attempt + 1}/{max_retries} 재시도 중...")
-                time.sleep(2 ** attempt)  # 지수 백오프 (1초, 2초, 4초 대기)
+                time.sleep(2 ** attempt)  # 지수 백오프
                 continue
 
             if response.status_code == 200:
@@ -121,7 +127,7 @@ def fn_ka10086(token, data, cont_yn='N', next_key='', max_retries=3):
     print("최대 재시도 횟수 초과. API 요청 실패")
     return None, None, None
 
-# 연속 조회를 포함한 모든 데이터 가져오기 (날짜 범위 제한 추가)
+# 연속 조회를 포함한 모든 데이터 가져오기
 def fetch_all_data(token, data, start_date='20230101', end_date=None, max_iterations=10):
     all_data = []
     cont_yn = 'N'
@@ -187,16 +193,23 @@ def fetch_all_data(token, data, start_date='20230101', end_date=None, max_iterat
 
 # 데이터베이스에 데이터 삽입
 def insert_to_db(df, expected_stk_cd, batch_size=1000):
+    global cur, conn
     try:
-        # DB 연결
-        cur, conn = DBconnect()
-        if cur is None or conn is None:
-            raise Exception("DB 연결 실패")
+        # 데이터프레임 크기 확인
+        print(f"삽입할 총 데이터: {len(df)} 행")
 
-        # 데이터프레임의 각 행을 테이블에 삽입 (배치 처리)
+        # 커서와 연결이 닫혔는지 확인하고 재연결
+        if conn is None or conn.closed or cur is None or cur.closed:
+            print("커서 또는 연결이 닫혔습니다. 재연결 시도...")
+            cur, conn = DBconnect(create_table=False)
+            if cur is None or conn is None:
+                raise Exception("데이터베이스 재연결 실패")
+
+        inserted_rows = 0
         for start in range(0, len(df), batch_size):
-            batch = df[start:start + batch_size]
-            print(f"배치 삽입 시작: {start} ~ {start + len(batch) - 1} 행")
+            end = min(start + batch_size, len(df))
+            batch = df[start:end]
+            print(f"배치 삽입 시작: {start} ~ {end - 1} 행 ({len(batch)} 행)")
 
             for index, row in batch.iterrows():
                 # stk_cd 검증
@@ -204,7 +217,7 @@ def insert_to_db(df, expected_stk_cd, batch_size=1000):
                     print(f"stk_cd 불일치: 예상값 {expected_stk_cd}, 실제값 {row['stk_cd']}")
                     continue
 
-                # 중복 데이터 삽입 안되게 설정
+                # 중복 데이터 삽입 방지
                 insert_query = """
                 INSERT INTO public.price_data (stk_cd, date, open_pric, high_pric, low_pric, close_pric, ind_netprps)
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
@@ -222,25 +235,27 @@ def insert_to_db(df, expected_stk_cd, batch_size=1000):
             
             # 배치 커밋
             conn.commit()
-            print(f"배치 삽입 완료: {len(batch)} rows")
+            inserted_rows += len(batch)
+            print(f"배치 삽입 완료: {len(batch)} 행, 누적 삽입: {inserted_rows} 행")
 
-        print("모든 데이터 삽입 완료")
+        print(f"모든 데이터 삽입 완료: 총 {inserted_rows} 행")
 
     except Exception as err:
-        print("데이터 삽입 중 오류:", str(err))
-        if conn is not None:
+        print(f"데이터 삽입 중 오류: {str(err)}")
+        if conn is not None and not conn.closed:
             conn.rollback()
-
-    finally:
-        DBdisconnect()
-
+        raise  # 오류를 상위로 전파하여 디버깅 용이
 
 # buyTop50_data에서 상위 20개 종목 코드 가져오기
 def get_top20_stk_codes():
+    global cur, conn
     try:
-        cur, conn = DBconnect()
-        if cur is None or conn is None:
-            raise Exception("DB 연결 실패")
+        # 이미 연결이 열려 있으므로 재사용
+        if conn is None or conn.closed or cur is None or cur.closed:
+            print("커서 또는 연결이 닫혔습니다. 재연결 시도...")
+            cur, conn = DBconnect(create_table=False)
+            if cur is None or conn is None:
+                raise Exception("DB 연결 실패")
 
         # 최신 created_at을 기준으로 상위 20개 종목 코드 조회
         query = """
@@ -257,37 +272,53 @@ def get_top20_stk_codes():
     except Exception as err:
         print(f"종목 코드 조회 중 오류: {str(err)}")
         return []
-    finally:
-        DBdisconnect()
-
 
 # 실행 구간
 if __name__ == '__main__':
     # 1. 토큰 설정
     MY_ACCESS_TOKEN = main.fn_au10001()  # 접근 토큰
 
+    # 2. 데이터베이스 연결 및 테이블 생성 (한 번만)
+    cur, conn = DBconnect(create_table=False)
+    if cur is None or conn is None:
+        print("프로그램 종료: 데이터베이스 연결 실패")
+        exit()
+
+    # 3. 상위 20개 종목 코드 가져오기
     stk_list = get_top20_stk_codes()
 
-    for stk_cd in stk_list : 
+    # 이미 처리된 종목코드 가져오기
+    cur.execute("SELECT DISTINCT stk_cd FROM public.price_data;")
+    already_inserted = {row[0] for row in cur.fetchall()}
+    print("이미 처리된 종목:", already_inserted)
+    
+    # 4. 각 종목 데이터 처리
+    for stk_cd in stk_list:
+        if stk_cd in already_inserted:
+           print(f"{stk_cd} 이미 처리됨, 건너뜀.")
+           continue
         print(f"\n{stk_cd} 데이터 조회 중")
 
-        # 2. 요청 데이터
+        # 요청 데이터
         params = {
-            'stk_cd' : stk_cd,
-            'qry_dt' : None,
-            'indc_tp' : '0',
+            'stk_cd': stk_cd,
+            'qry_dt': None,
+            'indc_tp': '0',
         }
 
-        # 3. 모든 데이터 가져오기
+        # 모든 데이터 가져오기
         df = fetch_all_data(
-            token = MY_ACCESS_TOKEN,
-            data = params,
+            token=MY_ACCESS_TOKEN,
+            data=params,
             start_date='20200101',
             end_date=None,
             max_iterations=100
         )
 
-        # 4. 데이터베이스에 삽입
+        # 데이터베이스에 삽입
         if df is not None:
             print(f"총 {len(df)} row 데이터를 삽입합니다.")
             insert_to_db(df, expected_stk_cd=params['stk_cd'], batch_size=1000)
+
+    # 5. 데이터베이스 연결 종료
+    DBdisconnect()
