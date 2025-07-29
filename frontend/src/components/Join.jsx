@@ -32,10 +32,8 @@ const Join = () => {
   return (
     <div className="join-container">
       <div className="join-header">
-        <button className="join-home-btn" onClick={handleHome}>
           <img src={teamlogo} alt="팀 로고" className="join-logo-img" />
           <h1 className="join-logo-text">FIVE_SENSE</h1>
-        </button>
       </div>
 
       <form className="join-form" onSubmit={handleSubmit}>
@@ -88,7 +86,6 @@ const Join = () => {
             <h3 className="to-login-text">이미 계정이 있으신가요? 로그인</h3>
           </button>
         </div>
-
         <button className="submit-join-btn" type="submit">회원가입</button>
       </form>
     </div>

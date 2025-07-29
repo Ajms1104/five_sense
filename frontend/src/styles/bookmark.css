@@ -1,12 +1,11 @@
 /* src/styles/bookmark.css */
 
-@import url('https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@2.0/nanumSquare.css');
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
 
 /*CSS -> 자바스크립트 순서로 정리해둠*/
 
 * {
   color: #000000;
-  font-family: 'NanumSquare', sans-serif;
 }
 
 /*최상위 설정 모음, 어지간하면 터치 X*/
@@ -24,6 +23,13 @@ button{
   background: transparent;
   padding: 0;
   cursor: pointer;
+}
+
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
 }
 
 .bookmark-container{
@@ -139,7 +145,7 @@ button{
   height: 20px;
   flex-shrink: 0;
   color: #24AFCF;
-  font-family: NanumSquare;
+  font-family: 'Pretendard-Regular';
   font-size: 23px;
   font-style: normal;
   font-weight: 800;
@@ -179,7 +185,7 @@ button{
 .menu-txt{
   flex-shrink: 0;
   color: var(--, #3B413C);
-  font-family: NanumSquare;
+  font-family: 'Pretendard-Regular';
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -192,10 +198,10 @@ button{
 .ai_chat{ /*사실상 처음으로 돌아가기*/
   flex-shrink: 0;
   color: var(--, #3B413C);
-  font-family: NanumSquare;
+  font-family: 'Pretendard-Regular';
   font-size: 20px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 400;
   line-height: normal;
   letter-spacing: 2px;
   position: relative;
@@ -206,10 +212,10 @@ button{
 .b_bookmark{ /*즐겨찾기*/
   flex-shrink: 0;
   color: var(--, #28aa3e);
-  font-family: NanumSquare;
+  font-family: 'Pretendard-Regular';
   font-size: 20px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 400;
   line-height: normal;
   letter-spacing: 2px;
   position: relative;
@@ -236,7 +242,7 @@ button{
 .history_font{
   flex-shrink: 0;
   color: var(--, #3B413C);
-  font-family: NanumSquare;
+  font-family: 'Pretendard-Regular';
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -256,7 +262,7 @@ button{
   border-radius: 100px;
   background: var(--_, #f2f2f2);
   color: var(--, #3B413C);
-  font-family: NanumSquare;
+  font-family: 'Pretendard-Regular';
   font-size: 15px;
   font-style: normal;
   font-weight: 400;
@@ -281,7 +287,7 @@ button{
 .dplus-7-btn{ /*7일 전꺼*/
   flex-shrink: 0;
   color: var(--, #3B413C);
-  font-family: NanumSquare;
+  font-family: 'Pretendard-Regular';
   font-size: 15px;
   font-style: normal;
   font-weight: 400;
@@ -310,7 +316,7 @@ button{
 .post{
   flex-shrink: 0;
   color: var(--, #3B413C);
-  font-family: NanumSquare;
+  font-family: 'Pretendard-Regular';
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -360,10 +366,10 @@ button{
  height: 27px;
  flex-shrink: 0;
  color: #000;
- font-family: NanumSquareRound;
+ font-family: 'Pretendard-Regular';
  font-size: 18px;
  font-style: normal;
- font-weight: 700;
+ font-weight: 600;
  line-height: normal;
  letter-spacing: 2.4px;
  position: relative;
@@ -395,10 +401,10 @@ button{
 
 .mark_chart{
  color: #000;
- font-family: NanumSquareRound;
+ font-family: 'Pretendard-Regular';
  font-size: 19px;
  font-style: normal;
- font-weight: 700;
+ font-weight: 600;
  line-height: normal;
  letter-spacing: 1.9px;
  position: relative;
@@ -407,7 +413,7 @@ button{
 
 .mark_search{
  color: #000;
- font-family: NanumSquareRound;
+ font-family: 'Pretendard-Regular';
  font-size: 19px;
  font-style: normal;
  font-weight: 700;
@@ -429,7 +435,7 @@ button{
 
 .mark_check{
  color: #000;
- font-family: NanumSquareRound;
+ font-family: 'Pretendard-Regular';
  font-size: 18px;
  font-style: normal;
  font-weight: 550;

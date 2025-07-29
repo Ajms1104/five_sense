@@ -29,10 +29,8 @@ const Login = () => {
     <div className="login-container">
       <form className='login-input-form' onSubmit={handleSubmit}>
         <div className="title">
-          <button className="main_btn" onClick={handleHome}>
             <img src={teamlogo} alt="팀 로고" className="login_logo_png" />
             <h1 className="login-logo-txt">FIVE_SENSE</h1>
-          </button>
         </div>
         <div className="form-group">
           <label htmlFor="accountid">아이디</label>

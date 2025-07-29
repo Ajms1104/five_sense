@@ -6,7 +6,6 @@
 
 * {
   color: #000000;
-  font-family: 'NanumSquare', sans-serif;
 }
 
 /*최상위 설정 모음, 어지간하면 터치 X*/
@@ -18,8 +17,14 @@ html, body {
   overflow-x: hidden;
   overflow-y: hidden;
   margin: 0;
-  font-family: 'NanumSquare';
   background-color: #ffffff;
+}
+
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
 }
 
 /*------------------------구분선------------------------*/
@@ -56,22 +61,21 @@ html, body {
   width: 70px;
   height: 50px;
   position: relative;
-  left:20px;
-
+  left: -100px;
 }
 
 .join-logo-text { /*Five_sense*/
   font-size: 24px;
   font-weight: bold;
   color: #24AFCF;
-  font-family: NanumSquare;
+  font-family: 'Pretendard-Regular';
   font-size: 28px;
   font-style: normal;
   font-weight: 800;
   line-height: normal;
   position: relative;
-  left: 145px;
-  top: -57px;
+  left:20px;
+  top: -65px;
 }
 
 /*------------------------구분선------------------------*/

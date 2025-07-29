@@ -5,7 +5,14 @@
 
 * {
   color: #000000;
-  font-family: 'NanumSquare', sans-serif;
+}
+
+
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
 }
 
 .chat-container{
@@ -25,7 +32,7 @@
 .sub_title {          
   color: #3B413C;
   text-align: center;
-  font-family: NanumSquare, sans-serif;
+  font-family: 'Pretendard-Regular';
   font-size: 24px;
   font-weight: 700;
   line-height: normal;
