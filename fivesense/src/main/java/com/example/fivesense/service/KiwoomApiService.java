@@ -59,7 +59,10 @@ public class KiwoomApiService {
         this.webClient = WebClient.builder()
                 .baseUrl("https://api.kiwoom.com")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .defaultHeader("appkey", "b2K5-UsTjlm6ZzCoOpYXfoW7w-f9lIoiCyJPfWbOvjA")
+                .defaultHeader("appsecret", "F9011bD31_BQEry1SOorhTUSGAj-mEOjrfjQZc4AD9A")
                 .build();
+                
         
         // 토큰 발급
         getAccessToken();
@@ -72,7 +75,8 @@ public class KiwoomApiService {
         try {
             // 1. 요청 데이터 JSON 문자열 생성
             Map<String, String> tokenRequest = new HashMap<>();
-            tokenRequest.put("grant_type", "client_credentials");
+            tokenRequest.put("appkey", "b2K5-UsTjlm6ZzCoOpYXfoW7w-f9lIoiCyJPfWbOvjA");
+            tokenRequest.put("secretkey", "F9011bD31_BQEry1SOorhTUSGAj-mEOjrfjQZc4AD9A");
 
             // 2. API 호출
             Map<String, Object> response = webClient.post()
