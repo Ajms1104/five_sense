@@ -12,7 +12,7 @@ import numpy as np
 def DBconnect(create_table=False):
     global cur, conn
     try:
-        conn = psycopg2.connect(host='localhost', user='postgres', password='1234', dbname='kiwoom_data')
+        conn = psycopg2.connect(host='localhost', user='postgres', password='5692', dbname='kiwoom_data')
         cur = conn.cursor()
         print("데이터베이스 연결 성공")
 
