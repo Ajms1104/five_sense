@@ -1,69 +1,140 @@
-// src/components/Join.jsx
+// components/Join.jsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/join.css';
-
+import teamlogo from '../assets/teamlogo.png';
 
 const Join = () => {
-  const [form, setForm] = useState({
-    accountid: '',
-    password: '',
-    username: '',
-  });
+  const navigate = useNavigate();
+  const [accountid, setAccountid] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPw, setConfirmPw] = useState('');
+  const [username, setUsername] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.id]: e.target.value,
-    });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    
+    if (password !== confirmPw) {
+      setError('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+    
+    setLoading(true);
+    
+    try {
+      const response = await fetch('http://localhost:8080/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          accountid: accountid,
+          password: password,
+          username: username
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert('회원가입이 완료되었습니다!');
+        navigate('/login');
+      } else {
+        setError(data.message || '회원가입에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('회원가입 오류:', error);
+      setError('서버 연결에 실패했습니다.');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // 실제 회원가입 처리 로직 (fetch/axios 등)
-    // 예시:
-    // fetch('/register', { method: 'POST', body: JSON.stringify(form), ... })
-    alert('회원가입 정보: ' + JSON.stringify(form, null, 2));
+  const handleHome = () => {
+    navigate('/');
+  };
+
+  const handleLogin = () => {
+    navigate('/login');
   };
 
   return (
-    <div className="container">
-      <h2>회원가입</h2>
-      <form action="/register" method="post" onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="accountid">아이디:</label>
+    <div className="join-container">
+      <div className="join-header">
+        <button className="join-home-btn" onClick={handleHome}>
+          <img src={teamlogo} alt="팀 로고" className="join-logo-img" />
+          <h1 className="join-logo-text">FIVE_SENSE</h1>
+        </button>
+      </div>
+
+      <form className="join-form" onSubmit={handleSubmit}>
+        {error && (
+          <div className="error-message" style={{ color: 'red', marginBottom: '10px', textAlign: 'center' }}>
+            {error}
+          </div>
+        )}
+        
+        <div className="join-form-group">
+          <label htmlFor="accountid">아이디</label>
           <input
             type="text"
             id="accountid"
-            value={form.accountid}
-            onChange={handleChange}
             required
+            value={accountid}
+            onChange={e => setAccountid(e.target.value)}
+            disabled={loading}
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="password">비밀번호:</label>
-          <input
-            type="password"
-            id="password"
-            value={form.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="username">이름:</label>
+
+        <div className="join-form-group">
+          <label htmlFor="username">사용자명</label>
           <input
             type="text"
             id="username"
-            value={form.username}
-            onChange={handleChange}
             required
+            value={username}
+            onChange={e => setUsername(e.target.value)}
+            disabled={loading}
           />
         </div>
-        <button type="submit">가입하기</button>
+
+        <div className="join-form-group">
+          <label htmlFor="password">비밀번호</label>
+          <input
+            type="password"
+            id="password"
+            required
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            disabled={loading}
+          />
+        </div>
+
+        <div className="join-form-group">
+          <label htmlFor="confirmPw">비밀번호 확인</label>
+          <input
+            type="password"
+            id="confirmPw"
+            required
+            value={confirmPw}
+            onChange={e => setConfirmPw(e.target.value)}
+            disabled={loading}
+          />
+        </div>
+
+        <div className="join-login-link">
+          <button type="button" className="to-login-btn" onClick={handleLogin}>
+            <h3 className="to-login-text">이미 계정이 있으신가요? 로그인</h3>
+          </button>
+        </div>
+
+        <button className="submit-join-btn" type="submit" disabled={loading}>
+          {loading ? '회원가입 중...' : '회원가입'}
+        </button>
       </form>
-      <div className="login-link">
-        <a href="/login">로그인으로 돌아가기</a>
-      </div>
     </div>
   );
 };

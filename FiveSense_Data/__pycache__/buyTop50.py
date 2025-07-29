@@ -14,7 +14,7 @@ def DBconnect():
         conn = psycopg2.connect(
             host='localhost',
             user='postgres',
-            password='1234',
+            password='5692',
             dbname='kiwoom_data'
         )
         cur = conn.cursor()
@@ -182,12 +182,12 @@ def insert_to_db(df, batch_size=1000):
                 ON CONFLICT (stk_cd) DO NOTHING;
                 """
                 cur.execute(insert_query, (
-                    row['rank'],
-                    row['stk_cd'],
-                    row['stk_nm'],
-                    row['cur_prc'],
-                    row['acc_trde_qty'],
-                    row['created_at']
+                    row['rank'],    # 순위
+                    row['stk_cd'],   # 종목코드
+                    row['stk_nm'],   # 종목명
+                    row['cur_prc'],   # 현재가
+                    row['acc_trde_qty'],   # 누적거래량
+                    row['created_at']   # DB에 저장되기 전 시각(데이터를 받은 시각)
                 ))
 
             conn.commit()

@@ -4,6 +4,7 @@ import com.example.fivesense.model.User;
 import com.example.fivesense.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -19,11 +20,22 @@ public class UserService {
         }
         userRepository.save(user);
     }
+
     public User login(String accountid, String password) {
         User user = userRepository.findByAccountid(accountid);
-        if (user == null || !user.getPassword().equals(password)) {
+        if (user == null) {
+            return null;
+        }
+        if (user.getPassword() == null) {
+            return null;
+        }
+        if (!user.getPassword().equals(password)) {
             return null;
         }
         return user;
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 }

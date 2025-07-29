@@ -1,72 +1,68 @@
 package com.example.fivesense.controller;
 
-import org.springframework.web.bind.annotation.*;
+import com.example.fivesense.model.ChatMessage;
+import com.example.fivesense.repository.ChatMessageRepository;
+import com.example.fivesense.service.ChatGPTService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.MediaType;
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/chat")
 public class ChatController {
 
-    @Value("${rasa.api.url}")
-    private String rasaApiUrl;
+    @Autowired
+    private ChatMessageRepository chatMessageRepository;
 
-    @Value("${rasa.api.key}")
-    private String rasaApiKey;
-    
+    @Autowired
+    private ChatGPTService chatGPTService;
 
-    @PostMapping("/chat")
-    public ResponseEntity<Map<String, String>> chat(@RequestBody Map<String, String> request) {
+    @PostMapping
+    public ResponseEntity<?> handleChat(@RequestBody Map<String, String> request) {
+        String userMessage = request.get("message");
+        if (userMessage == null || userMessage.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "메시지를 입력해주세요."));
+        }
         
         try {
-            String message = request.get("message");
-            if (message == null || message.trim().isEmpty()) {
-                return ResponseEntity.badRequest().body(createErrorResponse("메시지를 입력해주세요."));
-            }
-            
-            // Rasa API 요청 바디 설정
-            Map<String, String> rasaRequest = new HashMap<>();
-            rasaRequest.put("sender", "user");
-            rasaRequest.put("message", message);
-            
-            // API 호출
-            RestTemplate restTemplate = new RestTemplate();
-            List<Map<String, Object>> response = restTemplate.postForObject(
-                rasaApiUrl,
-                rasaRequest,
-                List.class
-            );
-            
-            // Rasa 응답 처리
-            if (response != null && !response.isEmpty()) {
-                Map<String, Object> firstResponse = response.get(0);
-                String text = (String) firstResponse.get("text");
-                
-                Map<String, String> result = new HashMap<>();
-                result.put("response", text != null ? text : "죄송합니다. 응답을 처리할 수 없습니다.");
-                return ResponseEntity.ok(result);
-            }
-            
-            return ResponseEntity.ok(createErrorResponse("죄송합니다. 응답을 받지 못했습니다."));
-                
+            // 사용자 메시지 저장
+            ChatMessage userChatMessage = new ChatMessage();
+            userChatMessage.setContent(userMessage);
+            userChatMessage.setType("USER");
+            chatMessageRepository.save(userChatMessage);
+
+            // ChatGPT API 호출
+            String aiResponse = chatGPTService.getChatResponse(userMessage);
+
+            // AI 응답 저장
+            ChatMessage aiChatMessage = new ChatMessage();
+            aiChatMessage.setContent(aiResponse);
+            aiChatMessage.setType("AI");
+            chatMessageRepository.save(aiChatMessage);
+
+            return ResponseEntity.ok(Map.of("response", aiResponse));
+        } catch (IllegalArgumentException e) {
+            // API 키 관련 에러
+            return ResponseEntity.status(500).body(Map.of("error", "서버 설정 오류: " + e.getMessage()));
+        } catch (RuntimeException e) {
+            // ChatGPT API 호출 실패
+            return ResponseEntity.status(500).body(Map.of("error", "AI 응답 생성 중 오류가 발생했습니다: " + e.getMessage()));
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500)
-                .body(createErrorResponse("챗봇 서버와 통신 중 오류가 발생했습니다: " + e.getMessage()));
+            // 기타 예상치 못한 에러
+            return ResponseEntity.status(500).body(Map.of("error", "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요."));
         }
     }
-    
-    
-    private Map<String, String> createErrorResponse(String message) {
-        Map<String, String> response = new HashMap<>();
-        response.put("response", message);
-        return response;
+
+    @GetMapping("/history")
+    public ResponseEntity<?> getChatHistory() {
+        try {
+            List<ChatMessage> messages = chatMessageRepository.findAll();
+            return ResponseEntity.ok(messages);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("error", "채팅 기록을 불러오는데 실패했습니다."));
+        }
     }
 } 
