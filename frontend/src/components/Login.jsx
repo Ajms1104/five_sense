@@ -13,8 +13,12 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // 로그인 처리 로직
+    // 로그인 처리 로직 (실제 API 호출로 대체하세요; 여기서는 성공 가정)
     console.log('로그인 시도:', accountid, password);
+    
+    // 로그인 성공 시 localStorage 설정 (실제로는 API 응답 후 설정)
+    localStorage.setItem('isLoggedIn', 'true');
+    navigate('/');  // 성공 시 홈으로 이동
   };
 
   const handleHome = () => {

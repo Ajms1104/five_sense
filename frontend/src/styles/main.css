@@ -82,6 +82,18 @@ button{
   object-fit: contain;
 }
 
+/*수정수정수정수정수정 꼭 수정수정*/
+.user_login_logout_check{ /* user_btn 아래에 위치 조정 (CSS로 세밀히 조정하세요) */
+  position: relative;
+  width: 130px;
+  height: 100px;
+  left: 500px;                    /* 우측에서 20px */
+  transform: translateY(-5%); 
+  background-Color: #9c5d5d;
+  border: '1px solid #ccc';
+  padding: '10px';
+}
+
 .user-popup {
   position: absolute;
   top: 100%;       /* 아이콘 아래 */

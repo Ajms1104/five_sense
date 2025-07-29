@@ -1,6 +1,5 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, cloneElement} from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-
 
 import StockChart from './StockChart.jsx';
 import Chat from './Chat.jsx';
@@ -22,12 +21,30 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // 추가: 로그인 상태 관리 (기존 변수명 건들지 않음)
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  // 추가: useEffect로 localStorage 체크 (로그인 상태 유지)
+  useEffect(() => {
+    const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    setIsLoggedIn(loggedIn);
+  }, []);
+
   const toggleSidebar = () => {
     setSidebarOpen(prev => !prev);
   };
 
-  const toggleUserPopup = () => {  // 추가
+  const toggleUserPopup = () => {  // 기존 함수 유지
     setShowUserPopup(prev => !prev);
+  };
+
+  // 추가: 로그아웃 핸들러 (새로 만듦)
+  const handleLogout = () => {
+    localStorage.removeItem('isLoggedIn');
+    setIsLoggedIn(false);
+    setShowUserPopup(false);  // 팝업 닫기
+    navigate('/login');  // 로그인 페이지로 이동
   };
   
   const handleAiChat = () => {
@@ -41,6 +58,15 @@ const Home = () => {
   const handleLogin = () => {
     navigate('/login');
   }
+
+  // 추가: user_btn 클릭 핸들러 (로그인 상태에 따라 분기; 기존 handleLogin 활용)
+  const handleUserButtonClick = () => {
+    if (isLoggedIn) {
+      toggleUserPopup();  // 로그인 시 팝업 토글
+    } else {
+      handleLogin();  // 미로그인 시 기존 로그인 페이지로
+    }
+  };
 
   const handleStockSelect = (stockCode) => {
     setSelectedStock(stockCode);
@@ -137,12 +163,18 @@ const Home = () => {
       <aside className='top-bar'>
         <div className="user-bar">
             <nav>
-              <Link to ="/login">
-               <button className="user_btn" onClick={handleLogin}>
+              {/* 기존 Link 유지, onClick을 handleUserButtonClick으로 변경 */}
+              <button className="user_btn" onClick={handleUserButtonClick}>
                 <img src={UserIcon} alt="user" className="user" />
-               </button>
-              </Link>
+              </button>
             </nav>
+            {/* 추가: 팝업 (user_btn 아래에 위치; position: absolute로 배치) */}
+            {/* showUserPopup && isLoggedIn && 
+            (<div className='user_login_logout_check'>
+                <p>로그인 중</p>
+                <button onClick={handleLogout} style={{ marginTop: '10px' }}>로그아웃</button>
+              </div>
+            )*/}
           <p className='line_5'></p>
         </div>
       </aside>
