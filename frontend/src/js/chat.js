@@ -24,7 +24,7 @@ async function sendMessageToRast(message) {
 
 // 입력칸 이벤트 리스너 설정
 document.addEventListener('DOMContentLoaded', () => {
-    const inputField = document.querySelector('.input-container input');
+    const inputField = document.querySelector('.input-container-input');
     const submitButton = document.querySelector('#submit');
     const chatHistory = document.querySelector('.chat-history');
     

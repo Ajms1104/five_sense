@@ -19,7 +19,7 @@ public class FivesenseApplication {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
-						.allowedOrigins("http://localhost:3000") // React 기본 포트
+						.allowedOrigins("http://localhost:5173") // React 기본 포트
 						.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
 						.allowedHeaders("*")
 						.allowCredentials(true);
