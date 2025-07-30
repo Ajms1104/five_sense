@@ -27,6 +27,7 @@ import java.net.URI;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+
 @Service
 public class KiwoomApiService {
 
@@ -59,10 +60,9 @@ public class KiwoomApiService {
         this.webClient = WebClient.builder()
                 .baseUrl("https://api.kiwoom.com")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .defaultHeader("appkey", "b2K5-UsTjlm6ZzCoOpYXfoW7w-f9lIoiCyJPfWbOvjA")
-                .defaultHeader("appsecret", "F9011bD31_BQEry1SOorhTUSGAj-mEOjrfjQZc4AD9A")
+                .defaultHeader("appkey", "qFcv09wI95xTn6ohGbv1Dk2Omjd6F5fYRDZRuuIe4FI")
+                .defaultHeader("secretkey", "yd1X8TmJueuJk2Yblx-4f34b3ggRcyJj8ZSnIz_SKoc")
                 .build();
-                
         
         // 토큰 발급
         getAccessToken();
@@ -73,10 +73,11 @@ public class KiwoomApiService {
     
     private void getAccessToken() {
         try {
-            // 1. 요청 데이터 JSON 문자열 생성
+            // 1. 요청 데이터 JSON 문자열 생성 (grant_type 추가: 키움 API 필수)
             Map<String, String> tokenRequest = new HashMap<>();
-            tokenRequest.put("appkey", "b2K5-UsTjlm6ZzCoOpYXfoW7w-f9lIoiCyJPfWbOvjA");
-            tokenRequest.put("secretkey", "F9011bD31_BQEry1SOorhTUSGAj-mEOjrfjQZc4AD9A");
+            tokenRequest.put("grant_type", "client_credentials");
+            tokenRequest.put("appkey", "qFcv09wI95xTn6ohGbv1Dk2Omjd6F5fYRDZRuuIe4FI");
+            tokenRequest.put("secretkey", "yd1X8TmJueuJk2Yblx-4f34b3ggRcyJj8ZSnIz_SKoc");
 
             // 2. API 호출
             Map<String, Object> response = webClient.post()
@@ -104,6 +105,7 @@ public class KiwoomApiService {
             e.printStackTrace();
         }
     }
+    
     // 웹소켓 연결 초기화
     private void initWebSocketConnection() {
         try {
@@ -115,12 +117,15 @@ public class KiwoomApiService {
                 public void afterConnectionEstablished(@NonNull WebSocketSession session) {
                     socketSession = session;
                     try {
-                        // 로그인 패킷 전송
+                        // 로그인 패킷 전송 (토큰이 null인지 확인하는 로그 추가)
+                        if (accessToken == null || accessToken.isEmpty()) {
+                            System.err.println("Warning: accessToken is null or empty before sending login.");
+                        }
                         Map<String, Object> loginMessage = new HashMap<>();
                         loginMessage.put("trnm", "LOGIN");
                         loginMessage.put("token", accessToken);
                         
-                        System.out.println("실시간 시세 서버로 로그인 패킷을 전송합니다.");
+                        System.out.println("실시간 시세 서버로 로그인 패킷을 전송합니다. Token: " + accessToken);
                         session.sendMessage(new TextMessage(objectMapper.writeValueAsString(loginMessage)));
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -172,7 +177,6 @@ public class KiwoomApiService {
             e.printStackTrace();
         }
     }
-    
 
     // 주식 차트 조회
     public Map<String, Object> getDailyStockChart(String stockCode, String baseDate, String apiId) {
@@ -185,7 +189,6 @@ public class KiwoomApiService {
             Map<String, String> requestData = new HashMap<>();
             requestData.put("stk_cd", stockCode);
             requestData.put("upd_stkpc_tp", "1");
-
 
             if ("KA10080".equals(apiId)) {
                 requestData.put("tic_scope", ticScope != null ? ticScope : "1");
@@ -258,5 +261,4 @@ public class KiwoomApiService {
         }
         return new HashMap<>();
     }
-
-} 
+}
