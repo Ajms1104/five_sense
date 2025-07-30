@@ -1,6 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import { useNavigate, Link, useSearchParams } from 'react-router-dom';
-
+import React, {useState, useEffect, cloneElement} from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 
 import StockChart from './StockChart.jsx';
 import Chat from './Chat.jsx';
@@ -13,7 +12,6 @@ import side_btn from '../assets/Vector_3.svg';
 import UserIcon from "../assets/user.svg";
 
 const Home = () => {
-  const [searchParams] = useSearchParams();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showUserPopup, setShowUserPopup] = useState(false);
   const [news, setNews] = useState([]);
@@ -22,14 +20,31 @@ const Home = () => {
   const [selectedStock, setSelectedStock] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [currentUser, setCurrentUser] = useState(null);
+
+  // 추가: 로그인 상태 관리 (기존 변수명 건들지 않음)
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  // 추가: useEffect로 localStorage 체크 (로그인 상태 유지)
+  useEffect(() => {
+    const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    setIsLoggedIn(loggedIn);
+  }, []);
 
   const toggleSidebar = () => {
     setSidebarOpen(prev => !prev);
   };
 
-  const toggleUserPopup = () => {  // 추가
+  const toggleUserPopup = () => {  // 기존 함수 유지
     setShowUserPopup(prev => !prev);
+  };
+
+  // 추가: 로그아웃 핸들러 (새로 만듦)
+  const handleLogout = () => {
+    localStorage.removeItem('isLoggedIn');
+    setIsLoggedIn(false);
+    setShowUserPopup(false);  // 팝업 닫기
+    navigate('/login');  // 로그인 페이지로 이동
   };
   
   const handleAiChat = () => {
@@ -44,58 +59,19 @@ const Home = () => {
     navigate('/login');
   }
 
+  // 추가: user_btn 클릭 핸들러 (로그인 상태에 따라 분기; 기존 handleLogin 활용)
+  const handleUserButtonClick = () => {
+    if (isLoggedIn) {
+      toggleUserPopup();  // 로그인 시 팝업 토글
+    } else {
+      handleLogin();  // 미로그인 시 기존 로그인 페이지로
+    }
+  };
+
   const handleStockSelect = (stockCode) => {
     setSelectedStock(stockCode);
   };
 
-  // 즐겨찾기 추가 함수
-  const handleAddFavorite = async (stockCode, stockName) => {
-    try {
-      // 로그인된 사용자 정보 가져오기
-      const userStr = localStorage.getItem('user');
-      if (!userStr) {
-        alert('로그인이 필요합니다.');
-        return;
-      }
-      
-      const user = JSON.parse(userStr);
-      const accountid = user.accountid;
-      
-      const response = await fetch('http://localhost:8080/api/favorites', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          accountid: accountid,
-          stockCode: stockCode,
-          stockName: stockName
-        })
-      });
-
-      if (response.ok) {
-        alert('즐겨찾기에 추가되었습니다!');
-      } else {
-        const errorData = await response.json();
-        alert(errorData.message || '즐겨찾기 추가에 실패했습니다.');
-      }
-    } catch (error) {
-      console.error('즐겨찾기 추가 오류:', error);
-      alert('즐겨찾기 추가 중 오류가 발생했습니다.');
-    }
-  };
-
-  //여기까지 즐겨찾기 추가 함수
-
-  // URL 파라미터에서 stock 코드 확인
-  useEffect(() => {
-    const stockParam = searchParams.get('stock');
-    if (stockParam) {
-      setSelectedStock(stockParam);
-    }
-  }, [searchParams]);
-
-  
   useEffect(() => {
     const fetchTopStocks = async () => {
       try {
@@ -153,27 +129,11 @@ const Home = () => {
 
   const renderChartSection = () => {
     if (selectedStock) {
-      // 선택된 주식의 이름 찾기
-      const selectedStockInfo = topStocks.find(stock => stock.code === selectedStock);
-      const stockName = selectedStockInfo ? selectedStockInfo.name : selectedStock;
-      
       return (
         <div className="chart-container">
-          <div className="chart-header">
-            <button className="back-button" onClick={() => setSelectedStock(null)}>
-              ← 랭킹으로 돌아가기
-            </button>
-            <div className="stock-info">
-              <h3>{stockName} ({selectedStock})</h3>
-              <button 
-                className="favorite-button"
-                onClick={() => handleAddFavorite(selectedStock, stockName)}
-                title="즐겨찾기 추가"
-              >
-                ⭐ 즐겨찾기 추가
-              </button>
-            </div>
-          </div>
+          <button className="back-button" onClick={() => setSelectedStock(null)}>
+            ← 랭킹으로 돌아가기
+          </button>
           <StockChart stockCode={selectedStock} chartType="daily" />
         </div>
       );
@@ -203,12 +163,18 @@ const Home = () => {
       <aside className='top-bar'>
         <div className="user-bar">
             <nav>
-              <Link to ="/login">
-               <button className="user_btn" onClick={handleLogin}>
+              {/* 기존 Link 유지, onClick을 handleUserButtonClick으로 변경 */}
+              <button className="user_btn" onClick={handleUserButtonClick}>
                 <img src={UserIcon} alt="user" className="user" />
-               </button>
-              </Link>
+              </button>
             </nav>
+            {/* 추가: 팝업 (user_btn 아래에 위치; position: absolute로 배치) */}
+            {/* showUserPopup && isLoggedIn && 
+            (<div className='user_login_logout_check'>
+                <p>로그인 중</p>
+                <button onClick={handleLogout} style={{ marginTop: '10px' }}>로그아웃</button>
+              </div>
+            )*/}
           <p className='line_5'></p>
         </div>
       </aside>
