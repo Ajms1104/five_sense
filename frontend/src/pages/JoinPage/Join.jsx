@@ -1,8 +1,11 @@
 // components/Join.jsx
+// 회원가입
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/join.css';
-import teamlogo from '../assets/teamlogo.png';
+
+import style from './join.module.css';
+
+import teamlogo from '../../assets/teamlogo.png';
 
 const Join = () => {
   const navigate = useNavigate();
@@ -30,14 +33,14 @@ const Join = () => {
   };
 
   return (
-    <div className="join-container">
-      <div className="join-header">
-          <img src={teamlogo} alt="팀 로고" className="join-logo-img" />
-          <h1 className="join-logo-text">FIVE_SENSE</h1>
-      </div>
+    <div className={style['join-container']}>
+      <form className={style['join-form']} onSubmit={handleSubmit}>
+        <div className={style['join-header']}>
+          <img src={teamlogo} alt="팀 로고" className={style['join-logo-img']} />
+          <h1 className={style['join-logo-text']}>FIVE_SENSE</h1>
+        </div>
 
-      <form className="join-form" onSubmit={handleSubmit}>
-        <div className="join-form-group">
+        <div className={style['join-form-group']}>
           <label htmlFor="accountid">아이디</label>
           <input
             type="text"
@@ -48,7 +51,7 @@ const Join = () => {
           />
         </div>
 
-        <div className="join-form-group">
+        <div className={style['join-form-group']}>
           <label htmlFor="email">이메일</label>
           <input
             type="email"
@@ -59,7 +62,7 @@ const Join = () => {
           />
         </div>
 
-        <div className="join-form-group">
+        <div className={style['join-form-group']}>
           <label htmlFor="password">비밀번호</label>
           <input
             type="password"
@@ -70,7 +73,7 @@ const Join = () => {
           />
         </div>
 
-        <div className="join-form-group">
+        <div className={style['join-form-group']}>
           <label htmlFor="confirmPw">비밀번호 확인</label>
           <input
             type="password"
@@ -81,12 +84,13 @@ const Join = () => {
           />
         </div>
 
-        <div className="join-login-link">
-          <button type="button" className="to-login-btn" onClick={handleLogin}>
-            <h3 className="to-login-text">이미 계정이 있으신가요? 로그인</h3>
+        <div className={style['join-login-link']}>
+          <button type="button" className={style['to-login-btn']} onClick={handleLogin}>
+            <h3 className={style['to-login-text']}>이미 계정이 있으신가요? 로그인</h3>
           </button>
         </div>
-        <button className="submit-join-btn" type="submit">회원가입</button>
+        <button className={style['submit-join-btn']} type="submit">회원가입
+        </button>
       </form>
     </div>
   );

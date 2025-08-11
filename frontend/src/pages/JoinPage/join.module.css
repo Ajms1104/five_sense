@@ -1,0 +1,115 @@
+/* src/components/join/join.module.css */
+
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
+
+/* 전체 컨테이너: 화면 정중앙에 배치 */
+.join-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+}
+
+.join-form {
+  background: #ffffff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 420px;
+}
+
+/*----------------구분선----------------*/
+.join-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 25px;
+}
+
+.join-logo-img {
+  width: 70px;
+  height: 50px;
+  flex-shrink: 0;
+  aspect-ratio: 1/1;
+  position: relative;
+  left: -75px;
+}
+
+.join-logo-text { /*five_sense*/
+  width: 20px;
+  height: 20px;
+  color: #24AFCF;
+  font-family: 'Pretendard';
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  position: relative;
+  left: -73px;
+  top:-7px;
+}
+
+/* 폼 입력 필드 그룹 (라벨 + 인풋) */
+.join-form-group {
+  margin-bottom: 18px;
+}
+
+.join-form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.join-form-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+/* 메인 '회원가입' 버튼 */
+.submit-join-btn {
+  width: 100%;
+  padding: 13px;
+  background-color: #F5C943; /* 로그인 페이지의 메인 버튼 색상과 동일하게 */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+/* '이미 계정이 있으신가요?' 링크 영역 */
+.join-login-link {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 5px;
+}
+
+/* '로그인' 링크 버튼 스타일 (버튼처럼 보이지 않게) */
+.to-login-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.to-login-text {
+  color: #555;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.to-login-text:hover {
+  text-decoration: underline;
+}

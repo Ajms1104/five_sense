@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { createChart, CrosshairMode } from 'lightweight-charts';
-import '../styles/StockChart.css';
+
+import style from './StockChart.module.css';
 
 const StockChart = ({ stockCode = '005930', chartType = 'daily', minuteType = '1' }) => {
   const chartContainerRef = useRef(null);
@@ -275,7 +276,7 @@ const StockChart = ({ stockCode = '005930', chartType = 'daily', minuteType = '1
     // 여기에 차트 렌더링 로직 구현
     // 예: TradingView 차트 또는 다른 차트 라이브러리 사용
     chartRef.current.innerHTML = `
-      <div class="chart-info">
+      <div className={style.chart-info}>
         <h3>${stockCode}</h3>
         <p>일별 차트</p>
       </div>
@@ -286,14 +287,14 @@ const StockChart = ({ stockCode = '005930', chartType = 'daily', minuteType = '1
   };
 
   return (
-    <div ref={chartContainerRef} className="chart-container" >
+    <div ref={chartContainerRef} className={style.chart-container} >
       <div className="chart-separator">
-        <div ref={priceChartContainerRef} className='price-chart-container'>
-          <div id="stockInfoPanel" className='stock-info-panel'></div>
+        <div ref={priceChartContainerRef} className={style.price-chart-container}>
+          <div id="stockInfoPanel" className={style.stock-info-panel}></div>
         </div>
-        <div className="divider"></div>
-        <div ref={volumeChartContainerRef} className='volume-chart-container' >
-          <div id="volumeInfoPanel" className='volume-info'></div>
+        <div className={style.divider}></div>
+        <div ref={volumeChartContainerRef} className={style.volume-chart-container}>
+          <div id="volumeInfoPanel" className={style.volume-info}></div>
         </div>
       </div>
     </div>

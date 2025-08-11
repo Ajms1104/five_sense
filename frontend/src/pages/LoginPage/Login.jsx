@@ -1,10 +1,12 @@
 // components/Login.jsx
+// 로그인
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/login.css';
+
+import style from './login.module.css';
 
 /* 이미지 모음 */
-import teamlogo from '../assets/teamlogo.png';
+import teamlogo from '../../assets/teamlogo.png';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -13,12 +15,9 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // 로그인 처리 로직 (실제 API 호출로 대체하세요; 여기서는 성공 가정)
     console.log('로그인 시도:', accountid, password);
-    
-    // 로그인 성공 시 localStorage 설정 (실제로는 API 응답 후 설정)
     localStorage.setItem('isLoggedIn', 'true');
-    navigate('/');  // 성공 시 홈으로 이동
+    navigate('/');
   };
 
   const handleHome = () => {
@@ -30,13 +29,14 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <form className='login-input-form' onSubmit={handleSubmit}>
-        <div className="title">
-            <img src={teamlogo} alt="팀 로고" className="login_logo_png" />
-            <h1 className="login-logo-txt">FIVE_SENSE</h1>
+    <div className={style['login-container']}>
+      <form className={style['login-input-form']} onSubmit={handleSubmit}>
+        <div className={style.title}>
+          <img src={teamlogo} alt="팀 로고" className={style['login_logo_png']} />
+          <h1 className={style['login-logo-txt']}>FIVE_SENSE</h1>
         </div>
-        <div className="form-group">
+        
+        <div className={style['form-group']}>
           <label htmlFor="accountid">아이디</label>
           <input
             type="text"
@@ -48,7 +48,7 @@ const Login = () => {
           />
         </div>
 
-        <div className="form-group">
+        <div className={style['form-group']}>
           <label htmlFor="password">비밀번호</label>
           <input
             type="password"
@@ -59,12 +59,8 @@ const Login = () => {
             onChange={e => setPassword(e.target.value)}
           />
         </div>
-        <div className="join-group">
-          <button className="join_btn" type="button" onClick={handleJoin}>
-            <h3 className='Join-txt'> 회원가입 </h3>
-          </button>
-        </div>
-        <button className="login_btn" type="submit">로그인</button>
+        <button className={style.login_btn} type="submit">로그인</button>
+        <button className={style.join_btn} type="button" onClick={handleJoin}> 회원가입 </button>
       </form>
     </div>
   );

@@ -2,36 +2,6 @@
 
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
 
-/*CSS -> 자바스크립트 순서로 정리해둠*/
-
-* {
-  color: #000000;
-}
-
-/*최상위 설정 모음, 어지간하면 터치 X*/
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-  overflow-y: hidden;
-}
-
-button{
-  border: none;
-  outline: none;
-  background: transparent;
-  padding: 0;
-  cursor: pointer;
-}
-
-@font-face {
-    font-family: 'Pretendard-Regular';
-    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
-    font-weight: 400;
-    font-style: normal;
-}
-
 .bookmark-container{
   display: grid;
   grid-template-columns: 275px auto;     /* 275px 너비 사이드바 + 나머지 메인[1] */

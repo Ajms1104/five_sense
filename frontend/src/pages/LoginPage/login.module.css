@@ -2,29 +2,6 @@
 
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
 
-/*CSS -> 자바스크립트 순서로 정리해둠*/
-
-* {
-  color: #000000;
-}
-
-/*최상위 설정 모음, 어지간하면 터치 X*/
-
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-  overflow-y: hidden;
-  margin: 0;
-}
-
-@font-face {
-    font-family: 'Pretendard-Regular';
-    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
-    font-weight: 400;
-    font-style: normal;
-}
 
 /* 전체 컨테이너: 화면 중앙 정렬 */
 .login-container {
@@ -34,8 +11,6 @@ html, body {
   justify-content: center;
   align-items: center;
 }
-
-/*------------------------구분선------------------------*/
 
 /*로고 영역*/
 .login_logo_png{
@@ -51,10 +26,10 @@ html, body {
   width: 20px;
   height: 20px;
   color: #24AFCF;
-  font-family: 'Pretendard-Regular';
+  font-family: 'Pretendard';
   font-size: 28px;
   font-style: normal;
-  font-weight: 800;
+  font-weight: 500;
   line-height: normal;
   position: relative;
   left: 140px;
@@ -105,16 +80,20 @@ input[type="password"] {
   font-size: 16px;
   cursor: pointer;
   position: relative;
-  top: -10px;
+  top: 10px;
 }
 
-/* 회원가입 링크 */
-.Join-txt{
-  font-size: 14px;
+.join_btn{
+  width: 100%;
+  padding: 12px;
+  background-color: #F5C943;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
   position: relative;
-  top:-15px;
-  color: #7b7b7b;
-  font-family: 'Pretendard-Regular';
+  top:23px;
 }
 
 .register-link {

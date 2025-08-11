@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
-import '../styles/chat.css';
+//AI와 채팅
 
-import input_btn from '../assets/Vector.svg'
+import React, { useState, useEffect } from "react";
+import style from './chat.module.css';
+
+import input_btn from '../../../assets/Vector.svg';
 
 const ChatUI = () => {
   const [messages, setMessages] = useState([]);
@@ -66,29 +68,29 @@ const ChatUI = () => {
   };
 
   return (
-    <section className="chat-container">
-      <aside className="message-container">
-        <div className="chat-messages" id="chat-messages">
-          <p className="sub_title">오늘은 어떤 주식이 궁금하신가요?</p>
+    <section className={style['chat-container']}>
+      <aside className={style['message-container']}>
+        <div className={style['chat-messages']} id="chat-messages">
+          <p className={style.sub_title}>오늘은 어떤 주식이 궁금하신가요?</p>
           {messages.map((msg, index) => (
-            <div key={index} className={`chat-message ${msg.type}`}>
+            <div key={index} className={`${style['chat-message']} ${style[msg.type]}`}>
               {msg.content}
             </div>
           ))}
           {isLoading && (
-            <div className="chat-message ai loading">
+            <div className={style['chat-message-ai-loading']}> 
               응답을 생성하고 있습니다...
             </div>
           )}
           {error && (
-            <div className="chat-message error">
+            <div className={style['chat-message-error']}>
               {error}
             </div>
           )}
         </div>
       </aside>
 
-      <form className="chat-input-form" onSubmit={handleSubmit}>
+      <form className={style['chat-input-form']} onSubmit={handleSubmit}>
         <input
             type="text"
             id="chat-input"
@@ -98,10 +100,10 @@ const ChatUI = () => {
             disabled={isLoading}
         />
           <button type="submit" disabled={isLoading}>
-            <img src={input_btn} className="input_btn"/>
+            <img src={input_btn} className={style.input_btn}/>
           </button>
       </form>
-      <h3 className='danger'> 투자에 대한 모든 결과는 전적으로 개인에게 있으며 손해에 대해 FIVESENSE 에선 책임지지 않습니다</h3>
+      <h3 className={style.danger}> 투자에 대한 모든 결과는 전적으로 개인에게 있으며 손해에 대해 FIVESENSE 에선 책임지지 않습니다</h3>
     </section>
   );
 };
