@@ -10,6 +10,7 @@ import Chat from '../components/layout/chat/Chat';
 import Rank from '../components/layout/Rank/Rank';
 import Sidebar from '../components/layout/Sidebar/Sidebar';
 import Topbar from '../components/layout/Topbar/Topbar';
+import ChartRank from '../components/layout/Rank/Rank';
 
 // 페이지 전용 스타일
 import styles from '../styles/main.module.css';
@@ -50,7 +51,7 @@ const Home = () => {
       {/* 메인 콘텐츠 */}
       <main className={styles.mainContent}>
         <section className={styles.chartSection}>
-          {/*{renderChartSection()}*/}
+          {renderChartSection()}
         </section>
         <div className={styles.divider}></div>
         <section className={styles.chatSection}>
