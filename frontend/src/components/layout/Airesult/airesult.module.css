@@ -23,15 +23,15 @@
 }
 
 .tabButton.active { /*설정 버튼 배경*/
-  background-color: #ffc107;
-  border-color: #ffc107;
-  color: #fff;
+  background-color: #F5C943; /* 이미지의 노란색 배경 */
+  border-color: #F5C943;
+  color: #333;
 }
 
 .content { /*메인 상자*/
   background-color: #ffffff;
   border: 1px solid #e0e0e0;
-  border-radius: 10px;
+  border-radius: 5px;
   padding: 24px;
 }
 
