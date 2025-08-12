@@ -43,7 +43,6 @@ function Topbar() {
           onMouseLeave={handleMouseLeave}>
           <img src={UserIcon} alt="user" className={style.user}/>
           {isPopupVisible && (
-            // ✨ 2. className을 'popupbar'가 아닌 style.popupbar로 변경합니다.
             <div className={style.popupbar}>
               <img src={popup} className={style.popup_btn}/>
               {isLoggedIn ? (

@@ -47,14 +47,13 @@ const Home = () => {
       {/*고정 컴포넌트 */}
       <Sidebar />
       <Topbar />
-
       {/* 메인 콘텐츠 */}
-      <main className={styles.mainContent}>
-        <section className={styles.chartSection}>
+      <main className={styles.main_content}>
+        <section className={styles.chart_section}>
           {renderChartSection()}
         </section>
         <div className={styles.divider}></div>
-        <section className={styles.chatSection}>
+        <section className={styles.chat_section}>
           {/*<Chat /> */}
         </section>
       </main>
