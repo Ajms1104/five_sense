@@ -59,6 +59,8 @@ public class KiwoomApiService {
         this.webClient = WebClient.builder()
                 .baseUrl("https://api.kiwoom.com")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .defaultHeader("appkey", "IFZoKZtS4RIhUP7qd4DSzgiFJ5_zbzJvgVoRCbb7KtM")
+                .defaultHeader("secretkey", "4lD4p6k5ehfmfx3hB6OIaYoQFiqA8DrM3nVG8ybNryg")
                 .build();
         
         // 토큰 발급
@@ -73,6 +75,8 @@ public class KiwoomApiService {
             // 1. 요청 데이터 JSON 문자열 생성
             Map<String, String> tokenRequest = new HashMap<>();
             tokenRequest.put("grant_type", "client_credentials");
+            tokenRequest.put("appkey", "IFZoKZtS4RIhUP7qd4DSzgiFJ5_zbzJvgVoRCbb7KtM");
+            tokenRequest.put("secretkey", "4lD4p6k5ehfmfx3hB6OIaYoQFiqA8DrM3nVG8ybNryg");
 
             // 2. API 호출
             Map<String, Object> response = webClient.post()
@@ -115,6 +119,7 @@ public class KiwoomApiService {
                         Map<String, Object> loginMessage = new HashMap<>();
                         loginMessage.put("trnm", "LOGIN");
                         loginMessage.put("token", accessToken);
+                        
                         
                         System.out.println("실시간 시세 서버로 로그인 패킷을 전송합니다.");
                         session.sendMessage(new TextMessage(objectMapper.writeValueAsString(loginMessage)));
