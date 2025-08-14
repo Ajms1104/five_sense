@@ -1,0 +1,59 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
+
+/*상단바 CSS영역*/
+.top-bar{
+  grid-area: topbar;
+  height: 70px;
+  width: 100vw;
+  background-color: #ffffff;
+  border-bottom: 1.5px solid var(--_, rgba(166, 166, 166, 0.85));;
+}
+
+.user-bar{
+  height: 100%;  
+  display: flex;
+  flex-shrink: 0;
+  justify-content: right;
+}
+
+.user_btn{
+  position: relative; 
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.user{ /*USER 아이콘, 버튼임*/
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  position: relative;
+  top: 10px;
+  left: -30px;
+}
+
+.popup_btn{ /*팝업 이미지*/
+  width: 170px;
+  height: 100px;
+  position: relative;
+  left: 15px;
+  top:7px;
+}
+
+.popup_txt{ /*로그인, 로그아웃*/
+  color: #333; /* 잘 보이는 색으로 변경 */
+  font-family: 'Pretendard';
+  font-size: 16px; /* 잘 보이는 크기로 변경 */
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  top:-60px;
+  left: 10px;
+}
+
+.loginout_btn{
+  position: relative;
+  left: -5px;
+  top: 3px;
+}

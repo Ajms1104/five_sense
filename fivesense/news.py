@@ -16,7 +16,7 @@ from urllib.error import HTTPError, URLError
 load_dotenv()
 
 # 네이버 API 인증 정보
-client_id ="yVTs36RiAqwNoBsKtvlP"
+client_id ="yVTs36RiAqwNoBsKtvlP"  #키 바꾸기
 client_secret = "5pKiHIh22g"
 
 # DB 연결
@@ -24,7 +24,7 @@ def DBconnect():
     global cur, conn
     try:
         conn = psycopg2.connect(
-            host='192.168.56.1',
+            host='Localhost',  #로컬호스트 바꾸기
             user='postgres',
             password='1234',
             dbname='fivesense',

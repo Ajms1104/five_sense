@@ -1,10 +1,10 @@
 // App.jsx
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import HOME from './components/HOME.jsx';
-import Bookmark from './components/Bookmark.jsx';
-import Login from './components/Login.jsx'; 
-import Join from './components/Join.jsx' 
+import HOME from './pages/HOME.jsx';
+import Bookmark from './pages/BookmarkPage/Bookmark.jsx';
+import Login from './pages/LoginPage/Login.jsx'; 
+import Join from './pages/JoinPage/Join.jsx';
 
 function App() {
   return (

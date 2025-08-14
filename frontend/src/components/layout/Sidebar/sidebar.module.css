@@ -1,0 +1,275 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
+
+/*사이드바 CSS영역*/
+.sidebar{ /*aside, 사이드바 전체 영역*/
+  grid-area: sidebar;
+  background-color: #ffffff;
+  border-right: 1.5px solid var(--_, rgba(166, 166, 166, 0.85));
+  width: 260px;
+  height: 100vw;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  position: absolute;
+}
+
+.sidebar-top{ /*로고 있는 영역*/
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.logo-top{
+  width: 100%;
+  height: 54px;
+}
+
+.logo_png{ /*로고 이미지*/
+  width: 40px;
+  height: 31px;
+  flex-shrink: 0;
+  aspect-ratio: 1/1;
+  position: relative;
+  top: 14px;
+  left: 7px;
+}
+
+.logo-txt{ /*five_sense*/
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: #24AFCF;
+  font-family: 'Pretendard-Regular';
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+  position: relative;
+  top: -35px;
+  left: 55px;
+}
+
+.side_btn { /*사이드바 폴드버튼*/
+  width: 50px;
+  height: 22px;
+  cursor: pointer;
+  position: relative;
+  top : -70px;
+  left: 200px;
+}
+
+.side_btn_png {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/*-----------구분선-----------*/
+/*메뉴 TOP 즐겨찾기, 검색*/
+.sidebar-menu-top{
+  width: 100%;
+  height: 150px;
+  position: relative;
+}
+
+/*-----------구분선-----------*/
+.menu-txt{ /*메뉴*/
+  flex-shrink: 0;
+  color: var(--, #3B413C);
+  font-family: 'Pretendard';
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  position: relative;
+  left: 10px;
+  top: 5px
+}
+
+.ai_chat_img{/*ai_chat 이미지*/
+  height: 25px;
+  position: relative;
+  left: 15px;
+  top:10px;
+}
+
+.ai_chat{ /*ai_chat*/
+  flex-shrink: 0;
+  color: var(--, #3B413C);
+  font-family: 'Pretendard';
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  position: relative;
+  top: 5px;
+  left: -25px;
+  cursor: pointer; 
+}
+
+.bookmark_img{/*즐겨찾기 이미지*/
+  height: 25px;
+  position: relative;
+  left: 15px;
+  top: 17px;
+}
+
+.bookmark{ /*즐겨찾기*/
+  flex-shrink: 0;
+  color: var(--, #3B413C);
+  font-family: 'Pretendard';
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 1px;
+  position: relative;
+  top: 15px;
+  left: -24px;
+  cursor: pointer; 
+}
+
+.line_1{
+  width: 90%;
+  height: 1.5px;
+  background-color: rgba(166, 166, 166, 0.85);
+  position: relative;
+  left: 10px;
+  top : 20px;
+}
+
+/*-----------구분선-----------*/
+/*메뉴 중간 : 검색 기록 */
+.sidebar-menu-mid{
+  width: 100%;
+  height: 225px;
+  flex-direction: column; 
+  align-items: flex-start; 
+}
+
+.history_font{ /*검색 기록*/
+  flex-shrink: 0;
+  color: var(--, #3B413C);
+  font-family: 'Pretendard';
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  position: relative;
+  left: 15px;
+}
+
+.today_btn{ /*오늘*/
+  width: 80%;
+  height: 26px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 100px; /*둥글게 깍기*/
+  background: var(--_, #f2f2f2);
+  color: var(--, #3B413C);
+  font-family: 'Pretendard';
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.75px;
+  box-sizing: border-box;
+  white-space: nowrap; 
+  position: relative;
+  left: 15px;
+  top : 7px;
+  cursor: pointer;
+}
+
+.day_7_btn{ /*7일전*/
+  width: 80%;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  left: 15px;
+  top:15px;
+  font-family: 'Pretendard';
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.line_2{
+  width: 1px;
+  height: 75%;
+  background-color: rgba(166,166,166,0.85);
+  position: relative;
+  left : 60px;
+  top : 5px;
+}
+
+.dropdownItem{
+  position: relative;
+  left: 10px;
+  top: -10px;
+  text-align: left;
+}
+
+.dplus-7-btn{ /*7일 전꺼*/
+  flex-shrink: 0;
+  color: var(--, #3B413C);
+  font-family: 'Pretendard-Regular';
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 0.75px;
+  position: relative;
+  left:53px;
+}
+
+.line_3{
+  width: 90%;
+  height: 1px;
+  background-color: rgba(166, 166, 166, 0.85);
+  position: relative;
+  left: 10px;
+  top : 20px;
+}
+
+/*-----------구분선-----------*/
+/*메뉴 하단 : 최신 뉴스*/
+.sidebar-menu-bottom{
+  width: 100%;
+  height: 100%;
+}
+
+.post{ /*최신 뉴스*/
+  flex-shrink: 0;
+  color: var(--, #3B413C);
+  font-family: 'Pretendard';
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal; 
+  position: relative;
+  left: 15px;
+  top: 20px;
+}
+
+.post_bg{
+  display: flex;
+  justify-content: center; /* 내용물을 가로축 중앙에 배치 */
+  align-items: center;    
+  min-height: 100px; 
+}
+
+.new_error, .new-loading{ /*뉴스 오류(로딍) 메세지*/
+  color: var(--, #3B413C);
+  font-family: 'Pretendard';
+  position: relative;
+}
+
+/*회의 후 뉴스 불러오는 거 수정 후 추가하기*/
