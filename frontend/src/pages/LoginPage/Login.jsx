@@ -2,6 +2,7 @@
 // 로그인
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext.jsx';
 
 import style from './login.module.css';
 
@@ -10,14 +11,42 @@ import teamlogo from '../../assets/teamlogo.png';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [accountid, setAccountid] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('로그인 시도:', accountid, password);
-    localStorage.setItem('isLoggedIn', 'true');
-    navigate('/');
+    
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          accountid: accountid,
+          password: password
+        })
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        console.log('로그인 성공:', data.message);
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('user', JSON.stringify(data.user));
+        login(); // AuthContext의 login 함수 호출
+        navigate('/');
+      } else {
+        console.log('로그인 실패:', data.message);
+        alert(data.message || '로그인에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('로그인 요청 중 오류:', error);
+      alert('로그인 처리 중 오류가 발생했습니다.');
+    }
   };
 
   const handleHome = () => {
