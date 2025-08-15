@@ -10,18 +10,50 @@ import teamlogo from '../../assets/teamlogo.png';
 const Join = () => {
   const navigate = useNavigate();
   const [accountid, setAccountid] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPw, setConfirmPw] = useState('');
   const [email, setEmail] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // 입력 검증
     if (password !== confirmPw) {
       alert('비밀번호가 일치하지 않습니다.');
       return;
     }
-    console.log('회원가입 시도:', { accountid, password, email });
-    // 회원가입 처리 로직
+    
+    console.log('회원가입 시도:', { accountid, username, password, email });
+    
+    try {
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          accountid: accountid,
+          username: username,
+          password: password,
+          email: email
+        })
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        console.log('회원가입 성공:', data.message);
+        alert('회원가입이 완료되었습니다. 로그인해주세요.');
+        navigate('/login');
+      } else {
+        console.log('회원가입 실패:', data.message);
+        alert(data.message || '회원가입에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('회원가입 요청 중 오류:', error);
+      alert('회원가입 처리 중 오류가 발생했습니다.');
+    }
   };
 
   const handleHome = () => {
@@ -48,6 +80,17 @@ const Join = () => {
             required
             value={accountid}
             onChange={e => setAccountid(e.target.value)}
+          />
+        </div>
+
+        <div className={style['join-form-group']}>
+          <label htmlFor="username">닉네임</label>
+          <input
+            type="text"
+            id="username"
+            required
+            value={username}
+            onChange={e => setUsername(e.target.value)}
           />
         </div>
 

@@ -15,8 +15,15 @@ public class UserService {
         if(userRepository.existsByAccountid(user.getAccountid())){
             throw new RuntimeException("이미 존재하는 계정입니다.");
         }
+        if(userRepository.existsByEmail(user.getEmail())){
+            throw new RuntimeException("이미 존재하는 이메일입니다.");
+        }
         if(userRepository.existsByPassword(user.getPassword())){
             throw new RuntimeException("이미 존재하는 비밀번호입니다.");
+        }
+        // username이 설정되지 않은 경우 accountid를 username으로 사용
+        if(user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+            user.setUsername(user.getAccountid());
         }
         userRepository.save(user);
     }
