@@ -257,17 +257,17 @@ def get_top20_stk_codes():
             if cur is None or conn is None:
                 raise Exception("DB 연결 실패")
 
-        # 최신 created_at을 기준으로 상위 20개 종목 코드 조회
+        # 최신 created_at을 기준으로 상위 50개 종목 코드 조회
         query = """
         SELECT stk_cd
         FROM public.buyTop50_data
         WHERE created_at = (SELECT MAX(created_at) FROM public.buyTop50_data)
         ORDER BY rank ASC
-        LIMIT 20;
+        LIMIT 50;
         """
         cur.execute(query)
         stk_codes = [row[0] for row in cur.fetchall()]
-        print(f"상위 20개 종목 코드: {stk_codes}")
+        print(f"상위 50개 종목 코드: {stk_codes}")
         return stk_codes
     except Exception as err:
         print(f"종목 코드 조회 중 오류: {str(err)}")
