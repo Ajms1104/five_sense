@@ -1,0 +1,104 @@
+/* src/styles/login.css */
+
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
+
+
+/* 전체 컨테이너: 화면 중앙 정렬 */
+.login-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/*로고 영역*/
+.login_logo_png{
+  width: 70px;
+  height: 50px;
+  flex-shrink: 0;
+  aspect-ratio: 1/1;
+  position: relative;
+  left:65px;
+}
+
+.login-logo-txt{ /*five_sense*/
+  width: 20px;
+  height: 20px;
+  color: #24AFCF;
+  font-family: 'Pretendard';
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  position: relative;
+  left: 140px;
+  top: -60px;
+}
+/*------------------------구분선------------------------*/
+
+.login-input-form { /* 내용 담는? 상자 */
+  background: #ffffff;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  height: 400px;
+}
+
+/* 입력 그룹 */
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+/* 버튼 */
+.login_btn[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  background-color: #24AFCF;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  position: relative;
+  top: 10px;
+}
+
+.join_btn{
+  width: 100%;
+  padding: 12px;
+  background-color: #F5C943;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  position: relative;
+  top:23px;
+}
+
+.register-link {
+  margin-top: 15px;
+  text-align: center;
+}
+
+

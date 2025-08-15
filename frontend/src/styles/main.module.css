@@ -1,0 +1,15 @@
+/* src/styles/main.css */
+
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
+
+/*CSS -> 자바스크립트 순서로 정리해둠*/
+
+.main_content{
+  height: 100vh;
+}
+
+.chart_section{
+  position: absolute;
+  left: 300px;
+  top:160px;
+}
