@@ -6,11 +6,12 @@ import { useTopStocks } from '../hooks/useTopStocks';
 
 // 레이아웃 컴포넌트들
 import StockChart from '../components/layout/StockChart/StockChart'
-import Chat from '../components/layout/chat/Chat';
+import Chat from '../components/layout/Chat/Chat';
 import Rank from '../components/layout/Rank/Rank';
 import Sidebar from '../components/layout/Sidebar/Sidebar';
 import Topbar from '../components/layout/Topbar/Topbar';
 import ChartRank from '../components/layout/Rank/Rank';
+import AiResult from '../components/layout/Airesult/airesult';
 
 // 페이지 전용 스타일
 import styles from '../styles/main.module.css';
@@ -47,15 +48,17 @@ const Home = () => {
       {/*고정 컴포넌트 */}
       <Sidebar />
       <Topbar />
-
       {/* 메인 콘텐츠 */}
-      <main className={styles.mainContent}>
-        <section className={styles.chartSection}>
+      <main className={styles.main_content}>
+        <section className={styles.chart_section}>
           {renderChartSection()}
         </section>
         <div className={styles.divider}></div>
-        <section className={styles.chatSection}>
-          {/*<Chat /> */}
+        <section className={styles.chat_section}>
+          <Chat />
+        </section>
+        <section className={styles.ai_result_section}>
+          <AiResult />
         </section>
       </main>
     </div>

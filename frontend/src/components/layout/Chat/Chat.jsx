@@ -3,8 +3,6 @@
 import React, { useState, useEffect } from "react";
 import style from './chat.module.css';
 
-import input_btn from '../../../assets/Vector.svg';
-
 const ChatUI = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -99,9 +97,6 @@ const ChatUI = () => {
             onChange={(e) => setInput(e.target.value)}
             disabled={isLoading}
         />
-          <button type="submit" disabled={isLoading}>
-            <img src={input_btn} className={style.input_btn}/>
-          </button>
       </form>
       <h3 className={style.danger}> 투자에 대한 모든 결과는 전적으로 개인에게 있으며 손해에 대해 FIVESENSE 에선 책임지지 않습니다</h3>
     </section>
