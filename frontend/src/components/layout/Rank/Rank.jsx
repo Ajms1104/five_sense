@@ -66,7 +66,7 @@ const Rank = ({ stocks = [], onStockSelect }) => {
                           <button className={styles['favorite-btn']}>♥</button>
                           <span className={styles['stock-name']}>{stock.name}</span>
                         </td>
-                        <td className={styles['td-price']}>{stock.price?.toLocaleString()}원</td>
+                        <td className={styles['td-price']}>{Math.abs(stock.price)?.toLocaleString()}원</td>
                         <td className={`${styles['td-change']} ${stock.change >= 0 ? styles.up : styles.down}`}>
                           {stock.change >= 0 ? "▲" : "▼"} {Math.abs(stock.change)}%
                         </td>

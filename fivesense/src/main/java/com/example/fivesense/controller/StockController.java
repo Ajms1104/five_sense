@@ -80,10 +80,6 @@ public class StockController {
                 }
                 idx++;
             }
-
-            System.out.println("처리된 뉴스 개수: " + newsList.size());
-            System.out.println("=== /news 엔드포인트 처리 완료 ===");
-
         } catch (Exception e) {
             System.err.println("=== /news 엔드포인트 오류 발생 ===");
             System.err.println("오류 메시지: " + e.getMessage());
