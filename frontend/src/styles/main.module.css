@@ -10,18 +10,18 @@
 
 .chart_section{
   position: absolute;
-  left: 370px;
-  top:120px;
+  left: 300px;
+  top:85px;
 }
 
 .chat_section{
   position: fixed;
-  right: 155px;
-  bottom: 90px;
+  right: 10px;
+  bottom: 25px;
 }
 
 .ai_result_section{
-  position: fixed;
-  right: 180px;
-  top: 160px;
+  position: absolute;
+  right: 70px;
+  top: 119px;
 }

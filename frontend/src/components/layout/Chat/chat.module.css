@@ -1,14 +1,12 @@
-
-/* src/styles/chat.css */
+/* src/styles/chat.css (최후의 1px 축소 최종 버전) */
 
 .chat-container{
-  min-height: 350px;
-  min-width: 600px;
-  width: 850px;
+  min-height: 270px; 
+  min-width: 420px; 
+  width: 620px; 
   position: relative;
   display: flex;
   flex-direction: column;
-  border-top: 1px solid hsla(0, 0%, 20%, 0.164);
 }
 
 .message-container{
@@ -20,89 +18,92 @@
   color: #3B413C;
   text-align: center;
   font-family: 'Pretendard';
-  font-size: 24px;
-  font-weight: 400;
+  font-size: 20px; 
+  font-weight: 500;
   line-height: normal;
+  margin-bottom: 7px;
 }
 
 .chat-message-ai-loading{ /*응답을 생성하고 있습니다*/
   font-family: 'Pretendard';
-
+  padding: 5px 9px; /* 값 감소 */
+  font-size: 11px; /* 값 감소 */
+  color: #555;
 }
 
-.chat-messages { /**/
+.chat-messages {
   font-family: 'Pretendard';
-  display: flex;               /* 1. 세로 스택을 위해 flex 컨테이너로 */
-  flex-direction: column;      /*    자식 요소들이 위→아래로 쌓이게 */
-  gap: 5px;                    /*    메시지 간격 */
+  display: flex;
+  flex-direction: column;
+  gap: 2px; /* 값 감소 */
   overflow-y: auto;
-  padding: 16px;
+  padding: 7px; /* 값 감소 */
 }
 
 .chat-message {
-  display: inline-block;       /* 2. 각 메시지를 내용 크기만큼 */
-  max-width: 80%;              /*    화면의 80% 이하로 제한 */
-  padding: 8px 12px;           /*    여백 */
-  border-radius: 8px;
+  display: inline-block;
+  max-width: 80%;
+  padding: 4px 7px; /* 값 감소 */
+  border-radius: 4px; /* 값 감소 */
   word-wrap: break-word;
+  font-size: 11px; /* 값 감소 */
 }
 
-/* 3. 유저 메시지는 오른쪽 정렬 */
-.chat-message.user-message {
+/* 유저 메시지는 오른쪽 정렬 */
+.chat-message.user {
   margin-left: auto;
   background-color: rgb(36, 175, 207, 0.25);
   color: rgb(0, 0, 0);
   text-align: right;
 }
 
-/* 4. 봇 메시지는 왼쪽 정렬 */
-.chat-message.bot-message {
+/* 봇 메시지는 왼쪽 정렬 */
+.chat-message.ai {
   margin-right: auto;
   background-color: #E5E7EB;
   color: black;
   text-align: left;
 }
 
-
+/* --- 아래는 JSX에서 직접 사용되지 않는 것으로 보이는 기존 스타일 (그대로 유지) --- */
 .message {
   margin-bottom: 16px;
   max-width: 80%;
 }
-
 .message-content {
   padding: 8px 16px;
   border-radius: 16px;
   background-color: #e9ecef;
 }
-
 .message.user {
   margin-left: auto;
 }
-
 .message.user .message-content {
   background-color: #73a1d2;
   color: #ffffff;
 }
-
 .message-timestamp {
   font-size: 12px;
   color: #6c757d;
   margin-top: 4px;
 }
+/* ------------------------------------------------------------- */
 
-.chat-input-form { /*메세지 입력 칸 1*/
+.chat-input-form {
   min-width: 90%;
   display: flex;
-  padding: 10px 0px 0px 10px;
+  padding: 5px 0px 0px 5px; /* 값 감소 */
   position: absolute;
-  left: 27px;
-  bottom: 5px;
+  left: 14px; /* 값 감소 */
+  bottom: 5px; /* 값 감소 */
 }
 
 .chat-input-form input {
-  padding: 8px;
+  width: 100%;
+  padding: 5px 7px; /* 값 감소 */
   border: 1px solid rgb(108, 117, 125, 0.5);
-  border-radius: 5px; 
+  border-radius: 4px; /* 값 감소 */
+  font-size: 11px; /* 값 감소 */
 }
 
 .chat-input-form button {
@@ -113,22 +114,21 @@
   display: flex; 
   justify-content: center;
   align-items: center;
-
 }
 
- .input_btn {
+.input_btn {
   width: 20px;
   height: 20px;
 }
 
-.danger {  /*책임 문구*/
+.danger { 
   color: rgba(166,166, 166, 0.5);
   font-family: 'Pretendard';
   font-weight: 100;
-  font-size: 12px;
+  font-size: 9px; 
   position: absolute;
-  bottom:-60px;
-  left: 170px;
+  bottom: -20px; /* 위치 조정 */
+  left: 125px; /* 위치 조정 */
 }
 
 .chat-section {
@@ -140,7 +140,6 @@
   max-width: 800px;
   margin: 20px auto;
 }
-
 .chat-history {
   background-color: #ffffff;
   border-radius: 8px;
@@ -150,27 +149,16 @@
   height: 200px;
   overflow-y: auto;
 }
-
-.chat-message {
-  padding: 8px 12px;
-  margin: 8px 0;
-  border-radius: 8px;
-  max-width: 80%;
-  word-wrap: break-word;
-}
-
 .bottom-section {
   width: 100%;
   margin-top: 10px;
 }
-
 .input-container {
   position: relative;
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
 }
-
 .input-container-input {
   width: 100%;
   padding: 12px 40px 12px 15px;
@@ -179,7 +167,6 @@
   font-size: 14px;
   background-color: #ffffff;
 }
-
 .input-container #submit {
   position: absolute;
   right: 15px;
@@ -188,7 +175,6 @@
   cursor: pointer;
   color: #007bff;
 }
-
 .info {
   text-align: center;
   color: rgba(0, 0, 0, 0.5);

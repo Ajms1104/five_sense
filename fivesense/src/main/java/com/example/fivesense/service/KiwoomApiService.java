@@ -76,13 +76,8 @@ public class KiwoomApiService {
         try {
             Map<String, String> tokenRequest = new HashMap<>();
             tokenRequest.put("grant_type", "client_credentials");
-<<<<<<< HEAD
             tokenRequest.put("appkey", this.apiKey); // @Value로 주입된 apiKey 필드 사용
             tokenRequest.put("secretkey", this.apiSecret); // @Value로 주입된 apiSecret 필드 사용
-=======
-            tokenRequest.put("appkey", "IFZoKZtS4RIhUP7qd4DSzgiFJ5_zbzJvgVoRCbb7KtM");
-            tokenRequest.put("secretkey", "4lD4p6k5ehfmfx3hB6OIaYoQFiqA8DrM3nVG8ybNryg");
->>>>>>> 1f0942fd (feat: Fix kiwoom api)
 
             Map<String, Object> response = webClient.post()
                     .uri("/oauth2/token")
@@ -122,11 +117,6 @@ public class KiwoomApiService {
                 @Override
                 public void afterConnectionEstablished(@NonNull WebSocketSession session) throws Exception {
                     socketSession = session;
-<<<<<<< HEAD
-                    // 로그인 패킷 전송
-                    if (accessToken == null || accessToken.isEmpty()) {
-                        System.err.println("Warning: accessToken is null or empty before sending login.");
-=======
                     try {
                         // 로그인 패킷 전송
                         Map<String, Object> loginMessage = new HashMap<>();
@@ -138,7 +128,6 @@ public class KiwoomApiService {
                         session.sendMessage(new TextMessage(objectMapper.writeValueAsString(loginMessage)));
                     } catch (Exception e) {
                         e.printStackTrace();
->>>>>>> 1f0942fd (feat: Fix kiwoom api)
                     }
                     Map<String, Object> loginMessage = new HashMap<>();
                     loginMessage.put("trnm", "LOGIN");

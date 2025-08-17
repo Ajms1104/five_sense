@@ -1,417 +1,132 @@
-/* src/styles/bookmark.css */
+/* pages/bookmark.module.css */
 
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
+/* --- 1. 전체 페이지 레이아웃 --- */
 
-.bookmark-container{
-  display: grid;
-  grid-template-columns: 275px auto;     /* 275px 너비 사이드바 + 나머지 메인[1] */
-  grid-template-rows: 70px 1fr;           /* 70px 높이 상단바 + 나머지 영역 */
-  grid-template-areas:
-    "sidebar  topbar"
-    "sidebar  main";
-  height: 100vh;
-  width: 100%;
+.b-main-bar {
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    padding-left: 260px; /* 사이드바 너비만큼 여백 */
+    padding-top: 40PX;
+    box-sizing: border-box; 
+    width: 100%; 
+    height: 100%;
 }
 
-/*body와 비슷한 속성*/
-.main_container{
-  height: 100%;
-  box-sizing: border-box;
-  display: flex;
-}
-/*------------------------구분선------------------------*/
-
-/*상단바 CSS영역*/
-.top-bar{ /*aside 영역, 상단바 포괄 영역*/
-  grid-area: topbar;
-  width: 100%;
-  height: 50px;
-  position: relative;
+/* --- 2. 즐겨찾기 흰색 박스 --- */
+.bookmark-top {
+    width: 100%; 
+    max-width: 700px; 
+    height: 70vh; 
+    min-height: 500px;
+    background: #fff; 
+    border: 1px solid #e0e0e0; 
+    border-radius: 20px;
+    position: relative;
 }
 
-.line_5{
-  display: flex;
-  width: 100%;
-  height: 1px;
-  background-color: rgba(166,166,166,0.85);
-  position: relative;
-  top:15px;
+/* --- 3. 헤더 및 왼쪽 메뉴 --- */
+.bookmark_name {
+    position: absolute; 
+    top: 10px; 
+    left: 25px;
+    font-size: 20px; 
+    font-weight: 600;
 }
 
-.user-bar{
-  height: 100%;     /* right를 0으로 지정해 우측 여백 제거 */
+.line_6 {
+    position: absolute; 
+    top: 60px; 
+    left: 0;
+    width: 100%; 
+    height: 1px; 
+    background-color: #e0e0e0;
 }
 
-.user{ /*USER 아이콘, 버튼임*/
-  position: absolute;
-  top: 50%;                       /* 세로 중앙 */
-  right: 20px;                    /* 우측에서 20px */
-  transform: translateY(-50%);    /* 정확히 중앙 정렬 */
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
+.bookmark-side {
+    position: absolute; 
+    top: 78px; 
+    bottom: 0;
+    width: 200px; 
+    padding: 20px 10px;
+    border-right: 1px solid #e0e0e0; 
+    box-sizing: border-box;
 }
 
-.user-popup {
-  position: absolute;
-  top: 100%;       /* 아이콘 아래 */
-  right: 0;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  display: flex;
-  flex-direction: column;
-  z-index: 1000;
-}
-.user-popup button {
-  background: none;
-  border: none;
-  padding: 8px 12px;
-  text-align: left;
-  cursor: pointer;
-}
-.user-popup button:hover {
-  background: #f2f2f2;
+.mark_chart, 
+.mark_search {
+    display: block; 
+    width: 100%; 
+    text-align: left; 
+    padding: 12px 20px;
+    margin-bottom: 10px; 
+    border-radius: 8px; 
+    font-size: 14px;
+    border: none; 
+    background: none; 
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/*------------------------구분선------------------------*/
-/*사이드바 CSS영역*/
-.sidebar{ /*aside, 사이드바 전체 영역*/
-  grid-area: sidebar;
-  border-right: 1.5px solid var(--_, rgba(166, 166, 166, 0.85));
-  width: 275px;
-  height: 100vw;
-  flex-shrink: 0;
-  box-sizing: border-box;
-  position: absolute;
+/* 활성화된 탭 버튼 스타일 */
+.mark_chart.active, 
+.mark_search.active {
+    background-color: #f0f2f5; 
+    font-weight: 600; 
+    color: #000;
 }
 
-.sidebar-top{ /*로고 있는 영역*/
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-end;
+/* 비활성화된 탭에 마우스를 올렸을 때 */
+.mark_chart:not(.active):hover, 
+.mark_search:not(.active):hover {
+    background-color: #f9f9f9;
 }
 
-.logo-top{
-  width: 100%;
-  height: 54px;
-}
-
-.logo_png{
-  width: 50px;
-  height: 35px;
-  flex-shrink: 0;
-  aspect-ratio: 1/1;
-  position: relative;
-  top: 10px;
-  left: 5px;
-}
-
-.logo-txt{ /*five_sense*/
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-  color: #24AFCF;
-  font-family: 'Pretendard-Regular';
-  font-size: 23px;
-  font-style: normal;
-  font-weight: 800;
-  line-height: normal;
-  position: relative;
-  top : -48px;
-  left: 56px;
-}
-
-.side_btn { /*사이드바 접었다 폈다 그거*/
-  position: relative;
-  top: -93px;
-  left: 220px;
-  width: 45px;
-  height: 27px;
-  flex-shrink: 0;
-  border: none;
-  background-color: transparent;
-  padding: 0;
-  cursor: pointer;
-}
-
-.side_btn_png {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-/*메뉴 TOP 즐겨찾기, 검색*/
-.sidebar-menu-top{
-  width: 100%;
-  height: 150px;
-  position: relative;
-}
-
-.menu-txt{
-  flex-shrink: 0;
-  color: var(--, #3B413C);
-  font-family: 'Pretendard-Regular';
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  position: relative;
-  left: 15px;
-  top: 5px
-}
-
-.ai_chat{ /*사실상 처음으로 돌아가기*/
-  flex-shrink: 0;
-  color: var(--, #3B413C);
-  font-family: 'Pretendard-Regular';
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  letter-spacing: 2px;
-  position: relative;
-  left: 25px;
-  top: 5px
-}
-
-.b_bookmark{ /*즐겨찾기*/
-  flex-shrink: 0;
-  color: var(--, #28aa3e);
-  font-family: 'Pretendard-Regular';
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  letter-spacing: 2px;
-  position: relative;
-  left: 25px;
-  top: 40px;
-}
-
-.b_line_1{
-  width: 90%;
-  height: 1.5px;
-  background-color: rgba(166,166,166,0.85);
-  position: relative;
-  left: 15px;
-  top : 40px;
-}
-
-/*메뉴 중간 : 검색 기록 */
-.sidebar-menu-mid{
-  width: 100%;
-  height: 225px;
-  position: relative;
-}
-
-.history_font{
-  flex-shrink: 0;
-  color: var(--, #3B413C);
-  font-family: 'Pretendard-Regular';
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  position: relative;
-  left: 15px;
-  top: 5px
-}
-
-.today_btn{ /*오늘꺼*/
-  width: 70%;
-  height: 26px;
-  padding: 0 20px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  border-radius: 100px;
-  background: var(--_, #f2f2f2);
-  color: var(--, #3B413C);
-  font-family: 'Pretendard-Regular';
-  font-size: 15px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 1.2;
-  letter-spacing: 0.75px;
-  box-sizing: border-box;
-  white-space: nowrap; 
-  position: relative;
-  left: 30px;
-  top : 5px;
-}
-
-.line_2{
-  width: 1px;
-  height: 80px;
-  background-color: rgba(166,166,166,0.85);
-  position: relative;
-  left : 60px;
-  top : -5px;
-}
-
-.dplus-7-btn{ /*7일 전꺼*/
-  flex-shrink: 0;
-  color: var(--, #3B413C);
-  font-family: 'Pretendard-Regular';
-  font-size: 15px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  letter-spacing: 0.75px;
-  position: relative;
-  left:53px;
-}
-
-.line_3{
-  width: 90%;
-  height: 1px;
-  background-color: rgba(166,166,166,0.85);
-  position: relative;
-  left: 15px;
-  top: 17px;
-}
-
-/*메뉴 하단 : 최신 뉴스*/
-
-.sidebar-menu-bottom{
-  width: 100%;
-  height: 416px;
-}
-
-.post{
-  flex-shrink: 0;
-  color: var(--, #3B413C);
-  font-family: 'Pretendard-Regular';
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal; 
-  position: relative;
-  left: 15px;
-  top: 5px
-}
-
-/*------------------------구분선------------------------*/
-
-.b-main-bar{
-  width: 100%;
-  grid-area: main;
-  display:flex;
-  flex-direction:column;
-  justify-content: center;  /* 세로 중앙 정렬 */
-  align-items: center;      /* 가로 중앙 정렬 */
-  gap: 15px;
-  padding:15px;
-  flex-shrink: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  scrollbar-width: none;       /* Firefox */
-  -ms-overflow-style: none;    /* IE 10+ */
-}
-
-.bookmark-top{
- width: 40vw;          
- height: 30vh;         
- min-width: 400px;     
- min-height: 300px;    
- max-width: 800px;     
- max-height: 600px;    
- flex-shrink: 0;
- border-radius: 20px;
- border: 1px solid var(--_, rgba(166, 166, 166, 0.85));
- background: var(--, #FFF);
- position: relative;
- margin: auto;
- display: flex;           /* Flexbox 추가 */
- flex-direction: column;  /* 세로 방향 정렬 */
-}
-
-.bookmark_name{
- width: 99px;
- height: 27px;
- flex-shrink: 0;
- color: #000;
- font-family: 'Pretendard-Regular';
- font-size: 18px;
- font-style: normal;
- font-weight: 600;
- line-height: normal;
- letter-spacing: 2.4px;
- position: relative;
- left: 20px;
-}
-
-.line_6{
- width: 100%;
- height: 10%;
- flex-shrink: 0;
- border-radius: 19px 19px 0px 0px;
- border-bottom: 1px solid var(--_, rgba(166, 166, 166, 0.85));
- background: var(--, #FFF);
- position: relative;
- top:-40px;
- margin: 0%;
-}
-
-.bookmark-side{
- position: relative;
- top:-40px;
- width: 175px;
- height: 82.5%;
- flex-shrink: 0;
- border-radius: 0px 0px 0px 19px;
- border-right: 1px solid var(--_, rgba(166, 166, 166, 0.85));
- overflow: hidden;
-}
-
-.mark_chart{
- color: #000;
- font-family: 'Pretendard-Regular';
- font-size: 19px;
- font-style: normal;
- font-weight: 600;
- line-height: normal;
- letter-spacing: 1.9px;
- position: relative;
- margin: 15% 0% 20% 5%;
-}
-
-.mark_search{
- color: #000;
- font-family: 'Pretendard-Regular';
- font-size: 19px;
- font-style: normal;
- font-weight: 700;
- line-height: normal;
- letter-spacing: 1.9px;
-  position: relative;
- margin: 5% 0% 20% 5%;
-}
-
+/* --- 4. 오른쪽 콘텐츠 목록 --- */
 .bookmark-center {
- position: absolute;
- top: 53.5px;
- right: 0;
- width: calc(100% - 175px);
- height: 82.5%;
- overflow: hidden;
- border-radius: 0px 0px 19px 0px;
+    position: absolute; 
+    top: 70px; 
+    left: 200px; 
+    right: 0; 
+    bottom: 0;
+    padding: 25px 30px; 
+    overflow-y: auto;
 }
 
-.mark_check{
- color: #000;
- font-family: 'Pretendard-Regular';
- font-size: 18px;
- font-style: normal;
- font-weight: 550;
- line-height: normal;
- letter-spacing: 1.8px;
- position: relative;
- top: 25px;
- left: 25px;
+.bookmark-list {
+    list-style-type: none; 
+    padding: 0; 
+    margin: 0;
+    display: flex; 
+    flex-direction: column; 
+    gap: 20px; /* 목록 아이템 사이 간격 */
+}
+
+.bookmark-item {
+    display: flex; 
+    align-items: center; 
+    gap: 10px; /* 아이콘과 텍스트 사이 간격 */
+}
+
+.item-name {
+    font-size: 15px; 
+    color: #333;
+    flex-grow: 1; /* 텍스트가 남은 공간을 모두 차지 (X버튼을 오른쪽 끝으로 밀기 위함) */
+}
+
+/* 삭제 버튼 스타일 */
+.delete-btn {
+    background: none; 
+    border: none; 
+    cursor: pointer; 
+    padding: 5px;
+    font-size: 18px; 
+    font-weight: bold; 
+    color: #aaa;
+    margin-left: auto; /* X 버튼을 항상 오른쪽 끝으로 밀어냄 */
+    transition: color 0.2s ease;
+}
+
+.delete-btn:hover {
+    color: #000;
 }
