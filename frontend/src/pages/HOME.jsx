@@ -12,7 +12,7 @@ import Sidebar from '../components/layout/Sidebar/Sidebar';
 import Topbar from '../components/layout/Topbar/Topbar';
 import AiResult from '../components/layout/Airesult/airesult';
 
-// 페이지 전용 스타일
+// 페이지 전용 스타일ㅇ
 import styles from '../styles/main.module.css';
 
 const Home = () => {

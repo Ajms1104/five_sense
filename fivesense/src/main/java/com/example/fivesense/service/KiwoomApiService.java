@@ -21,10 +21,15 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
+<<<<<<< HEAD
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+=======
+import java.util.Arrays;
+import java.util.List;
+>>>>>>> origin/jaeeok
 @Service
 public class KiwoomApiService {
 
@@ -74,10 +79,18 @@ public class KiwoomApiService {
 
     private void getAccessToken() {
         try {
+<<<<<<< HEAD
             Map<String, String> tokenRequest = new HashMap<>();
             tokenRequest.put("grant_type", "client_credentials");
             tokenRequest.put("appkey", this.apiKey); // @Value로 주입된 apiKey 필드 사용
             tokenRequest.put("secretkey", this.apiSecret); // @Value로 주입된 apiSecret 필드 사용
+=======
+            // 1. 요청 데이터 JSON 문자열 생성
+            Map<String, String> tokenRequest = new HashMap<>();
+            tokenRequest.put("grant_type", "client_credentials");
+            tokenRequest.put("appkey", "IFZoKZtS4RIhUP7qd4DSzgiFJ5_zbzJvgVoRCbb7KtM");
+            tokenRequest.put("secretkey", "4lD4p6k5ehfmfx3hB6OIaYoQFiqA8DrM3nVG8ybNryg");
+>>>>>>> origin/jaeeok
 
             Map<String, Object> response = webClient.post()
                     .uri("/oauth2/token")
@@ -107,7 +120,11 @@ public class KiwoomApiService {
             e.printStackTrace();
         }
     }
+<<<<<<< HEAD
 
+=======
+    // 웹소켓 연결 초기화
+>>>>>>> origin/jaeeok
     private void initWebSocketConnection() {
         try {
             WebSocketClient client = new StandardWebSocketClient();
@@ -173,6 +190,7 @@ public class KiwoomApiService {
             e.printStackTrace();
         }
     }
+    
 
     // 주식 차트 조회
     public Map<String, Object> getDailyStockChart(String stockCode, String baseDate, String apiId) {
@@ -184,6 +202,11 @@ public class KiwoomApiService {
             Map<String, String> requestData = new HashMap<>();
             requestData.put("stk_cd", stockCode);
             requestData.put("upd_stkpc_tp", "1");
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> origin/jaeeok
             if ("KA10080".equals(apiId)) {
                 requestData.put("tic_scope", ticScope != null ? ticScope : "1");
             } else {
@@ -247,4 +270,5 @@ public class KiwoomApiService {
         }
         return new HashMap<>();
     }
-}
+
+} 
