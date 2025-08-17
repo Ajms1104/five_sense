@@ -260,8 +260,20 @@ for i in range(len(all_labels)):
 if final_unknown_count > 0:
     print(f"\n{final_unknown_count}개의 라벨이 재처리 후에도 'unknown'으로 최종 처리되었습니다.")
 
-# 결과 저장
+# 본문 분석 결과
 df = df.iloc[:len(all_labels)]
 df["gemini_label"] = all_labels
+
+#------ 제목-본문 불일치 시 'neutral'로 최종 라벨링 -------
+# 1.
+df['final_label'] = df['predicted_label']
+
+# 2. 제목 라벨(predicted_label)과 본문 라벨(gemini_label)이 다른 행 마스킹
+mismatched_mask = (df['predicted_label'] != df['gemini_label']) & (df['gemini_label'] != 'unknown')
+
+# 3. 불일치하는 모든 행의 'final_label'을 'neutral'로 변경
+df.loc[mismatched_mask, 'final_label'] = 'neutral'
+#-----------------------------------------------------
+
 # csv 저장
 df.to_csv("News_DB_sentiment_results.csv", index=False)
