@@ -1,0 +1,153 @@
+.container { /*전체 영역*/
+  font-family: 'Pretendard';
+  min-width: 400px;
+  min-height: 500px;
+}
+.tabContainer { /*설정 버튼 영역*/
+  display: flex;
+  gap: 6px; 
+  margin-bottom: 12px; 
+}
+.tabButton { /*설정 버튼*/
+  height: 30px;
+  width: 100px; 
+  padding: 6px 0; /* 세로 패딩 추가 */
+  border-radius: 6px 6px 0 0; 
+  color: #888;
+  cursor: pointer;
+  font-size: 12px; 
+  font-weight: 600;
+  position: relative;
+  bottom: 77px; 
+  right: 5px;
+}
+.tabButton.active { /*설정 버튼 배경*/
+  background-color: #ffc107;
+  border-color: #ffc107;
+  color: #333;
+}
+.content { /*메인 상자*/
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  padding: 12px; 
+}
+.summaryHeader { /*설명글 영역*/
+  display: flex;
+  align-items: center;
+  gap: 5px; 
+  font-size: 11px; 
+}
+.togletxt{ /*토글 앞뒤 문장*/
+    font-family: 'Pretendard';
+    font-size: 11px; 
+    font-weight: 400;
+}
+.stockSelect { /*주식 선택 영역(토글)*/
+  padding: 3px 6px; 
+  border: 1px solid #e0e0e0;
+  border-radius: 5px; 
+  font-family: 'Pretendard';
+  font-size: 11px; 
+}
+.totalPredictionSection { /*AI total 평가예측*/
+  display: flex;
+  align-items: center;
+  gap: 10px; 
+  margin-bottom: 10px; 
+  position: relative;
+  bottom: 22px; 
+}
+.totalTitle { /*주가 변화 예측*/
+  font-size: 12px; 
+  color: #333;
+  font-weight: 600;
+  margin: 0;
+}
+.totalPrice { /*예측 금액*/
+  font-size: 18px; 
+  color: #ff3333;
+  font-weight: 700;
+  margin: 2px 0;
+}
+.totalChangeRate { /*변화율*/
+  font-size: 11px; 
+  color: #ff3333;
+  margin: 0;
+}
+.priceRangeBar { /*AI 그래프*/
+  flex-grow: 1;
+  height: 16px; 
+  background-color: #f0f0f0;
+  border-radius: 8px; 
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+/*----------------구분선---------------*/
+.modelCardsContainer { /*각 AI 별 수치 영역*/
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px; 
+  position: relative;
+  bottom: 12px; 
+}
+.modelCard { /*각 AI 별 카드*/
+  border: 1px solid #e0e0e0;
+  border-radius: 8px; 
+  padding: 10px; 
+}
+.modelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px; 
+}
+.modelTitle {
+  font-family: 'Pretendard';
+  font-size: 14px; 
+  font-weight: 500;
+  margin: 0;
+}
+.dataType { /*()Data 학습*/
+  font-size: 9px; 
+  color: #777;
+  background-color: #eaeaea83;
+  padding: 2px 5px; 
+  border-radius: 8px; 
+}
+.accuracySection { /*정확도*/
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px; 
+  margin-bottom: 3px; 
+}
+.progressBarContainer {/*정확도 바*/
+  width: 100%;
+  height: 4px; 
+  background-color: #e0e0e0;
+  border-radius: 2px; 
+  overflow: hidden;
+  margin-bottom: 8px; 
+}
+.predictionResult { /*각 AI 예측 가격 영역 */
+  padding: 10px; 
+  border-radius: 6px; 
+  text-align: center;
+}
+.predictionResult p {
+  margin: 1px 0; 
+}
+.predictionResult p:first-child { /*날짜와 종목*/
+  font-size: 9px; 
+  color: #777;
+}
+.predictedPrice { /*가격*/
+  font-size: 16px; 
+  font-weight: 700;
+  color: #333;
+}
+.changeRate { /*상승일 경우*/
+  font-size: 11px; 
+  color: #e94266;
+}

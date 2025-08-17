@@ -6,7 +6,7 @@ import style from './topbar.module.css';
 import UserIcon from '../../../assets/User.svg';
 import popup from '../../../assets/popupbtn.svg';
 import login from '../../../assets/login.svg';
-import logout from '../../../assets/logout.svg';
+import logout_btn from '../../../assets/logout.svg';
 
 function Topbar() {
   const navigate = useNavigate();
@@ -46,15 +46,15 @@ function Topbar() {
             <div className={style.popupbar}>
               <img src={popup} className={style.popup_btn}/>
               {isLoggedIn ? (
-                <button onClick={handleLogout} className={style.popup_txt}>
-                  <img src={logout} className={style.loginout_btn}/>
+                <div onClick={handleLogout} className={style.popup_txt}>
+                  <img src={logout_btn} className={style.loginout_btn}/>
                   로그아웃
-                </button>
+                </div>
                ) : (
-                <button onClick={handleLogin} className={style.popup_txt}>
+                <div onClick={handleLogin} className={style.popup_txt}>
                   <img src={login} className={style.loginout_btn} />
                   로그인
-                </button>
+                </div>
               )}
             </div>
           )}

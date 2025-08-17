@@ -1,4 +1,4 @@
-/* rank.module.css (최소 높이 유지 기능만 추가) */
+/* rank.module.css (높이 추가 축소 최종 버전) */
 
 .rank-component-wrapper {
   font-family: 'Pretendard';
@@ -6,19 +6,21 @@
 
 .tab-container {
   display: flex;
-  margin-left: 20px;
+  margin-left: 10px;
   position: relative;
-  left: 300px;
+  left: 265px; 
 }
 
 .tab-button {
-  padding: 12px 20px;
+  height: 30px;
+  width: 130px;
+  padding: 5px 12px; /* 세로 padding 감소 */
   border: 1px solid #e0e0e0;
   border-bottom: none;
-  border-radius: 10px 10px 0 0;
+  border-radius: 7px 7px 0 0;
   background-color: #f9f9f9;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
   color: #888;
   margin-right: 4px;
@@ -27,29 +29,24 @@
 }
 
 .tab-button.active {
-  background-color: #F5C943; /* 이미지의 노란색 배경 */
-  border-color: #F5C943;
+  background-color: #ffc107;
+  border-color:#ffc107;
   color: #333;
   z-index: 2; 
 }
 
-.stock-ranking-container { /*실시간 주식랭킹*/
+.stock-ranking-container {
   width: 100%;
-  max-width: 700px; 
+  max-width: 520px;
   margin: 0 auto;
-  border-radius: 15px; 
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); 
-  padding: 22px;
+  border-radius: 5px; 
+  padding: 8px 14px; /* 세로 padding 감소 */
   background-color: #ffffff;
   border: 1px solid #e0e0e0; 
   border-top-left-radius: 0; 
   position: relative;
   z-index: 1;
-
-  /* ★★★ 1. 컨테이너의 최소 높이를 지정하여 크기를 유지합니다 ★★★ */
-  min-height: 620px;
-  
-  /* ★★★ 2. 내용이 적을 때 중앙 정렬을 위한 flex 속성 추가 ★★★ */
+  min-height: 350px; /* min-height 감소 */
   display: flex;
   flex-direction: column;
 }
@@ -58,107 +55,100 @@
 .header {
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 8px; /* margin-bottom 감소 */
 }
-.title { /*실시간 주식 차트*/
-  font-size: 16px;
+.title {
+  font-size: 13px;
   font-weight: 700;
 }
-.update-time { /*현재 (시간) 기준*/
-  font-size: 14px;
+.update-time {
+  font-size: 11px;
   color: #888;
-  margin-left: 12px;
+  margin-left: 8px;
 }
+
 /*------------구분선------------*/
-.stocks-table { /*주식 순위 테이블*/
+.stocks-table {
   width: 100%;
   border-collapse: collapse; 
   table-layout: fixed; 
 }
 .stocks-table th, .stocks-table td {
-  padding: 8px 5px;
+  position: relative;
+  top:-5px;
+  padding: 1px 1px; /* 세로 padding 감소 */
   border-bottom: 1px solid #f0f0f0;
   vertical-align: middle; 
 }
 .stocks-table th {
   text-align: right; 
   font-weight: 400;
-  font-size: 12px;
+  font-size: 10px;
   color: #555;
   background-color: #f8f9fa;
-  padding-bottom: 10px;
+  padding-bottom: 4px; /* padding-bottom 감소 */
 }
-.stocks-table .th-rank { /*순위*/
-  width: 60%;
-  text-align: left;
-}
-.stocks-table .th-price { /*가격*/
-  width: 22%;
-}
-.stocks-table .th-change { /*등락률*/
-  width: 18%;
-}
+.stocks-table .th-rank { width: 60%; text-align: left; }
+.stocks-table .th-price { width: 22%; }
+.stocks-table .th-change { width: 18%; }
 .stocks-table tbody tr:hover {
-  background-color: #f8f9fa;
   cursor: pointer;
 }
 
 /*------------구분선------------*/
 .td-name-cell {
-  text-align: left;
+  text-align: right;
   display: flex;
   align-items: center;
 }
 .td-price, .td-change {
   text-align: right;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 11px;
 }
-.favorite-btn { /*하트*/
-  background: none;
-  border: none;
+.favorite-btn {
   cursor: pointer;
-  font-size: 18px;
+  font-size: 14px;
   color: #ccc;
-  padding: 0;
   position: relative;
-  left: -40px;
+  left: -30px;
 }
 .favorite-btn:hover { color: #f5c943; }
-.stock-name { /*주식명*/
+.stock-name {
   font-weight: 400;
-  font-size: 14px;
+  font-size: 11px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  position: relative;
-  left: -20px;
+  text-align: right;
 }
 .rank {
-  font-weight: 600;
-  min-width: 20px; 
+  font-size: 14px;
+  font-weight: 400;
+  min-width: 10px;
   text-align: center;
 }
 .up { color: #ff3333; }
 .down { color: #5050ff; }
 
 /*------------구분선------------*/
-/*페이지 넘어가기*/
 .pagination-controls {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
-  gap: 40px;
+  margin-top: auto;
+  padding-top: 8px; /* padding-top 감소 */
+  gap: 15px;
 }
 .pagination-controls button {
-  width: 150px;
+  width: 100px;
   background: #f0f0f0;
   border: none;
-  border-radius: 6px;
-  padding: 8px 10px;
+  border-radius: 5px;
+  padding: 2px 6px; /* 세로 padding 감소 */
   cursor: pointer;
   font-weight: 600;
+  font-size: 11px;
 }
 .pagination-controls button:disabled {
   background: #f8f8f8;
@@ -167,14 +157,15 @@
 }
 .page-info {
   font-weight: 600;
-  font-size: 14px;
+  font-size: 11px;
 }
 
 /*------------구분선------------*/
 .no-data {
-  min-width: 700px;
+  min-width: 500px;
   color: #888;
   display: flex;
   justify-content:center;
-  
+  align-items: center;
+  flex-grow: 1;
 }
