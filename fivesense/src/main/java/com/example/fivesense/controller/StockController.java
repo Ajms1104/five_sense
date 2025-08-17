@@ -55,14 +55,25 @@ public class StockController {
 
     @GetMapping("/news")
     public List<Map<String, Object>> getLatestNews(@RequestParam(defaultValue = "1") int page) {
+        System.out.println("=== /news 엔드포인트 호출됨 ===");
+        System.out.println("페이지 번호: " + page);
+        
         int pageSize = 4;
         int offset = (page - 1) * pageSize;
         List<Map<String, Object>> newsList = new ArrayList<>();
+        
+        System.out.println("데이터베이스 연결 시도 중...");
         try (Connection conn = DriverManager.getConnection(
-                "jdbc:postgresql://192.168.56.1:5432/fivesense", "postgres", "1234");
-             PreparedStatement stmt = conn.prepareStatement(
-                "SELECT title, link FROM company_news ORDER BY pub_date DESC LIMIT 40 OFFSET 0")) {
+                "jdbc:postgresql://192.168.56.1:5432/fivesense", "postgres", "1234")) {
+            System.out.println("데이터베이스 연결 성공!");
+            
+            PreparedStatement stmt = conn.prepareStatement(
+                "SELECT title, link FROM company_news ORDER BY pub_date DESC LIMIT 40 OFFSET 0");
+            System.out.println("SQL 쿼리 실행 중...");
+            
             ResultSet rs = stmt.executeQuery();
+            System.out.println("쿼리 실행 완료, 결과 처리 중...");
+            
             int idx = 0;
             while (rs.next() && newsList.size() < 40) {
                 if (idx >= offset && newsList.size() < offset + pageSize) {
@@ -73,7 +84,13 @@ public class StockController {
                 }
                 idx++;
             }
+            
+            System.out.println("처리된 뉴스 개수: " + newsList.size());
+            System.out.println("=== /news 엔드포인트 처리 완료 ===");
+            
         } catch (Exception e) {
+            System.err.println("=== /news 엔드포인트 오류 발생 ===");
+            System.err.println("오류 메시지: " + e.getMessage());
             e.printStackTrace();
         }
         return newsList;
