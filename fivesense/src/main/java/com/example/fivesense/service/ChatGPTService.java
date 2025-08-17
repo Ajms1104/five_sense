@@ -75,7 +75,7 @@ public class ChatGPTService {
                     .build();
             System.out.println("ChatCompletionRequest 생성 완료");
 
-            System.out.println("OpenAI API 호출 중...");
+            System.out.println("OpenAI API 호출 중ㅇㅇㅇㅇ...");
             String response = openAiService.createChatCompletion(request)
                     .getChoices().get(0).getMessage().getContent();
             System.out.println("OpenAI API 응답 수신 완료");
