@@ -27,8 +27,8 @@
 }
 
 .tab-button.active {
-  background-color: #F5C943; /* 이미지의 노란색 배경 */
-  border-color: #F5C943;
+  background-color: #ffc107; /* 이미지의 노란색 배경 */
+  border-color:#ffc107;
   color: #333;
   z-index: 2; 
 }

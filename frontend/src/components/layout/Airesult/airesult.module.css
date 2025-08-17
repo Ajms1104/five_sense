@@ -16,15 +16,15 @@
   color: #888;
   cursor: pointer;
   font-size: 14px;
-  font-weight: 400;
+  font-weight: 600;
   position: relative;
   bottom: 110px;
-  right: 10px;
+  right: 5px;
 }
 
 .tabButton.active { /*설정 버튼 배경*/
-  background-color: #F5C943; /* 이미지의 노란색 배경 */
-  border-color: #F5C943;
+  background-color: #ffc107;
+  border-color: #ffc107;
   color: #333;
 }
 
@@ -73,14 +73,14 @@
 
 .totalPrice { /*예측 금액*/
   font-size: 24px;
-  color: #e94266;
+  color: #ff3333;
   font-weight: 700;
   margin: 4px 0;
 }
 
 .totalChangeRate { /*변화율*/
   font-size: 14px;
-  color: #e94266;
+  color: #ff3333;
   margin: 0;
 }
 
