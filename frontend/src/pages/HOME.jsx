@@ -57,7 +57,7 @@ const Home = () => {
           <Chat />
         </section>
         <section className={styles.ai_result_section}>
-          <AiResult />
+          {/*<AiResult />*/}
         </section>
       </main>
     </div>

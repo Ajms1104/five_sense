@@ -74,11 +74,6 @@ public class KiwoomApiService {
 
     private void getAccessToken() {
         try {
-
-            // 1. 요청 데이터 JSON 문자열 생성
-            Map<String, String> tokenRequest = new HashMap<>();
-            tokenRequest.put("grant_type", "client_credentials");
-            tokenRequest.put("appkey", "IFZoKZtS4RIhUP7qd4DSzgiFJ5_zbzJvgVoRCbb7KtM");
             Map<String, String> tokenRequest = new HashMap<>();
             tokenRequest.put("grant_type", "client_credentials");
             tokenRequest.put("appkey", this.apiKey); // @Value로 주입된 apiKey 필드 사용
@@ -112,7 +107,7 @@ public class KiwoomApiService {
             e.printStackTrace();
         }
     }
-    // 웹소켓 연결 초기화
+
     private void initWebSocketConnection() {
         try {
             WebSocketClient client = new StandardWebSocketClient();

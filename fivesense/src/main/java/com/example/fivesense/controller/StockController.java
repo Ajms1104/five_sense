@@ -18,6 +18,7 @@ import java.util.HashMap;
 @RestController
 @RequestMapping("/api/stock")
 @CrossOrigin(origins = "http://localhost:5173")
+
 public class StockController {
 
     private final KiwoomApiService kiwoomApiService;
@@ -25,11 +26,12 @@ public class StockController {
     public StockController(KiwoomApiService kiwoomApiService) {
         this.kiwoomApiService = kiwoomApiService;
     }
+
     @PostMapping("/daily-chart/{stockCode}")
     public Map<String, Object> getDailyChart(
             @PathVariable String stockCode,
             @RequestBody Map<String, Object> requestData,
-            @RequestParam(required = false, defaultValue = "KA10081") String apiId) {
+            @RequestParam(value = "apiId", required = false, defaultValue = "KA10081") String apiId) {
         System.out.println("차트 데이터 요청: " + stockCode + ", apiId: " + apiId + ", requestData: " + requestData);
         String baseDate = requestData.containsKey("base_dt") ? (String) requestData.get("base_dt") : null;
         if (baseDate == null) {
@@ -50,7 +52,7 @@ public class StockController {
     }
 
 @GetMapping("/news")
-    public List<Map<String, Object>> getLatestNews(@RequestParam(defaultValue = "1") int page) {
+public List<Map<String, Object>> getLatestNews(@RequestParam(value = "page", defaultValue = "1") int page) {
         System.out.println("=== /news 엔드포인트 호출됨 ===");
         System.out.println("페이지 번호: " + page);
 
