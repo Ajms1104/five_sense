@@ -13,17 +13,17 @@ public class FivesenseApplication {
 		SpringApplication.run(FivesenseApplication.class, args);
 	}
 
-	@Bean
-	public WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurer() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**")
-						.allowedOrigins("http://localhost:5173") // React 기본 포트
-						.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-						.allowedHeaders("*")
-						.allowCredentials(true);
-			}
-		};
-	}
+	// @Bean
+	// public WebMvcConfigurer corsConfigurer() {
+	// 	return new WebMvcConfigurer() {
+	// 		@Override
+	// 		public void addCorsMappings(CorsRegistry registry) {
+	// 			registry.addMapping("/**")
+	// 					.allowedOrigins("http://localhost:5173") // React 기본 포트
+	// 					.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+	// 					.allowedHeaders("*")
+	// 					.allowCredentials(true);
+	// 		}
+	// 	};
+	// }
 }

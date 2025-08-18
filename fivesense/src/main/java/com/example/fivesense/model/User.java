@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Data
 @Builder
 @Table(name="users")
+
 public class User {
 @Id
 @GeneratedValue(strategy= GenerationType.IDENTITY)

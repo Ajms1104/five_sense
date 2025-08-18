@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api")
 @Slf4j
+
 public class UserController{
     private final UserService userService;
     

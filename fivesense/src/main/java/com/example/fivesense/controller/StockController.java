@@ -18,6 +18,7 @@ import java.util.HashMap;
 @RestController
 @RequestMapping("/api/stock")
 @CrossOrigin(origins = "http://localhost:5173")
+
 public class StockController {
 
     private final KiwoomApiService kiwoomApiService;
@@ -26,14 +27,11 @@ public class StockController {
         this.kiwoomApiService = kiwoomApiService;
     }
 
-    
-
-
     @PostMapping("/daily-chart/{stockCode}")
     public Map<String, Object> getDailyChart(
             @PathVariable String stockCode,
             @RequestBody Map<String, Object> requestData,
-            @RequestParam(required = false, defaultValue = "KA10081") String apiId) {
+            @RequestParam(value = "apiId", required = false, defaultValue = "KA10081") String apiId) {
         System.out.println("차트 데이터 요청: " + stockCode + ", apiId: " + apiId + ", requestData: " + requestData);
         String baseDate = requestData.containsKey("base_dt") ? (String) requestData.get("base_dt") : null;
         if (baseDate == null) {
@@ -53,16 +51,27 @@ public class StockController {
         return kiwoomApiService.getDailyTopVolumeStocks();
     }
 
-    @GetMapping("/news")
-    public List<Map<String, Object>> getLatestNews(@RequestParam(defaultValue = "1") int page) {
+@GetMapping("/news")
+public List<Map<String, Object>> getLatestNews(@RequestParam(value = "page", defaultValue = "1") int page) {
+        System.out.println("=== /news 엔드포인트 호출됨 ===");
+        System.out.println("페이지 번호: " + page);
+
         int pageSize = 4;
         int offset = (page - 1) * pageSize;
         List<Map<String, Object>> newsList = new ArrayList<>();
+
+        System.out.println("데이터베이스 연결 시도 중...");
         try (Connection conn = DriverManager.getConnection(
-                "jdbc:postgresql://192.168.56.1:5432/fivesense", "postgres", "1234");
-             PreparedStatement stmt = conn.prepareStatement(
-                "SELECT title, link FROM company_news ORDER BY pub_date DESC LIMIT 40 OFFSET 0")) {
+                "jdbc:postgresql://localhost:5432/fivesense", "postgres", "1234")) {
+            System.out.println("데이터베이스 연결 성공!");
+
+            PreparedStatement stmt = conn.prepareStatement(
+                "SELECT title, link FROM company_news ORDER BY pub_date DESC LIMIT 40 OFFSET 0");
+            System.out.println("SQL 쿼리 실행 중...");
+
             ResultSet rs = stmt.executeQuery();
+            System.out.println("쿼리 실행 완료, 결과 처리 중...");
+
             int idx = 0;
             while (rs.next() && newsList.size() < 40) {
                 if (idx >= offset && newsList.size() < offset + pageSize) {
@@ -74,9 +83,11 @@ public class StockController {
                 idx++;
             }
         } catch (Exception e) {
+            System.err.println("=== /news 엔드포인트 오류 발생 ===");
+            System.err.println("오류 메시지: " + e.getMessage());
             e.printStackTrace();
         }
         return newsList;
     }
 
-} 
+}
