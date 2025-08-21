@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createChart, CrosshairMode } from 'lightweight-charts';
-import styles from './stockChart.module.css'; // CSS 모듈 import
-
+import styles from './stockChart.module.css'; 
 
 const ChartHeader = ({ stockInfo, isLoading }) => {
   if (isLoading || !stockInfo) {
     return <div className={styles['header-loading']}>종목 정보를 불러오는 중...</div>;
   }
   
-  // stockInfo의 필수 속성들이 존재하는지 확인
   if (!stockInfo.name || stockInfo.price === undefined || stockInfo.changeAmount === undefined) {
     return <div className={styles['header-loading']}>종목 정보를 불러오는 중...</div>;
   }
@@ -16,8 +14,8 @@ const ChartHeader = ({ stockInfo, isLoading }) => {
   return (
     <div className={styles['chart-header']}>
       <div className={styles['stock-identity']}>
-        <div className={styles['stock-logo']}>{stockInfo.name.charAt(0)}</div>
-        <h2>{stockInfo.name}</h2>
+        <div className={styles['stock-logo']}>{stockInfo.name.charAt(0)}</div> {/* 현재 종목 별 로고 없음 */}
+        <h2>{stockInfo.name}</h2> {/* 현재 종목 코드 넘어오는 중*/}
       </div>
       <div className={styles['stock-price-info']}>
         <span className={`${styles['current-price']} ${styles[stockInfo.changeType]}`}>
@@ -34,6 +32,7 @@ const ChartHeader = ({ stockInfo, isLoading }) => {
 const MainTabs = () => (
   <div className={styles['main-tabs']}>
     <button className={`${styles['tab-button']} ${styles.active}`}>차트·호가</button>
+    {/* 아직 정보 안 넘어옴 */}
     <button className={styles['tab-button']}>종목정보</button>
     <button className={styles['tab-button']}>뉴스·공시</button>
     <button className={styles['tab-button']}>커뮤니티</button>
@@ -53,6 +52,7 @@ const ChartControls = ({ chartType, onChartTypeChange }) => (
         </button>
       ))}
     </div>
+    {/*
     <div className={styles['tool-selector']}>
       <button>+ 보조지표</button>
       <button>그리기</button>
@@ -61,6 +61,7 @@ const ChartControls = ({ chartType, onChartTypeChange }) => (
       <button>🗑️</button>
       <button>차트 크게보기 ↗</button>
     </div>
+    */}
   </div>
 );
 
@@ -76,7 +77,7 @@ const StockChart = ({ stockCode = '005930' }) => {
   const [chartType, setChartType] = useState('일');
   const [error, setError] = useState(null);
 
-  // 차트 초기화 및 리사이즈 로직 (이전과 거의 동일)
+  // 차트 초기화 및 리사이즈 로직
   useEffect(() => {
     if (!priceChartContainerRef.current || !volumeChartContainerRef.current) {
       console.log('차트 컨테이너가 아직 준비되지 않았습니다.');
@@ -200,7 +201,7 @@ const StockChart = ({ stockCode = '005930' }) => {
 
     // 리사이즈 핸들러
     const handleResize = () => {
-      if (priceChartContainerRef.current && volumeChartContainerRef.current) {
+      if (priceChartContainerRef.current && volumeChartContainerRef.current && chartRef.current) {
         const priceWidth = Math.max(priceChartContainerRef.current.clientWidth, 100);
         const priceHeight = Math.max(priceChartContainerRef.current.clientHeight, 100);
         const volumeWidth = Math.max(volumeChartContainerRef.current.clientWidth, 100);
@@ -208,8 +209,8 @@ const StockChart = ({ stockCode = '005930' }) => {
         
         console.log('차트 리사이즈:', { priceWidth, priceHeight, volumeWidth, volumeHeight });
         
-        priceChart.resize(priceWidth, priceHeight);
-        volumeChart.resize(volumeWidth, volumeHeight);
+        chartRef.current.priceChart.resize(priceWidth, priceHeight);
+        chartRef.current.volumeChart.resize(volumeWidth, volumeHeight);
       }
     };
 
@@ -238,7 +239,7 @@ const StockChart = ({ stockCode = '005930' }) => {
     };
   }, []);
 
-  // 데이터 로딩 및 차트 업데이트 로직 (이전과 거의 동일)
+  // 데이터 로딩 및 차트 업데이트 로직
   useEffect(() => {
     if (!candlestickSeriesRef.current || !volumeSeriesRef.current) {
       console.log('차트 시리즈가 아직 준비되지 않았습니다.');
@@ -278,7 +279,6 @@ const StockChart = ({ stockCode = '005930' }) => {
         
         console.log('API 응답 데이터:', data);
         
-        // 차트 객체가 여전히 유효한지 확인
         if (!candlestickSeriesRef.current || !volumeSeriesRef.current) {
           console.log('차트가 이미 제거되었습니다.');
           return;
@@ -357,7 +357,6 @@ const StockChart = ({ stockCode = '005930' }) => {
 
             console.log('차트에 설정할 데이터:', { candlestickData, volumeData });
 
-            // 차트 객체가 여전히 유효한지 다시 확인하고 안전하게 데이터 설정
             try {
               if (candlestickSeriesRef.current) {
                 candlestickSeriesRef.current.setData(candlestickData);
@@ -372,7 +371,6 @@ const StockChart = ({ stockCode = '005930' }) => {
               return;
             }
             
-            // 차트 정보 업데이트
             const latestData = processedData[processedData.length - 1];
             setStockInfo({
               name: stockCode, // 종목 코드를 이름으로 사용
@@ -409,22 +407,10 @@ const StockChart = ({ stockCode = '005930' }) => {
             <div 
               ref={priceChartContainerRef} 
               className={styles['price-chart-container']} 
-              style={{ 
-                width: '100%', 
-                height: '400px', 
-                border: '1px solid #ddd',
-                backgroundColor: '#f9f9f9'
-              }} 
             />
             <div 
               ref={volumeChartContainerRef} 
-              className={styles['volume-chart-container']} 
-              style={{ 
-                width: '100%', 
-                height: '200px', 
-                border: '1px solid #ddd',
-                backgroundColor: '#f9f9f9'
-              }} 
+              className={styles['volume-chart-container']}
             />
           </>
         )}

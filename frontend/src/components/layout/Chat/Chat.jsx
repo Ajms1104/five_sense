@@ -130,14 +130,11 @@ const ChatUI = () => {
           {messages.length === 0 && (
             <div className={style['welcome-message']}>
               안녕하세요! 주식 투자에 대해 궁금한 점이 있으시면 언제든 물어보세요. 
-              주식 분석, 투자 전략, 시장 동향 등에 대해 전문적인 답변을 드리겠습니다.
             </div>
           )}
           {messages.map((msg, index) => (
             <div key={index} className={`${style['chat-message']} ${style[msg.type]}`}>
-              <div className={style['message-content']}>
-                {msg.content}
-              </div>
+              <div className={style['message-content']}> {msg.content} </div>
               <div className={style['message-timestamp']}>
                 {new Date(msg.timestamp).toLocaleTimeString('ko-KR', {
                   hour: '2-digit',

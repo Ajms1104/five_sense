@@ -35,6 +35,9 @@
   left: 7px;
 }
 
+.logoandhome{
+  text-decoration: none;
+}
 
 .logo-txt{ /*five_sense*/
   width: 20px;
@@ -262,15 +265,33 @@
 
 .post_bg{
   display: flex;
-  justify-content: center; /* 내용물을 가로축 중앙에 배치 */
-  align-items: center;    
-  min-height: 100px; 
-}
-
-.new_error, .new-loading{ /*뉴스 오류(로딍) 메세지*/
-  color: var(--, #3B413C);
-  font-family: 'Pretendard';
+  flex-direction: column; /* 자식 요소(뉴스)를 세로로 정렬 */
+  gap: 16px; /* 뉴스 아이템 사이의 간격 */
+  padding: 0 15px; /* 목록 전체의 좌우 여백 */
+  align-items: stretch;
   position: relative;
+  top:30px
 }
 
-/*회의 후 뉴스 불러오는 거 수정 후 추가하기*/
+.news-item a {
+  display: block; /* 링크가 전체 영역을 차지하도록 */
+  text-decoration: none; 
+  color: #3B413C; /* 기본 글자색 */
+  font-size: 14px;
+  font-weight: 500; 
+  line-height: 1.4; /* 줄 간격 조절 */
+  transition: color 0.2s ease; /* 부드러운 색상 전환 효과 */
+}
+
+.news-item a:hover {
+  color: #24AFCF; /* 마우스를 올렸을 때 색상 변경 */
+}
+
+/* 뉴스 로딩/에러 메시지 스타일 수정 */
+.news_error, .news-loading {
+  color: #888;
+  font-family: 'Pretendard';
+  text-align: center;
+  padding: 20px 0; 
+  width: 100%;
+}

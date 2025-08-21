@@ -33,23 +33,18 @@
 }
 
 .popup_btn{ /*팝업 이미지*/
-  width: 170px;
-  height: 100px;
-  position: relative;
-  left: 15px;
-  top:7px;
+  height: 65px;
 }
 
 .popup_txt{ /*로그인, 로그아웃*/
-  color: #333; /* 잘 보이는 색으로 변경 */
+  color: #333; 
   font-family: 'Pretendard';
-  font-size: 16px; /* 잘 보이는 크기로 변경 */
+  font-size: 14px; 
   font-weight: 600;
   border: none;
   cursor: pointer;
   position: relative;
-  top:-60px;
-  left: 10px;
+  top:-45px;
 }
 
 .loginout_btn{

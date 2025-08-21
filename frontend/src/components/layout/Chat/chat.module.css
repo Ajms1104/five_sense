@@ -24,10 +24,18 @@
   margin-bottom: 7px;
 }
 
+.welcome-message{
+  font-family: 'Pretendard';
+  font-size: 14px; 
+  font-weight: 400;
+  color: #707070;
+  text-align: center;
+}
+
 .chat-message-ai-loading{ /*응답을 생성하고 있습니다*/
   font-family: 'Pretendard';
-  padding: 5px 9px; /* 값 감소 */
-  font-size: 11px; /* 값 감소 */
+  padding: 5px 9px; 
+  font-size: 11px; 
   color: #555;
 }
 
@@ -35,25 +43,24 @@
   font-family: 'Pretendard';
   display: flex;
   flex-direction: column;
-  gap: 2px; /* 값 감소 */
+  gap: 2px; 
   overflow-y: auto;
-  padding: 7px; /* 값 감소 */
+  padding: 7px; 
 }
 
 .chat-message {
   display: inline-block;
   max-width: 80%;
-  padding: 4px 7px; /* 값 감소 */
-  border-radius: 4px; /* 값 감소 */
+  padding: 4px 7px; 
+  border-radius: 4px; 
   word-wrap: break-word;
-  font-size: 11px; /* 값 감소 */
+  font-size: 12px; 
 }
 
 /* 유저 메시지는 오른쪽 정렬 */
 .chat-message.user {
   margin-left: auto;
-  background-color: rgb(36, 175, 207, 0.25);
-  color: rgb(0, 0, 0);
+  background-color: rgb(36, 175, 207, 0.25); /*채팅 배경*/
   text-align: right;
 }
 
@@ -61,54 +68,36 @@
 .chat-message.ai {
   margin-right: auto;
   background-color: #E5E7EB;
-  color: black;
   text-align: left;
 }
 
-/* --- 아래는 JSX에서 직접 사용되지 않는 것으로 보이는 기존 스타일 (그대로 유지) --- */
-.message {
-  margin-bottom: 16px;
-  max-width: 80%;
-}
-.message-content {
-  padding: 8px 16px;
-  border-radius: 16px;
-  background-color: #e9ecef;
-}
-.message.user {
-  margin-left: auto;
-}
-.message.user .message-content {
-  background-color: #73a1d2;
-  color: #ffffff;
-}
-.message-timestamp {
-  font-size: 12px;
+.message-timestamp { /*시간 영역*/
+  font-size: 10px;
   color: #6c757d;
   margin-top: 4px;
 }
+
 /* ------------------------------------------------------------- */
 
-.chat-input-form {
+.chat-input-form { /*채팅 입력칸*/
   min-width: 90%;
   display: flex;
-  padding: 5px 0px 0px 5px; /* 값 감소 */
+  padding: 5px 0px 0px 5px; 
   position: absolute;
-  left: 14px; /* 값 감소 */
-  bottom: 5px; /* 값 감소 */
+  left: 14px; 
+  bottom: 5px; 
 }
 
-.chat-input-form input {
+.chat-input-form input { /*메세지를 입력하세요*/
   width: 100%;
-  padding: 5px 7px; /* 값 감소 */
+  padding: 5px 7px; 
   border: 1px solid rgb(108, 117, 125, 0.5);
-  border-radius: 4px; /* 값 감소 */
-  font-size: 11px; /* 값 감소 */
+  border-radius: 4px ; 
+  font-size: 11px; 
 }
-
-.chat-input-form button {
-  background: none; 
-  border: none;
+.chat-input-form button { /*전송 버튼*/
+  width: 100px;
+  border-radius: 10px; 
   padding: 0; 
   cursor: pointer; 
   display: flex; 
@@ -116,19 +105,15 @@
   align-items: center;
 }
 
-.input_btn {
-  width: 20px;
-  height: 20px;
-}
 
-.danger { 
+.danger {   /*주의 문구*/
   color: rgba(166,166, 166, 0.5);
   font-family: 'Pretendard';
   font-weight: 100;
   font-size: 9px; 
   position: absolute;
-  bottom: -20px; /* 위치 조정 */
-  left: 125px; /* 위치 조정 */
+  bottom: -20px; 
+  left: 125px;
 }
 
 .chat-section {
@@ -173,11 +158,11 @@
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  color: #007bff;
 }
-.info {
+
+.chat-message-error{ /*AI 경고*/
+  font-size: 14px;
   text-align: center;
-  color: rgba(0, 0, 0, 0.5);
-  font-size: 12px;
   margin-top: 10px;
 }
+

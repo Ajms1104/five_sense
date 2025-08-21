@@ -1,20 +1,37 @@
-/* --- 기본 레이아웃 및 상태 표시 --- */
-.stock-chart-layout {
+/* stockChart.module.css */
+
+.stock-chart-layout { /*차트 전체 크기*/
+  width: 550px;
+  height: 550px;
+  min-width: 550px;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  background-color: #1a1a1d;
-  color: #f0f0f0;
+  background-color: #ffffff;
+  color: #333333;
   font-family: 'Pretendard';
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  overflow: hidden;
+  transition: all 0.2s ease-in-out;
 }
 
-.loading, .error {
+.loading, .error { /*로딩 문구 & 에러 문구*/
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100px; /* 예시 높이 */
-  font-size: 1.2em;
+  height: 100%;
+  font-size: 1em;
+  color: #555;
 }
+
+.header-loading {
+  padding: 7px 20px;
+  color: #888;
+  border-bottom: 1px solid #f0f0f0;
+  height: 62px;
+  box-sizing: border-box;
+}
+
 
 .error {
   color: #dc3545;
@@ -22,173 +39,171 @@
 
 
 /* --- 1. 차트 헤더 --- */
-.chart-header {
-  padding: 15px 20px;
+.chart-header { /*종목코드 및 가격 적히는 영역*/
+  padding: 7px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid #f0f0f0;
 }
 
-.header-loading {
-  padding: 15px 20px;
-  color: #888;
-  border-bottom: 1px solid #333;
-  height: 75px; /* 헤더 높이와 맞춤 */
-  box-sizing: border-box;
-}
-
-.stock-identity {
+.stock-identity { /*종목 코드 + 로고 영역*/
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.stock-identity h2 {
+.stock-identity h2 { /*종목 코드*/
   margin: 0;
-  font-size: 24px;
+  font-size: 18px;
+  font-weight: 600;
 }
 
-.stock-logo {
-  width: 40px;
-  height: 40px;
+.stock-logo { /*종목 로고*/
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  background-color: #5050ff;
+  background-color: #24AFCF;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 20px;
-  font-weight: bold;
+  color: #ffffff;
 }
 
-.stock-price-info {
+.stock-price-info { /*가격, 등락률 정보*/
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 4px;
+  gap: 5px;
 }
 
-.current-price {
-  font-size: 28px;
-  font-weight: bold;
+.current-price { /*가격*/
+  font-size: 20px; 
+  font-weight: 700;
 }
 
-.change-amount {
-  font-size: 16px;
+.change-amount { /*등락률*/
+  font-size: 14px;
+  font-weight: 500;
 }
 
-/* 동적 스타일 클래스 */
-.up { color: #ff3333; }
-.down { color: #5050ff; }
+.up { color: #d94c4c; }
+.down { color: #4c6ed9; }
 
 
-/* --- 2. 메인 탭 --- */
-.main-tabs {
+/* --- 메인 탭 --- */
+.main-tabs { /*차트, 종목정보, 뉴스, 커뮤니티*/
   display: flex;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .tab-button {
-  padding: 12px 20px;
-  font-size: 16px;
+  padding: 5px 18px;
+  font-size: 14px;
+  font-weight: 400;
   cursor: pointer;
   background: none;
   border: none;
-  color: #ccc;
-  border-bottom: 2px solid transparent;
-  transition: background-color 0.2s;
+  color: #888;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+  flex-grow: 1;
+  text-align: center;
 }
 
 .tab-button:hover {
-  background-color: #2a2a2e;
+  background-color: #f8f9fa;
+  color: #333;
 }
 
 .tab-button.active {
-  color: #f0f0f0;
-  font-weight: bold;
-  border-bottom-color: #f0f0f0;
+  color: #333333;
+  font-weight: 700;
+  border-bottom-color: #333333;
 }
 
 
 /* --- 3. 차트 컨트롤 --- */
-.chart-controls {
-  padding: 8px 15px;
+.chart-controls { 
+  padding: 8px 4px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #222;
+  background-color: #ffffff;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .timeframe-selector {
+  width: 350px;
   display: flex;
-  gap: 5px;
+  gap: 4px;
+  background-color: #f0f2f5;
+  border-radius: 8px;
+  padding: 4px;
 }
 
+/* 2. 시간대 버튼 크기 조정  */
 .timeframe-selector button {
-  background-color: #333;
-  color: white;
+  background-color: transparent;
+  color: #555;
   border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
+  padding: 5px 5px; 
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 12px; 
+  font-weight: 600;
+  transition: all 0.25s ease;
 }
 
-.timeframe-selector button:hover {
-  background-color: #444;
+.timeframe-selector button:hover:not(.active) {
+  background-color: #e2e6ea;
 }
 
 .timeframe-selector button.active {
-  background-color: #5050ff;
+  background-color: #24AFCF;
+  color: white;
   font-weight: bold;
+  box-shadow: 0 2px 5px #1360715a;
 }
 
+/* 보조 기능
 .tool-selector {
   display: flex;
-  gap: 8px;
+  gap: 6px;
 }
 
 .tool-selector button {
   background: none;
-  border: 1px solid #555;
-  color: #ccc;
+  border: 1px solid #e0e0e0;
+  color: #555;
   padding: 6px 10px;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s ease;
 }
 
-.tool-selector button:hover {
-  background-color: #333;
-}
-
+/* --- 4. 차트 영역 --- */
 .chart-area-container {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  background-color: #ffffff;
 }
 
 .price-chart-container {
   width: 100%;
-  flex-basis: 70%; 
+  height: 265px; 
   position: relative;
 }
 
 .volume-chart-container {
   width: 100%;
-  flex-basis: 30%;
+  height: 115px; 
   position: relative;
-  border-top: 1px solid #444; 
+  border-top: 1px solid #f0f0f0;
 }
 
 .stock-info-panel, .volume-info {
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  background: rgba(40, 40, 40, 0.85); 
-  padding: 5px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  color: #f0f0f0;
-  z-index: 10;
-  pointer-events: none;
-  line-height: 1.4;
+  display: none;
 }
