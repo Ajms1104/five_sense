@@ -67,7 +67,7 @@ function Sidebar() {
       <div className={style['sidebar-top']}>
         <div className={style['logo-top']}>
           <img src={teamlogo} className={style['logo_png']}/>
-          <Link to ="/" classname={style.logoandhome}> {/* 검은 밑줄 편집하기 */}
+          <Link to ="/" className={style.logoandhome}> {/* 검은 밑줄 편집하기 */}
           <h1 className={style['logo-txt']}>FIVE_SENSE</h1>
           </Link>
           <button type='button' className={style['side_btn']}  onClick={toggleSidebar}>
