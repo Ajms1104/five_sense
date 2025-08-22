@@ -1,0 +1,28 @@
+# --- Core Deep Learning & NLP ---
+tensorflow
+torch
+transformers
+scipy
+datasets
+nltk
+konlpy
+
+# --- Data Handling & Analysis ---
+pandas
+numpy
+scikit-learn
+
+# --- Database & Utilities ---
+SQLAlchemy
+psycopg2-binary
+python-dotenv
+google-generativeai
+tqdm
+
+# --- Data Visualization ---
+matplotlib
+seaborn
+
+# --- Experiment & Development Environment ---
+jupyterlab
+wandb

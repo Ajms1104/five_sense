@@ -19,7 +19,7 @@ def DBconnect():
         conn = psycopg2.connect(
             host='localhost',
             user='postgres',
-            password='1234',
+            password='5692',
             dbname='financial_data'
         )
         cur = conn.cursor()

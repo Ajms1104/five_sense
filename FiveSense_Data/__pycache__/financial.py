@@ -12,7 +12,7 @@ load_dotenv()
 def DBconnect():
     global cur, conn
     try:
-        conn = psycopg2.connect(host='localhost', user='postgres', password='1234', dbname='financial_data')
+        conn = psycopg2.connect(host='localhost', user='postgres', password='5692', dbname='financial_data')
         cur = conn.cursor()
         print("Database Connect Success")
 
