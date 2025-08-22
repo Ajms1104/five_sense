@@ -15,7 +15,7 @@ import time
 conn = psycopg2.connect(
     dbname="News_data",
     user="postgres",
-    password="0000",
+    password="5692",
     host="localhost",
     port=5432
 )

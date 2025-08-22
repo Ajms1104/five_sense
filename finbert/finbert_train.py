@@ -3,8 +3,8 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 
 # CSV 불러오기
-test_df = pd.read_csv("finance_big_test.csv")
-train_val_df = pd.read_csv("finance_big_train.csv")
+test_df = pd.read_csv("./finbert/finance_big_test.csv")
+train_val_df = pd.read_csv("finbert/finance_big_train.csv")
 
 # 레이블 문자열을 숫자로 매핑
 label_map = {'negative': 0, 'neutral': 1, 'positive': 2}
