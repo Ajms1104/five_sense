@@ -43,7 +43,7 @@
 * Python 3.8 이상
 * PostgreSQL 데이터베이스
     * `News_data`라는 이름의 데이터베이스
-    * `id` (Primary Key), `title`, `description` 등의 컬럼을 포함하는 `company_news` 테이블
+    * `id`, `title`, `description` 등의 컬럼을 포함하는 `company_news` 테이블
 * Google Gemini API 키
 
 ### 2. 설치 및 설정
