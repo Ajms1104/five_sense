@@ -20,7 +20,7 @@ def DBconnect(create_table=False):
                 # 기존 테이블 삭제
                 cur.execute("DROP TABLE IF EXISTS public.stock_daily_data;")
                 print("기존 stock_daily_data 테이블 삭제 완료")
-                # 새 테이블 생성 (volatility 컬럼 추가)
+                
                 create_table_query = """
                 CREATE TABLE public.stock_daily_data (
                     stk_cd VARCHAR(20),
@@ -31,7 +31,6 @@ def DBconnect(create_table=False):
                     high_pric NUMERIC,
                     low_pric NUMERIC,
                     trde_prica NUMERIC,
-                    pred_close_pric NUMERIC,
                     volatility NUMERIC,
                     PRIMARY KEY (stk_cd, dt)
                 );
@@ -63,7 +62,7 @@ def DBdisconnect():
         cur = None
         conn = None
 
-# 프로그램 순매수 상위 50 요청 (ka90003)
+# 상위 50 요청 
 def fn_ka90003(token, data, max_retries=3, max_items=50):
     host = 'https://mockapi.kiwoom.com'
     endpoint = '/api/dostk/stkinfo'
@@ -143,7 +142,7 @@ def fn_ka90003(token, data, max_retries=3, max_items=50):
     print("최종 데이터프레임:\n", df)
     return df, cont_yn, next_key
 
-# 주식 일봉 차트 조회 요청 (ka10081)
+# 주식 일봉 차트 조회 요청
 def fn_ka10081(token, data, cont_yn='N', next_key='', max_retries=3):
     host = 'https://mockapi.kiwoom.com'
     endpoint = '/api/dostk/chart'
@@ -172,14 +171,14 @@ def fn_ka10081(token, data, cont_yn='N', next_key='', max_retries=3):
                 if df.empty:
                     print("받은 데이터가 비어 있습니다.")
                     return None, None, None
-                required_columns = ['dt', 'open_pric', 'high_pric', 'low_pric', 'cur_prc', 'pred_close_pric', 'trde_qty', 'trde_prica']
+                required_columns = ['dt', 'open_pric', 'high_pric', 'low_pric', 'cur_prc', 'trde_qty', 'trde_prica']
                 if not all(col in df.columns for col in required_columns):
                     missing_cols = [col for col in required_columns if col not in df.columns]
                     print(f"필수 컬럼이 누락되었습니다: {missing_cols}")
                     return None, None, None
                 df = df[required_columns]
                 df['stk_cd'] = data['stk_cd']
-                numeric_columns = ['cur_prc', 'open_pric', 'high_pric', 'low_pric', 'pred_close_pric']
+                numeric_columns = ['cur_prc', 'open_pric', 'high_pric', 'low_pric']
                 for col in numeric_columns:
                     df[col] = df[col].astype(str)
                     df[col] = df[col].apply(lambda x: float(x.replace('--', '')) / 100 if x.startswith('--') else float(x.replace('+', '')) / 100 if x else None)
@@ -269,8 +268,8 @@ def insert_to_db(df, expected_stk_cd, batch_size=1000):
                     print(f"stk_cd 불일치: 예상값 {expected_stk_cd}, 실제값 {row['stk_cd']}")
                     continue
                 insert_query = """
-                INSERT INTO public.stock_daily_data (stk_cd, dt, cur_prc, trde_qty, open_pric, high_pric, low_pric, trde_prica, pred_close_pric, volatility)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO public.stock_daily_data (stk_cd, dt, cur_prc, trde_qty, open_pric, high_pric, low_pric, trde_prica, volatility)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
                 ON CONFLICT (stk_cd, dt) DO NOTHING;
                 """
                 cur.execute(insert_query, (
@@ -282,7 +281,6 @@ def insert_to_db(df, expected_stk_cd, batch_size=1000):
                     row['high_pric'],
                     row['low_pric'],
                     row['trde_prica'],
-                    row['pred_close_pric'],
                     row['volatility']
                 ))
             conn.commit()
@@ -349,7 +347,7 @@ def analyze_volatility(start_date='20200101', end_date=None):
         print("\n월별 평균 변동성 (상위 50개):")
         print(monthly_volatility)
 
-        # 상위 50개 변동성 날짜 (종목별 상위 날짜)
+        # 상위 5개 변동성 날짜 (종목별 상위 날짜)
         daily_volatility = df.groupby(['stk_cd', 'dt'])['volatility'].mean().reset_index()
         daily_volatility = daily_volatility.sort_values(by='volatility', ascending=False)
         daily_volatility['dt'] = daily_volatility['dt'].dt.strftime('%Y%m%d')
@@ -368,7 +366,7 @@ def analyze_volatility(start_date='20200101', end_date=None):
 # 실행 구간
 if __name__ == '__main__':
     # 1. 토큰 설정
-    MY_ACCESS_TOKEN = main.fn_au10001() 
+    MY_ACCESS_TOKEN = main.fn_au10001()  
     # 2. 데이터베이스 연결 및 테이블 생성
     cur, conn = DBconnect(create_table=True)
     if cur is None or conn is None:
@@ -414,7 +412,7 @@ if __name__ == '__main__':
         else:
             print("가져온 데이터가 없습니다.")
     # 5. 변동성 분석
-    monthly_volatility, daily_volatility = analyze_volatility(start_date='20240101')
+    monthly_volatility, daily_volatility = analyze_volatility(start_date='20200101')
     if monthly_volatility is not None:
         print("\n변동성 분석 완료")
     else:
