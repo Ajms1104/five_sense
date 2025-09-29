@@ -17,6 +17,7 @@ DB_CONFIG = {
 FINBERT_MODEL_NAME = "snunlp/KR-FinBert-SC" # FinBert 모델
 FINBERT_WEIGHT_PATH = "best_model.pt"  # 학습된 가중치 파일 경로
 GEMINI_MODEL_NAME = "gemini-2.0-flash" # gemini 모델
+GEMINI_PROMPT = os.getenv("GEMINI_PROMPT") # prompt
 
 # --- 분석 최종 가중치 ---
 FINBERT_SCORE_WEIGHT = 0.3  # 제목 점수 가중치 (30%)
@@ -29,4 +30,5 @@ RETRY_DELAY_MULTIPLIER = 2
 API_REQUEST_DELAY = 30
 
 # --- 결과 저장 파일 이름 ---
+
 OUTPUT_CSV_NAME = "News_DB_sentiment_results.csv" # CSV로 저장
