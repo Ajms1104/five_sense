@@ -1,0 +1,7 @@
+psycopg2-binary
+pandas
+torch
+transformers
+tqdm
+python-dotenv
+google-generativeai

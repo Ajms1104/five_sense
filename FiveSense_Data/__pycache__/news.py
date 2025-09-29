@@ -81,7 +81,7 @@ def clean_text(text):
         return ""
     soup = BeautifulSoup(text, "html.parser")
     cleaned = soup.get_text()
-    cleaned = re.sub(r'\s+', ' ', cleaned).strip()
+    cleaned = re.sub(r' +', ' ', cleaned).strip()
     return cleaned
 
 def is_relevant(title, content, query, related_keywords=[]):
@@ -373,6 +373,7 @@ def main():
         insert_to_db(df)
     else:
         print("\n수집된 관련 뉴스가 없습니다.")
+
 
 if __name__ == "__main__":
     main()
