@@ -10,7 +10,7 @@ from requests.exceptions import RequestException
 def DBconnect():
     """
     PostgreSQL 데이터베이스에 연결하고 커서와 연결 객체를 반환합니다.
-    infolist_data 테이블을 삭제 후 새로 생성하여 모든 컬럼을 TEXT로 설정합니다.
+    infolist_data 테이블이 없으면 새로 생성하며, 모든 컬럼을 TEXT로 설정합니다.
     code를 기본 키로 설정하여 중복 데이터를 방지합니다.
     """
     global cur, conn
@@ -24,23 +24,32 @@ def DBconnect():
         cur = conn.cursor()
         print("데이터베이스 연결 성공")
 
-        # 기존 테이블 삭제
-        cur.execute("DROP TABLE IF EXISTS public.infolist_data;")
-        print("기존 infolist_data 테이블 삭제 완료")
+        # 테이블 존재 여부 확인
+        cur.execute("""
+            SELECT EXISTS (
+                SELECT FROM information_schema.tables 
+                WHERE table_schema = 'public' 
+                AND table_name = 'infolist_data'
+            );
+        """)
+        table_exists = cur.fetchone()[0]
 
-        # 새 테이블 생성
-        create_table_query = """
-        CREATE TABLE public.infolist_data (
-            code TEXT PRIMARY KEY,
-            name TEXT,
-            listCount TEXT,
-            upSizeName TEXT
-        );
-        """
-        cur.execute(create_table_query)
-        conn.commit()
-        print("infolist_data 테이블 생성 완료")
-        
+        if not table_exists:
+            # 테이블이 없으면 새로 생성
+            create_table_query = """
+            CREATE TABLE public.infolist_data (
+                code TEXT PRIMARY KEY,
+                name TEXT,
+                listCount TEXT,
+                upSizeName TEXT
+            );
+            """
+            cur.execute(create_table_query)
+            conn.commit()
+            print("infolist_data 테이블 생성 완료")
+        else:
+            print("infolist_data 테이블이 이미 존재합니다.")
+
         return cur, conn
     except Exception as err:
         print(f"데이터베이스 연결 실패: {str(err)}")
@@ -60,12 +69,6 @@ def DBdisconnect():
 
 # 3. 단일 API 요청 함수
 def fn_ka10099(token, data, cont_yn='N', next_key='', max_retries=3):
-    """
-    ka10099 API를 호출하여 종목 정보를 가져옵니다.
-    - 최대 재시도 횟수(max_retries)를 설정하여 네트워크 오류에 대응.
-    - 응답 데이터를 pandas DataFrame으로 변환.
-    - 연속 조회를 위해 cont-yn과 next-key를 반환.
-    """
     host = 'https://mockapi.kiwoom.com'  # 모의투자
     endpoint = '/api/dostk/stkinfo'
     url = host + endpoint
@@ -126,13 +129,7 @@ def fn_ka10099(token, data, cont_yn='N', next_key='', max_retries=3):
     return None, None, None
 
 # 4. 모든 데이터 가져오기 (연속 조회 포함)
-def fetch_all_data(token, data, max_iterations=10, max_rows=100):
-    """
-    연속 조회를 통해 종목 정보를 가져옵니다.
-    - max_iterations으로 조회 횟수를 제한.
-    - max_rows=100으로 최대 100개 행만 반환.
-    - 가져온 데이터를 하나로 합쳐 반환.
-    """
+def fetch_all_data(token, data, max_iterations=10, max_rows=10000):
     all_data = []
     cont_yn = 'N'
     next_key = ''
@@ -230,12 +227,12 @@ if __name__ == '__main__':
         'mrkt_tp': '0',  # 시장구분: 코스피
     }
 
-    # 3. 모든 데이터 가져오기 (최대 100개 행)
+    # 3. 모든 데이터 가져오기 (최대 3000개 행)
     df = fetch_all_data(
         token=MY_ACCESS_TOKEN,
         data=params,
         max_iterations=50,  # 충분한 횟수로 설정
-        max_rows=100       # 최대 100개 행 제한
+        max_rows=3000       # 최대 3000개 행 제한
     )
 
     # 4. 데이터베이스에 삽입
