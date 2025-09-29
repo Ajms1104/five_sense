@@ -25,5 +25,5 @@
     "@vitejs/plugin-react": "^4.4.1",
     "vite": "^6.3.5"
   },
-  "proxy": "http://localhost:8080"
+  "proxy": "http://backend:8080"
 }

@@ -8,7 +8,7 @@ export function useTopStocks() {
   useEffect(() => {
     const fetchTopStocks = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/stock/top-volume');
+        const response = await fetch('/api/stock/top-volume');
         if (!response.ok) {
           throw new Error('거래량 상위 종목을 가져오는데 실패했습니다');
         }

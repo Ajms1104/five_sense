@@ -40,7 +40,7 @@ function Sidebar() {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/stock/news');
+        const response = await fetch('/api/stock/news');
         if (!response.ok) {
           throw new Error('뉴스를 가져오는데 실패했습니다');
         }

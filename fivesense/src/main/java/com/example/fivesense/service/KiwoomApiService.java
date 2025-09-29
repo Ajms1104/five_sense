@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 @Service
 public class KiwoomApiService {
@@ -31,6 +33,7 @@ public class KiwoomApiService {
     private final WebClient webClient;
     private final SimpMessagingTemplate messagingTemplate;
     private final ObjectMapper objectMapper;
+    private final ApiRateLimitService rateLimitService;
     private WebSocketSession socketSession;
 
     @Value("${kiwoom.api.host}")
@@ -49,9 +52,10 @@ public class KiwoomApiService {
 
     // 1. 생성자: 의존성 주입만 담당하도록 변경 (초기화 로직 제거)
     // WebClient.Builder를 주입받는 것이 Spring의 권장 방식입니다.
-    public KiwoomApiService(SimpMessagingTemplate messagingTemplate, WebClient.Builder webClientBuilder) {
+    public KiwoomApiService(SimpMessagingTemplate messagingTemplate, WebClient.Builder webClientBuilder, ApiRateLimitService rateLimitService) {
         this.messagingTemplate = messagingTemplate;
         this.objectMapper = new ObjectMapper();
+        this.rateLimitService = rateLimitService;
         this.webClient = webClientBuilder.baseUrl("https://api.kiwoom.com")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .defaultHeader("appkey", "IFZoKZtS4RIhUP7qd4DSzgiFJ5_zbzJvgVoRCbb7KtM")
@@ -74,33 +78,33 @@ public class KiwoomApiService {
 
     private void getAccessToken() {
         try {
-            Map<String, String> tokenRequest = new HashMap<>();
-            tokenRequest.put("grant_type", "client_credentials");
-            tokenRequest.put("appkey", this.apiKey); // @Value로 주입된 apiKey 필드 사용
-            tokenRequest.put("secretkey", this.apiSecret); // @Value로 주입된 apiSecret 필드 사용
+            // RateLimiter를 사용하여 API 호출 속도 제한
+            CompletableFuture<Map<String, Object>> tokenFuture = rateLimitService.executeWithRateLimit(() -> {
+                Map<String, String> tokenRequest = new HashMap<>();
+                tokenRequest.put("grant_type", "client_credentials");
+                tokenRequest.put("appkey", this.apiKey);
+                tokenRequest.put("secretkey", this.apiSecret);
 
-            Map<String, Object> response = webClient.post()
-                    .uri("/oauth2/token")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(tokenRequest)
-                    .retrieve()
-                    .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
-                    .block();
+                return webClient.post()
+                        .uri("/oauth2/token")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(tokenRequest)
+                        .retrieve()
+                        .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
+                        .block();
+            });
+
+            Map<String, Object> response = tokenFuture.get(); // 동기적으로 결과 대기
 
             if (response != null) {
                 System.out.println("Token Response: " + response);
 
-                // <<-- 수정된 부분: 실제 로그에 찍힌 키 이름으로 변경 -->>
-                // 성공 코드는 "return_code"
                 if ("0".equals(String.valueOf(response.get("return_code")))) {
-                    // 토큰 값은 "token"
                     accessToken = (String) response.get("token");
                     System.out.println("Access token received: " + accessToken);
                 } else {
-                    // 실패 메시지는 "return_msg"
                     System.err.println("Token request failed: " + response.get("return_msg"));
                 }
-                // <<-- /수정된 부분 -->>
             }
         } catch (Exception e) {
             System.err.println("Error getting access token: " + e.getMessage());

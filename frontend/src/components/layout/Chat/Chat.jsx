@@ -29,7 +29,7 @@ const ChatUI = () => {
   const fetchChatHistory = async () => {
     try {
       console.log("채팅 기록 조회 중...");
-      const response = await fetch('http://localhost:8080/api/chat/history');
+      const response = await fetch('/api/chat/history');
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || '채팅 기록을 불러오는데 실패했습니다.');
@@ -74,8 +74,8 @@ const ChatUI = () => {
     try {
       console.log("ChatGPT API 호출 중...");
       const url = currentRoomId 
-        ? `http://localhost:8080/api/chat/${currentRoomId}`
-        : 'http://localhost:8080/api/chat';
+        ? `/api/chat/${currentRoomId}`
+        : '/api/chat';
         
       const response = await fetch(url, {
         method: 'POST',

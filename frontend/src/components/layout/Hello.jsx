@@ -5,7 +5,7 @@ function Hello() {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:8080/hello")
+    axios.get("/api/hello")
       .then(res => {
         setMessage(res.data); // "Spring Boot 연결 성공!"
       })

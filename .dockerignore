@@ -1,0 +1,36 @@
+# Git 관련
+.git
+.gitignore
+
+# IDE 관련
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS 관련
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+lightning_logs/
+
+# Build artifacts
+build/
+target/
+dist/
+node_modules/
+
+# Gradle
+.gradle/
+gradle/
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Temporary files
+*.tmp
+*.temp

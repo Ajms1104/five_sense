@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  # PostgreSQL 데이터베이스
+  postgres:
+    image: postgres:15
+    container_name: fivesense_postgres
+    environment:
+      POSTGRES_DB: fivesense
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - fivesense_network
+
+  # Spring Boot 백엔드
+  backend:
+    build:
+      context: ./fivesense
+      dockerfile: Dockerfile
+    container_name: fivesense_backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/fivesense
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      - postgres
+    networks:
+      - fivesense_network
+    volumes:
+      - ./FiveSense_Data:/app/data
+
+  # React 프론트엔드
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: fivesense_frontend
+    ports:
+      - "5173:3000"
+    environment:
+      VITE_API_URL: http://backend:8080
+    depends_on:
+      - backend
+    networks:
+      - fivesense_network
+
+volumes:
+  postgres_data:
+
+networks:
+  fivesense_network:
+    driver: bridge
