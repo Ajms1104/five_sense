@@ -1,1 +1,12 @@
-rootProject.name = 'fivesense' 
+// 🌟 이 블록을 추가해야 합니다.
+pluginManagement {
+    repositories {
+        // Gradle 플러그인 포털에서 플러그인을 다운로드할 수 있도록 선언합니다.
+        gradlePluginPortal() 
+        
+        // Maven Central이나 Google 같은 다른 저장소도 필요한 경우 추가합니다.
+        mavenCentral() 
+    }
+}
+
+rootProject.name = 'fivesense'

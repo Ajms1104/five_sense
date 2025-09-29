@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../contexts/AuthContext.jsx';
 
 import style from './topbar.module.css';
-import UserIcon from '../../../assets/User.svg';
+import UserIcon from '../../../assets/user.svg';
 import popup from '../../../assets/popupbtn.svg';
 import login from '../../../assets/login.svg';
 import logout_btn from '../../../assets/logout.svg';
