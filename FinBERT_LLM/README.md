@@ -64,7 +64,8 @@ DB_HOST=localhost
 DB_PORT=5432
 
 # Gemini
-GEMINI_API_KEY=your_api_key_here
+GEMINI_API_KEY=api_key
+GEMINI_PROMPT=prompt
 ```
 
 ### 4) DB 테이블
