@@ -1,0 +1,52 @@
+[2025-11-05 08:37:30] Trial 0 - New Best Loss: 0.29035
+  Params: {
+  "learning_rate": 0.004044418424438303,
+  "activation": "tanh",
+  "dropout_rate": 0.427277578832224,
+  "dense_layers": 1,
+  "dense_units": 256,
+  "batch_size": 128,
+  "seq_length": 87,
+  "bilstm_n_layers": 3,
+  "bilstm_units": 128
+}
+------------------------------
+[2025-11-05 08:51:21] Trial 3 - New Best Loss: 0.24083
+  Params: {
+  "learning_rate": 0.004344906327666084,
+  "activation": "gelu",
+  "dropout_rate": 0.699729444329025,
+  "dense_layers": 1,
+  "dense_units": 256,
+  "batch_size": 128,
+  "seq_length": 223,
+  "bilstm_n_layers": 4,
+  "bilstm_units": 128
+}
+------------------------------
+[2025-11-05 09:03:43] Trial 5 - New Best Loss: 0.23583
+  Params: {
+  "learning_rate": 0.0018533386109065523,
+  "activation": "gelu",
+  "dropout_rate": 0.6899642565663462,
+  "dense_layers": 2,
+  "dense_units": 128,
+  "batch_size": 32,
+  "seq_length": 238,
+  "bilstm_n_layers": 4,
+  "bilstm_units": 64
+}
+------------------------------
+[2025-11-05 13:55:27] Trial 11 - New Best Loss: 0.22747
+  Params: {
+  "learning_rate": 0.0030386415545972582,
+  "activation": "gelu",
+  "dropout_rate": 0.6967854922230525,
+  "dense_layers": 1,
+  "dense_units": 256,
+  "batch_size": 128,
+  "seq_length": 238,
+  "bilstm_n_layers": 4,
+  "bilstm_units": 128
+}
+------------------------------

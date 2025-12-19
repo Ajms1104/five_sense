@@ -1,0 +1,17 @@
+{
+  "learning_rate": 0.00019360456373573366,
+  "activation": "gelu",
+  "dropout_rate": 0.6014535988874091,
+  "dense_layers": 1,
+  "dense_units": 128,
+  "batch_size": 32,
+  "seq_length": 210,
+  "n_layers": 2,
+  "lstm_units": 256,
+  "cnn_filters": 64,
+  "cnn_kernel_size": 3,
+  "use_attention": true,
+  "num_heads_cnn": 2,
+  "best_validation_score": 0.22857394814491272,
+  "champion_run_seed": 352
+}

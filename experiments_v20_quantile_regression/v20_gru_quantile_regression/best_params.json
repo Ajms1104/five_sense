@@ -1,0 +1,13 @@
+{
+  "learning_rate": 0.0015183702923040633,
+  "activation": "gelu",
+  "dropout_rate": 0.557425551193683,
+  "dense_layers": 1,
+  "dense_units": 256,
+  "batch_size": 128,
+  "seq_length": 218,
+  "gru_n_layers": 3,
+  "gru_units": 128,
+  "best_validation_score": 0.2259790599346161,
+  "champion_run_seed": 789
+}

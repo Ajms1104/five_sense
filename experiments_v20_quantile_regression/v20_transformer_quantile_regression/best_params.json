@@ -1,0 +1,15 @@
+{
+  "learning_rate": 0.004509253181145043,
+  "activation": "relu",
+  "dropout_rate": 0.6989630349958441,
+  "dense_layers": 2,
+  "dense_units": 256,
+  "batch_size": 64,
+  "seq_length": 207,
+  "d_model": 128,
+  "num_heads": 2,
+  "transformer_n_blocks": 1,
+  "dff_multiplier": 4,
+  "best_validation_score": 0.23896294832229614,
+  "champion_run_seed": 1057
+}

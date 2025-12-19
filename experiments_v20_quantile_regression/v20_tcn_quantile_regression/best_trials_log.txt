@@ -1,0 +1,90 @@
+[2025-11-05 11:18:44] Trial 0 - New Best Loss: 0.29575
+  Params: {
+  "learning_rate": 0.00015603552168942067,
+  "activation": "tanh",
+  "dropout_rate": 0.5912436657003461,
+  "dense_layers": 1,
+  "dense_units": 256,
+  "batch_size": 64,
+  "seq_length": 105,
+  "tcn_filters": 32,
+  "tcn_kernel_size": 3,
+  "tcn_n_blocks": 3,
+  "tcn_dilation_base": 3
+}
+------------------------------
+[2025-11-05 11:19:30] Trial 1 - New Best Loss: 0.25843
+  Params: {
+  "learning_rate": 0.0072524802780720155,
+  "activation": "gelu",
+  "dropout_rate": 0.6001456819430239,
+  "dense_layers": 1,
+  "dense_units": 256,
+  "batch_size": 64,
+  "seq_length": 227,
+  "tcn_filters": 128,
+  "tcn_kernel_size": 5,
+  "tcn_n_blocks": 2,
+  "tcn_dilation_base": 3
+}
+------------------------------
+[2025-11-05 11:25:41] Trial 4 - New Best Loss: 0.25242
+  Params: {
+  "learning_rate": 0.0004178240394141237,
+  "activation": "relu",
+  "dropout_rate": 0.4081062794257892,
+  "dense_layers": 1,
+  "dense_units": 256,
+  "batch_size": 64,
+  "seq_length": 226,
+  "tcn_filters": 128,
+  "tcn_kernel_size": 3,
+  "tcn_n_blocks": 3,
+  "tcn_dilation_base": 2
+}
+------------------------------
+[2025-11-05 16:01:49] Trial 10 - New Best Loss: 0.24538
+  Params: {
+  "learning_rate": 0.0003348697059996015,
+  "activation": "gelu",
+  "dropout_rate": 0.5230215750335474,
+  "dense_layers": 1,
+  "dense_units": 128,
+  "batch_size": 32,
+  "seq_length": 213,
+  "tcn_filters": 32,
+  "tcn_kernel_size": 3,
+  "tcn_n_blocks": 4,
+  "tcn_dilation_base": 3
+}
+------------------------------
+[2025-11-05 16:04:31] Trial 11 - New Best Loss: 0.24218
+  Params: {
+  "learning_rate": 0.0003284774692651434,
+  "activation": "gelu",
+  "dropout_rate": 0.5285863969088176,
+  "dense_layers": 1,
+  "dense_units": 128,
+  "batch_size": 32,
+  "seq_length": 211,
+  "tcn_filters": 32,
+  "tcn_kernel_size": 3,
+  "tcn_n_blocks": 4,
+  "tcn_dilation_base": 3
+}
+------------------------------
+[2025-11-05 16:21:08] Trial 16 - New Best Loss: 0.24130
+  Params: {
+  "learning_rate": 0.0001265988850000432,
+  "activation": "gelu",
+  "dropout_rate": 0.6547480372361789,
+  "dense_layers": 1,
+  "dense_units": 128,
+  "batch_size": 32,
+  "seq_length": 209,
+  "tcn_filters": 32,
+  "tcn_kernel_size": 3,
+  "tcn_n_blocks": 4,
+  "tcn_dilation_base": 3
+}
+------------------------------

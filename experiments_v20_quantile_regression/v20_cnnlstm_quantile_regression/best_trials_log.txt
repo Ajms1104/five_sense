@@ -1,0 +1,68 @@
+[2025-11-05 10:53:43] Trial 0 - New Best Loss: 0.25692
+  Params: {
+  "learning_rate": 0.001032090166622904,
+  "activation": "tanh",
+  "dropout_rate": 0.5468667941205163,
+  "dense_layers": 2,
+  "dense_units": 256,
+  "batch_size": 128,
+  "seq_length": 158,
+  "n_layers": 1,
+  "lstm_units": 256,
+  "cnn_filters": 256,
+  "cnn_kernel_size": 5,
+  "use_attention": true,
+  "num_heads_cnn": 2
+}
+------------------------------
+[2025-11-05 11:02:03] Trial 2 - New Best Loss: 0.23958
+  Params: {
+  "learning_rate": 0.00018679270109335763,
+  "activation": "gelu",
+  "dropout_rate": 0.6086305502335054,
+  "dense_layers": 1,
+  "dense_units": 128,
+  "batch_size": 32,
+  "seq_length": 226,
+  "n_layers": 2,
+  "lstm_units": 256,
+  "cnn_filters": 64,
+  "cnn_kernel_size": 3,
+  "use_attention": true,
+  "num_heads_cnn": 2
+}
+------------------------------
+[2025-11-05 11:09:04] Trial 4 - New Best Loss: 0.23880
+  Params: {
+  "learning_rate": 0.00017538025015924718,
+  "activation": "tanh",
+  "dropout_rate": 0.4234297602004751,
+  "dense_layers": 2,
+  "dense_units": 256,
+  "batch_size": 128,
+  "seq_length": 225,
+  "n_layers": 1,
+  "lstm_units": 256,
+  "cnn_filters": 64,
+  "cnn_kernel_size": 5,
+  "use_attention": true,
+  "num_heads_cnn": 4
+}
+------------------------------
+[2025-11-05 15:36:05] Trial 12 - New Best Loss: 0.22999
+  Params: {
+  "learning_rate": 0.00019360456373573366,
+  "activation": "gelu",
+  "dropout_rate": 0.6014535988874091,
+  "dense_layers": 1,
+  "dense_units": 128,
+  "batch_size": 32,
+  "seq_length": 210,
+  "n_layers": 2,
+  "lstm_units": 256,
+  "cnn_filters": 64,
+  "cnn_kernel_size": 3,
+  "use_attention": true,
+  "num_heads_cnn": 2
+}
+------------------------------

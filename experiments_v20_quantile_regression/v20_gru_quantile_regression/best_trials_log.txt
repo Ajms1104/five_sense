@@ -1,0 +1,78 @@
+[2025-11-05 09:48:46] Trial 0 - New Best Loss: 0.32839
+  Params: {
+  "learning_rate": 0.008846611403117644,
+  "activation": "gelu",
+  "dropout_rate": 0.6927982721663917,
+  "dense_layers": 2,
+  "dense_units": 128,
+  "batch_size": 64,
+  "seq_length": 98,
+  "gru_n_layers": 2,
+  "gru_units": 256
+}
+------------------------------
+[2025-11-05 09:54:34] Trial 1 - New Best Loss: 0.29403
+  Params: {
+  "learning_rate": 0.0023756767686117595,
+  "activation": "tanh",
+  "dropout_rate": 0.6951607562161054,
+  "dense_layers": 2,
+  "dense_units": 128,
+  "batch_size": 32,
+  "seq_length": 84,
+  "gru_n_layers": 2,
+  "gru_units": 256
+}
+------------------------------
+[2025-11-05 10:00:51] Trial 3 - New Best Loss: 0.26801
+  Params: {
+  "learning_rate": 0.0003424971867193505,
+  "activation": "relu",
+  "dropout_rate": 0.5766084275893057,
+  "dense_layers": 2,
+  "dense_units": 128,
+  "batch_size": 128,
+  "seq_length": 171,
+  "gru_n_layers": 3,
+  "gru_units": 64
+}
+------------------------------
+[2025-11-05 10:09:23] Trial 4 - New Best Loss: 0.24156
+  Params: {
+  "learning_rate": 0.0004171369439405926,
+  "activation": "relu",
+  "dropout_rate": 0.4839510054378863,
+  "dense_layers": 2,
+  "dense_units": 256,
+  "batch_size": 32,
+  "seq_length": 212,
+  "gru_n_layers": 3,
+  "gru_units": 256
+}
+------------------------------
+[2025-11-05 10:27:59] Trial 6 - New Best Loss: 0.23203
+  Params: {
+  "learning_rate": 0.0005817910890744013,
+  "activation": "relu",
+  "dropout_rate": 0.44828047282935995,
+  "dense_layers": 1,
+  "dense_units": 256,
+  "batch_size": 32,
+  "seq_length": 239,
+  "gru_n_layers": 4,
+  "gru_units": 256
+}
+------------------------------
+[2025-11-05 15:27:26] Trial 19 - New Best Loss: 0.23194
+  Params: {
+  "learning_rate": 0.0015183702923040633,
+  "activation": "gelu",
+  "dropout_rate": 0.557425551193683,
+  "dense_layers": 1,
+  "dense_units": 256,
+  "batch_size": 128,
+  "seq_length": 218,
+  "gru_n_layers": 3,
+  "gru_units": 128
+}
+------------------------------

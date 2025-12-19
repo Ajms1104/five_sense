@@ -1,0 +1,60 @@
+[2025-11-05 11:35:37] Trial 0 - New Best Loss: 0.30008
+  Params: {
+  "learning_rate": 0.00010532501769905878,
+  "activation": "tanh",
+  "dropout_rate": 0.5126845235785377,
+  "dense_layers": 1,
+  "dense_units": 256,
+  "batch_size": 128,
+  "seq_length": 93,
+  "d_model": 64,
+  "num_heads": 8,
+  "transformer_n_blocks": 1,
+  "dff": 256
+}
+------------------------------
+[2025-11-05 11:37:13] Trial 1 - New Best Loss: 0.25138
+  Params: {
+  "learning_rate": 0.0015035441129157313,
+  "activation": "gelu",
+  "dropout_rate": 0.625194111109163,
+  "dense_layers": 2,
+  "dense_units": 256,
+  "batch_size": 128,
+  "seq_length": 219,
+  "d_model": 128,
+  "num_heads": 2,
+  "transformer_n_blocks": 1,
+  "dff": 512
+}
+------------------------------
+[2025-11-05 16:32:41] Trial 12 - New Best Loss: 0.24217
+  Params: {
+  "learning_rate": 0.0019233111772095288,
+  "activation": "relu",
+  "dropout_rate": 0.6342797285290059,
+  "dense_layers": 2,
+  "dense_units": 256,
+  "batch_size": 64,
+  "seq_length": 208,
+  "d_model": 128,
+  "num_heads": 2,
+  "transformer_n_blocks": 1,
+  "dff": 512
+}
+------------------------------
+[2025-11-05 16:36:21] Trial 14 - New Best Loss: 0.23995
+  Params: {
+  "learning_rate": 0.004509253181145043,
+  "activation": "relu",
+  "dropout_rate": 0.6989630349958441,
+  "dense_layers": 2,
+  "dense_units": 256,
+  "batch_size": 64,
+  "seq_length": 207,
+  "d_model": 128,
+  "num_heads": 2,
+  "transformer_n_blocks": 1,
+  "dff": 512
+}
+------------------------------

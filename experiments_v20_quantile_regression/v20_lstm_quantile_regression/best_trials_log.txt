@@ -1,0 +1,78 @@
+[2025-11-05 06:52:03] Trial 0 - New Best Loss: 0.28974
+  Params: {
+  "learning_rate": 0.005237465945044588,
+  "activation": "tanh",
+  "dropout_rate": 0.5285669323955062,
+  "dense_layers": 1,
+  "dense_units": 128,
+  "batch_size": 128,
+  "seq_length": 107,
+  "lstm_n_layers": 2,
+  "lstm_units": 128
+}
+------------------------------
+[2025-11-05 08:28:03] Trial 6 - New Best Loss: 0.25087
+  Params: {
+  "learning_rate": 0.0015519353460416933,
+  "activation": "tanh",
+  "dropout_rate": 0.6901981643809384,
+  "dense_layers": 1,
+  "dense_units": 128,
+  "batch_size": 128,
+  "seq_length": 232,
+  "lstm_n_layers": 2,
+  "lstm_units": 128
+}
+------------------------------
+[2025-11-05 08:29:14] Trial 7 - New Best Loss: 0.24065
+  Params: {
+  "learning_rate": 0.000813842232298758,
+  "activation": "gelu",
+  "dropout_rate": 0.6948990867782071,
+  "dense_layers": 1,
+  "dense_units": 128,
+  "batch_size": 128,
+  "seq_length": 210,
+  "lstm_n_layers": 3,
+  "lstm_units": 128
+}
+------------------------------
+[2025-11-05 08:31:13] Trial 8 - New Best Loss: 0.23975
+  Params: {
+  "learning_rate": 0.0007011152526783867,
+  "activation": "gelu",
+  "dropout_rate": 0.6893973493181859,
+  "dense_layers": 2,
+  "dense_units": 128,
+  "batch_size": 64,
+  "seq_length": 209,
+  "lstm_n_layers": 3,
+  "lstm_units": 256
+}
+------------------------------
+[2025-11-05 13:13:43] Trial 11 - New Best Loss: 0.23642
+  Params: {
+  "learning_rate": 0.0017110156184056,
+  "activation": "gelu",
+  "dropout_rate": 0.6106828489597826,
+  "dense_layers": 2,
+  "dense_units": 256,
+  "batch_size": 64,
+  "seq_length": 238,
+  "lstm_n_layers": 3,
+  "lstm_units": 256
+}
+------------------------------
+[2025-11-05 13:18:02] Trial 12 - New Best Loss: 0.22234
+  Params: {
+  "learning_rate": 0.0013540174453011294,
+  "activation": "gelu",
+  "dropout_rate": 0.6404669288852607,
+  "dense_layers": 2,
+  "dense_units": 256,
+  "batch_size": 64,
+  "seq_length": 238,
+  "lstm_n_layers": 3,
+  "lstm_units": 256
+}
+------------------------------
